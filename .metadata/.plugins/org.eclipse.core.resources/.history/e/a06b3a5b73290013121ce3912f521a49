@@ -3,6 +3,7 @@ package pss;
 import java.io.*;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
 
 public class FileTransfer implements Runnable {
 	private String fileName;
@@ -51,7 +52,7 @@ public class FileTransfer implements Runnable {
 		}
 		catch(IOException e)
 		{
-			
+			JOptionPane.showMessageDialog(null, "Your transfer was not completed", "404 Destination Not Found", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}

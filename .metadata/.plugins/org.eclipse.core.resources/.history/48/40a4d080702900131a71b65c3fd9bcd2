@@ -3,7 +3,6 @@ package pss;
 import java.io.*;
 import java.net.Socket;
 
-
 public class FileTransfer implements Runnable {
 	private String fileName;
 	private String serverName;
@@ -51,7 +50,7 @@ public class FileTransfer implements Runnable {
 		}
 		catch(IOException e)
 		{
-			
+			e.printStackTrace(); 
 		}
 		
 	}
