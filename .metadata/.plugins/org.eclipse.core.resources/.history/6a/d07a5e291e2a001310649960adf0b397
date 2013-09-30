@@ -19,7 +19,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,9 +88,9 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField HHBGemTInOp;
 	private JTextField HHBGemTOH;
 	private JTextField HHBLs;
-	private JTextField HHBInopLs;
+	private JTextField HHBnopLs;
 	private JTextField HHBOPpac2L;
-	private JTextField HHBInopPac2L;
+	private JTextField HHBnopPac2L;
 	private JTextField aUnitId;
 	private JTextField bUnitId;
 	private JTextField cUnitId;
@@ -119,11 +118,9 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField BSystemType;
 	private JTextField CSystemType;
 	private JTextField DSystemType;
-	private JTextField ACurAS;
 	private JTextField BCurAS;
 	private JTextField CCurAS;
 	private JTextField DCurAS;
-	private JTextField ADirAS;
 	private JTextField BDirAS;
 	private JTextField CDirAS;
 	private JTextField DDirAS;
@@ -749,13 +746,13 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBLs.setBounds(1391, 116, 77, 48);
 			getContentPane().add(HHBLs);
 			
-			HHBInopLs = new JTextField();
-			HHBInopLs.setEnabled(false);
-			HHBInopLs.setBackground(Color.GRAY);
-			HHBInopLs.setToolTipText("");
-			HHBInopLs.setColumns(10);
-			HHBInopLs.setBounds(1469, 116, 77, 48);
-			getContentPane().add(HHBInopLs);
+			HHBnopLs = new JTextField();
+			HHBnopLs.setEnabled(false);
+			HHBnopLs.setBackground(Color.GRAY);
+			HHBnopLs.setToolTipText("");
+			HHBnopLs.setColumns(10);
+			HHBnopLs.setBounds(1469, 116, 77, 48);
+			getContentPane().add(HHBnopLs);
 			
 			JTextArea HHBRemarks = new JTextArea();
 			HHBRemarks.setToolTipText("Enter All Current System Faults and Deadlines Here");
@@ -773,13 +770,13 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBOPpac2L.setBounds(1391, 164, 77, 48);
 			getContentPane().add(HHBOPpac2L);
 			
-			HHBInopPac2L = new JTextField();
-			HHBInopPac2L.setBackground(Color.GRAY);
-			HHBInopPac2L.setEnabled(false);
-			HHBInopPac2L.setToolTipText("");
-			HHBInopPac2L.setColumns(10);
-			HHBInopPac2L.setBounds(1469, 164, 77, 48);
-			getContentPane().add(HHBInopPac2L);
+			HHBnopPac2L = new JTextField();
+			HHBnopPac2L.setBackground(Color.GRAY);
+			HHBnopPac2L.setEnabled(false);
+			HHBnopPac2L.setToolTipText("");
+			HHBnopPac2L.setColumns(10);
+			HHBnopPac2L.setBounds(1469, 164, 77, 48);
+			getContentPane().add(HHBnopPac2L);
 			
 			aUnitId = new JTextField();
 			aUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
@@ -1906,12 +1903,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			lBackGround = AOPLs.getBackground();
 			
 			unitData uData = new unitData(starter, starter, starter, starter, starter, starter, starter);
-			fireUnitData fUData = new fireUnitData(starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, uData);
+			fireUnitData fUData = new fireUnitData(starter, lBackGround, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, uData);
 
-
-
-			
-			
 	}//End Constructor
 
 	
@@ -2061,180 +2054,50 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		return(invalidInt);
 	}//End IOvalidator
 	
-	/**
-	** dataCopier takes the information from the fireUnitData and unitData objects and copies it into the relevent GUI components 
-	** @param fireUnitData fUData, unitData uData
-	** @return
-	** @throws
-	**/
-	public void dataCopier(fireUnitData fUData, unitData uData){ 
-	if(uData.getUnitDesignator().equals("Alpha")){
-		ACurAS.setText(fUData.getCurAs());
-	 	ADirAS.setText(fUData.getDirAs());
-	 	AcurEtro.setText(fUData.getEtro());
-	 	aCurSto.setText(fUData.getSto());
-	 	aCurAco.setText(fUData.getAco());
-	 	aDtg.setText(fUData.getDtg());
 
-	 	AOpPac3.setText(fUData.getPac3Op());
-	 	AInOpPac3.setText(fUData.getPac3Inop());
-	 	APac3Oh.setText(fUData.getPac3Oh());
-	 	
-	 	AGemCOP.setText(fUData.getGemCOp());
-	 	AGemCInOp.setText(fUData.getGemCInop());
-	 	AGemCOh.setText(fUData.getGemCOh());
-	 	
-	 	AGemTOP.setText(fUData.getGemCOp());
-	 	AGemTInOp.setText(fUData.getGemTInop());
-	 	AGemTOH.setText(fUData.getGemTOh());
-	 	
-	 	AOPLs.setText(fUData.getOpPac3L());
-	 	AInopLs.setText(fUData.getInopPac3L());
-
-	 	AOPpac2L.setText(fUData.getOpPac2L());
-	 	AInopPac2L.setText(fUData.getInopPac2());
-	 	
-	 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 	
-	 }
-	 else if(uData.getUnitDesignator().equals("Bravo")){
-		 	BCurAS.setText(fUData.getCurAs());
-		 	BDirAS.setText(fUData.getDirAs());
-		 	BcurEtro.setText(fUData.getEtro());
-		 	bCurSto.setText(fUData.getSto());
-		 	bCurAco.setText(fUData.getAco());
-		 	bDtg.setText(fUData.getDtg());
-
-		 	BOpPac3.setText(fUData.getPac3Op());
-		 	BInOpPac3.setText(fUData.getPac3Inop());
-		 	BPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	BGemCOP.setText(fUData.getGemCOp());
-		 	BGemCInOp.setText(fUData.getGemCInop());
-		 	BGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	BGemTOP.setText(fUData.getGemCOp());
-		 	BGemTInOp.setText(fUData.getGemTInop());
-		 	BGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	BOPLs.setText(fUData.getOpPac3L());
-		 	BInopLs.setText(fUData.getInopPac3L());
-
-		 	BOPpac2L.setText(fUData.getOpPac2L());
-		 	BInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("Charlie")){
-		 	CCurAS.setText(fUData.getCurAs());
-		 	CDirAS.setText(fUData.getDirAs());
-		 	CcurEtro.setText(fUData.getEtro());
-		 	cCurSto.setText(fUData.getSto());
-		 	cCurAco.setText(fUData.getAco());
-		 	cDtg.setText(fUData.getDtg());
-
-		 	COpPac3.setText(fUData.getPac3Op());
-		 	CInOpPac3.setText(fUData.getPac3Inop());
-		 	CPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	CGemCOP.setText(fUData.getGemCOp());
-		 	CGemCInOp.setText(fUData.getGemCInop());
-		 	CGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	CGemTOP.setText(fUData.getGemCOp());
-		 	CGemTInOp.setText(fUData.getGemTInop());
-		 	CGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	COPLs.setText(fUData.getOpPac3L());
-		 	CInopLs.setText(fUData.getInopPac3L());
-
-		 	COPpac2L.setText(fUData.getOpPac2L());
-		 	CInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("Delta")){
-		 	DCurAS.setText(fUData.getCurAs());
-		 	DDirAS.setText(fUData.getDirAs());
-		 	DcurEtro.setText(fUData.getEtro());
-		 	dCurSto.setText(fUData.getSto());
-		 	dCurAco.setText(fUData.getAco());
-		 	dDtg.setText(fUData.getDtg());
-
-		 	DOpPac3.setText(fUData.getPac3Op());
-		 	DInOpPac3.setText(fUData.getPac3Inop());
-		 	DPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	DGemCOP.setText(fUData.getGemCOp());
-		 	DGemCInOp.setText(fUData.getGemCInop());
-		 	DGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	DGemTOP.setText(fUData.getGemCOp());
-		 	DGemTInOp.setText(fUData.getGemTInop());
-		 	DGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	DOPLs.setText(fUData.getOpPac3L());
-		 	DInopLs.setText(fUData.getInopPac3L());
-
-		 	DOPpac2L.setText(fUData.getOpPac2L());
-		 	DInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	dUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("ICC")){
-		 	HHBcurSelector.setSelectedItem(fUData.getCurAs());
-		 	HHBdirSelector.setSelectedItem(fUData.getDirAs());
-		 	HHBcurEtro.setText(fUData.getEtro());
-		 	hhbCurSto.setText(fUData.getSto());
-		 	hhbCurAco.setText(fUData.getAco());
-		 	hhbDtg.setText(fUData.getDtg());
-
-		 	HHBOpPac3.setText(fUData.getPac3Op());
-		 	HHBInOpPac3.setText(fUData.getPac3Inop());
-		 	HHBPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	HHBGemCOP.setText(fUData.getGemCOp());
-		 	HHBGemCInOp.setText(fUData.getGemCInop());
-		 	HHBGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	HHBGemTOP.setText(fUData.getGemCOp());
-		 	HHBGemTInOp.setText(fUData.getGemTInop());
-		 	HHBGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	HHBLs.setText(fUData.getOpPac3L());
-		 	HHBInopLs.setText(fUData.getInopPac3L());
-
-		 	HHBOPpac2L.setText(fUData.getOpPac2L());
-		 	HHBInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	}//End dataCopier
-	
-	/**
-	** Color reader accepts strings as arguments runs them through a switch statement and returns the corresponding Color.
-	** @param String toStringColor
-	** @return curColor: a corresponding color object 
-	** @throws
-	**/
-		public Color colorReader(String toStringColor){
-			String color = toStringColor;
-			Color curColor = null;
-			final String WHITE = "WHITE";
-			final String RED = "RED";
-			final String GREEN = "GREEN";
-			switch (color){
-			case WHITE:
-				curColor = Color.WHITE;
-			case RED: 
-				curColor = Color.RED;
-			case GREEN:
-				curColor = Color.GREEN;
-			}
-			return curColor;
-		}
 }//End Class
 
+/* ----Use this code to update the local data variables with the REcieved JSon Objects. I only had time to do one of them So in any test you do set your PSS unit to Alpha. 
+if(uData.getUnitDesignator().equals("Alpha")){
+	ACurAS.setText(fUData.getCurAs());
+	ADirAS.setText(fUData.getDirAs());
+	AcurEtro.setText(fUData.getEtro());
+	aCurSto.setText(fUData.getSto());
+	aCurAco.setText(fUData.getAco());
+	aDtg.setText(fUData.getDtg());
 
+	AOpPac3.setText(fUData.getPac3Op());
+	AInOpPac3.setText(fUData.getPac3Inop());
+	APac3Oh.setText(fUData.getPac3Oh());
+	
+	AGemCOP.setText(fUData.getGemCOp());
+	AGemCInOp.setText(fUData.getGemCInop());
+	AGemCOh.setText(fUData.getGemCOh());
+	
+	AGemTOP.setText(fUData.getGemCOp());
+	AGemTInOp.setText(fUData.getGemTInop());
+	AGemTOH.setText(fUData.getGemTOh());
+	
+	AOPLs.setText(fUData.getOpPac3L());
+	AInopLs.setText(fUData.getInopPac3L());
 
+	AOPpac2L.setText(fUData.getOpPac2L());
+	AInopPac2L.setText(fUData.getInopPac2());
+	
+	aUnitId.setBackground(fUData.getStatusBackGround());
+	
+}
+else if(uData.getUnitDesignator().equals("Bravo")){
+	//update Bravo
+}
+else if(uData.getUnitDesignator().equals("Charlie")){
+	//update Charlie
+}
+else if(uData.getUnitDesignator().equals("Delta")){
+	
+}
+else if(uData.getUnitDesignator().equals("ICC")){
+	//update HHB
+}
 
+*/

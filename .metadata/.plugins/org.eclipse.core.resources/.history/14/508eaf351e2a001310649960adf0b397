@@ -1,8 +1,10 @@
 package pss;
 
+import java.awt.Color;
+
 public class fireUnitData {
 	private String dtg;
-	private String curColor;
+	private Color curColor;
 	private String curAs;
 	private String dirAs;
 	private String etro;
@@ -24,7 +26,7 @@ public class fireUnitData {
 	private String inopPac2;
 	private unitData unitInfo;
 	
-	public fireUnitData(String dtg, String curColor, String curAs, String dirAs, String etro, String remarks, String sto, String aco, String pac3Op, String pac3Inop, String pac3Oh, String gemCOp, String gemCInop, String gemCOh, String GemTOP, String GemTInop, String gemTOh, String opPac3L, String inopPac3L, String opPac2L, String inopPac2, unitData unitInfo) {
+	public fireUnitData(String dtg, Color curColor, String curAs, String dirAs, String etro, String remarks, String sto, String aco, String pac3Op, String pac3Inop, String pac3Oh, String gemCOp, String gemCInop, String gemCOh, String GemTOP, String GemTInop, String gemTOh, String opPac3L, String inopPac3L, String opPac2L, String inopPac2, unitData unitInfo) {
 		
 		this.dtg = dtg;
 		this.curColor = curColor;
@@ -48,15 +50,6 @@ public class fireUnitData {
 		
 	}//End Contructor
 
-	
-public fireUnitData() {
-	 unitInfo = new unitData();
-	
-	}//End Contructor
-
-	
-	
-	
 	/**
 	 * @return the dtg
 	 */
@@ -343,14 +336,14 @@ public fireUnitData() {
 	/**
 	 * @return the statusBackGround
 	 */
-	public String getStatusBackGround() {
+	public Color getStatusBackGround() {
 		return curColor;
 	}
 
 	/**
 	 * @param statusBackGround the statusBackGround to set
 	 */
-	public void setStatusBackGround(String statusBackGround) {
+	public void setStatusBackGround(Color statusBackGround) {
 		this.curColor = statusBackGround;
 	}
 

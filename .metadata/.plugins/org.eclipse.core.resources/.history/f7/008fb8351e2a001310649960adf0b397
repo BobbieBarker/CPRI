@@ -1,31 +1,21 @@
 /************************************************************************
- ** @author Chad King
+** @author Chad King
 ** PssGui holds the GUI for the SamStatRep and the methods that define the behavior of the samstat report itself. 
 ** This GUI represents what the SamStat looks like at the Battery Level and how it will behave.
 *************************************************************************/
 
 package pss;
-
-
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import pss.FileReceiver.ClientHandler;
-
 import java.util.Calendar;
-import java.util.Scanner;
 import java.util.TimeZone;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -151,12 +141,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		PssGui.pac3Count = pac3Count;
 		PssGui.gemTCount = gemTCount;
 		this.unitAddress = unitAddys;
-		
-		//starts receiver code
-		Thread myThread = new Thread(new FileReceiver2(5000));
-
-		myThread.start();
-		
 		
 		//Sets the title for the JFrame and some behavior/attributes for the frame. 
 		setTitle("PATRIOT SMART SAMSTAT");
@@ -1168,59 +1152,16 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		curColor = field1.getBackground();
 		return curColor;	
 	}
+
 	
 	/**
-	 * Method that sends the file to an ip address
-	 * @param JButton button to get button text
+	 * Method that copies the contents of the form to an object	
 	 */
-	public void sendFile(JButton button)
-	{	
-		copyDataToObject();
-			
-		writeStringToFile(convertObjectToJSON(status));
 	
-		Thread myThread = new Thread(new FileTransfer("samstat.json", ipGetter(button, unitAddress), 5000));
-
-		myThread.start();
-	}
-		
-	
-	/**
-	 * Method that processes received samstat file and loads it into GUI
-	 * @param JButton button to get button text
-	 */
-	public void receiveFile(String fileName)
-	{	
-		File file = new File(fileName);
-		
-		if(file.exists())
-		{		
-			convertJSONToObject(file);
-			
-			///copyDataToObject();
-		}
-		else
-		{
-			System.out.println("Received File Does Not Exist");
-		}
-		
-	}
-	
-
-	
-
-	/**
-	** Collects information from local components and copies them to the fireUnitData status object
-	** @param none
-	** @return none
-	** @throws none
-	**/
 	public void copyDataToObject()
 	{
 		status.setDtg(currentDtg.getText());
-		status.setStatusBackGround(colorWriter(unitId));
-		
-		
+		status.setStatusBackGround(unitId.getBackground());
 		status.setCurAs(curSelector.getSelectedItem().toString());
 		status.setDirAs(dirSelector.getSelectedItem().toString());
 		status.setEtro(curEtro.getText().toString());
@@ -1240,6 +1181,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setInopPac3L(inopLsCount.getSelectedItem().toString());
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
+
 		FUdata.setUnitDesignator( battery.getSelectedItem().toString());
 		FUdata.setUnitType( systemType.getSelectedItem().toString());
 		FUdata.setUnitName(unitId.getText());
@@ -1247,100 +1189,12 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		FUdata.setLocation(curLocation.getText());
 		FUdata.setPtl(curPtl.getText());
 		FUdata.setStl(curStl.getText());
+
 		status.setUnitData(FUdata);		
 	}
 
-/**
-** Color reader accepts strings as arguments runs them through a switch statement and returns the corresponding Color.
-** @param String toStringColor
-** @return curColor: a corresponding color object 
-** @throws
-**/
-	public Color colorReader(String toStringColor){
-		String color = toStringColor;
-		Color curColor = null;
-		final String WHITE = "WHITE";
-		final String RED = "RED";
-		final String GREEN = "GREEN";
-		switch (color){
-		case WHITE:
-			curColor = Color.WHITE;
-		case RED: 
-			curColor = Color.RED;
-		case GREEN:
-			curColor = Color.GREEN;
-		}
-		return curColor;
-	}//end colorReader
-
 	/**
-	** Method accepts a JTextField as an arguement then returns its background color as a String.
-	** @param JTextField
-	** @return String result: result will be the current background color of the JTextField
-	** @throws
-	**/
-	public String colorWriter(JTextField field1){
-		Color curCulor = field1.getBackground();
-		String result = "";
-		
-		if(curCulor.equals(Color.RED)){
-			result = "RED";
-		}
-		else if(curCulor.equals(Color.WHITE)){
-		result = "WHITE";
-		}
-		else if(curCulor.equals(Color.GREEN)){
-			result = "GREEN";
-		}
-		
-		return result;
-	}//End colorWriter
-	
-	/**
-	 * Method that copies the contents of an object to GUI
-	 */
-	
-	public void copyObjectToGUI()
-	{
-		currentDtg.setText(status.getDtg());
-		unitId.setBackground(colorReader(status.getStatusBackGround()));
-		curSelector.setSelectedItem(status.getCurAs());
-		dirSelector.setSelectedItem(status.getDirAs());
-		curEtro.setText(status.getEtro());
-		remarksField.setText(status.getRemarks());
-		stoSelector.setSelectedItem(status.getSto()); 
-		acoSelector.setSelectedItem(status.getAco());
-
-		pac_3OpCount.setSelectedItem(status.getPac3Op());  
-		pac_3InopCount.setSelectedItem(status.getPac3Inop());
-		pac_3OhCount.setSelectedItem(status.getPac3Oh());
-
-		gemCOpCount.setSelectedItem(status.getGemCOp()); 
-		gemCInopCount.setSelectedItem(status.getGemCInop());
-		gemCOhCount.setSelectedItem(status.getGemTOh());
-
-		gemtOpCount.setSelectedItem(status.getGemTOP());
-		gemtInopCount.setSelectedItem(status.getGemTInop());
-		gemtOhCount.setSelectedItem(status.getGemTOh());
-
-		opLsCount.setSelectedItem(status.getOpPac3L());
-		inopLsCount.setSelectedItem(status.getInopPac3L());
-
-		opPac_2Count.setSelectedItem(status.getOpPac2L());
-		inop_Pac2Count.setSelectedItem(status.getInopPac2());
-
-		FUdata = status.getUnitData();
-		systemType.setSelectedItem(FUdata.getUnitType());
-		unitId.setText(FUdata.getUnitName());
-		defendedAssets.setText(FUdata.getDefAsset());
-		curLocation.setText(FUdata.getLocation());
-		curPtl.setText(FUdata.getPtl());
-		curStl.setText(FUdata.getStl());
-	}
-
-	
-	/**
-	 * JSON Serialize Object Method that converts the fireUnitData object to JSON 
+	 * Method that converts the fireUnitData object to JSON
 	 * @param fireUnitData object
 	 * @return String containing the JSON file
 	 */
@@ -1355,35 +1209,18 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		return jSONString;
 	}
 	
-
 	/**
-	 * JSON Deserialize Object  Method that converts the JSON to fireUnitData object
-	 * @param fireUnitData object
-	 * @return String containing the JSON file
-	 */
-	public void convertJSONToObject(File theFile)
-	{			
-		String jsonString = readFileToString(theFile);		
-		fireUnitData  fud = new fireUnitData();
-		
-		
-		fud = new JSONDeserializer<fireUnitData>().deserialize(jsonString);
-		
-		status = fud;
-		
-	}
-	
-	
-	/**
-	 * Method that write the JSON string to disk
+	 * Method that write the JSON file to disk
 	 * @param String containing the JSON file
 	 */
 	public void writeStringToFile(String theString)
 	{
+
 		File file = new File("samstat.json");
 		
 		try
-		{			
+		{
+			
 			PrintWriter out = new PrintWriter(file);
 			
 			out.println(theString);
@@ -1395,37 +1232,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 			System.out.println("This file does not exist. Try again:");
 		}
 	}
-	
-	
-	/**
-	 * Method that writes JSON file to a String
-	 * @param FILE the JSON file
-	 * @return String the json file in a String
-	 */
-	private String readFileToString(File file){
-		
-		String jsonString= "";
-		//check if file is valid
-		try
-		{
-			Scanner output = new Scanner(file);
-			
-			//write file lines to console
-			while(output.hasNextLine())
-			{
-				jsonString += output.nextLine();				
-			}
-			output.close();
-					
-		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("This file does not exist. Try again:");
-		}
-		
-		return jsonString;
-	}
-	
 	
 	/**
 	 * Method that get the approriate IP Address to send to
@@ -1455,106 +1261,64 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 	}//end ipGetter
 	
 	
-	
-	public class FileReceiver2 implements Runnable 
+	/**
+	 * Method that sends the file to an ip address
+	 * @param JButton button to get button text
+	 */
+	public void sendFile(JButton button)
 	{
-		private int  portNumber;
-		private ServerSocket serverSock = null;	
 		
-		public FileReceiver2(int portNumber)
-		{
-			this.portNumber = portNumber;
-		}	
-		
-		public void startServer() throws IOException
-		{	
-			serverSock = new ServerSocket(portNumber);
-			System.out.println("running");
-			while(true)
-			{
-				Socket socket = serverSock.accept();				
-					
-				Thread t = new Thread(new ClientHandler(socket));			
-				t.start();
-				System.out.println("got a connection");
-			    
-			}
-		}
-		
-		public class ClientHandler implements Runnable 
-		{		
-			Socket socket;
-			ObjectInputStream inStream;
-			String fileName;
 			
-			public ClientHandler(Socket clientSocket)
-			{
-				try
-				{
-					socket = clientSocket;
-					inStream = new ObjectInputStream(socket.getInputStream());
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-			}
+				copyDataToObject();
 			
-			@Override
-			public void run(){
-				try 
-				{
-					fileName = (String) inStream.readObject();	
-					System.out.println(fileName);
-					FileOutputStream outStream = new FileOutputStream(fileName);
-				    byte[] buffer = new byte[200000];
-		            int bytesRead = 0, counter = 0;
-		 
-		            while (bytesRead >= 0) 
-		            {
-		                bytesRead = inStream.read(buffer);
-		                if (bytesRead >= 0) 
-		                {
-		                    outStream.write(buffer, 0, bytesRead);
-		                    counter += bytesRead;
-		                    System.out.println("total bytes read: " + counter);
-		                }
-		                if (bytesRead < 1024) 
-		                {
-		                    outStream.flush();
-		                    break;
-		                }
-		            }
-				
-			        System.out.println("Download Successfully!");
-			        
-			        receiveFile(fileName);
-			        
-			        
-		            outStream.close(); 
-		            inStream.close();
-				} 
-				catch (Exception e) 
-				{				
-					e.printStackTrace();
-				}
-			}
-		}
+		
+		writeStringToFile(convertObjectToJSON(status));
+	
+		Thread myThread = new Thread(new FileTransfer("samstat.json", ipGetter(button, unitAddress), 5000));
 
-		@Override
-		public void run() {
-			try
-			{
-				startServer();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace(); 			
-			}
-		}
-		
+		myThread.start();
 	}
 	
-	
-	
 }//End PssGui
+
+
+/*//Copy Paste this block of code in for transmitting
+
+*/
+
+/* Use this for recieving/updating variables on the local machine after recieving transmission
+currentDtg.setText(status.getDtg());
+unitId.setBackground(status.getStatusBackGround());
+curSelector.setSelectedItem(status.getCurAs());
+dirSelector.setSelectedItem(status.getDirAs());
+curEtro.setText(status.getEtro());
+remarksField.setText(status.getRemarks());
+stoSelector.setSelectedItem(status.getSto()); 
+acoSelector.setSelectedItem(status.getAco());
+
+pac_3OpCount.setSelectedItem(status.getPac3Op());  
+pac_3InopCount.setSelectedItem(status.getPac3Inop());
+pac_3OhCount.setSelectedItem(status.getPac3Oh());
+
+gemCOpCount.setSelectedItem(status.getGemCOp()); 
+gemCInopCount.setSelectedItem(status.getGemCInop());
+gemCOhCount.setSelectedItem(status.getGemTOh());
+
+gemtOpCount.setSelectedItem(status.getGemTOP());
+gemtInopCount.setSelectedItem(status.getGemTInop());
+gemtOhCount.setSelectedItem(status.getGemTOh());
+
+opLsCount.setSelectedItem(status.getOpPac3L());
+inopLsCount.setSelectedItem(status.getInopPac3L());
+
+opPac_2Count.setSelectedItem(status.getOpPac2L());
+inop_Pac2Count.setSelectedItem(status.getInopPac2());
+
+FUdata = status.getUnitData();
+systemType.setSelectedItem(FUdata.getUnitType());
+unitId.setText(FUdata.getUnitName());
+defendedAssets.setText(FUdata.getDefAsset());
+curLocation.setText(FUdata.getLocation());
+curPtl.setText(FUdata.getPtl());
+curStl.setText(FUdata.getStl());
+*/

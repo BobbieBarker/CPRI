@@ -30,16 +30,6 @@ public class unitData {
 	}//end Constructor
 
 
-	/**
-	** Constructor for static unit related Data
-	** @param String unitDesignator, String unitName, String unitType, String defAsset, String location, String ptl, String stl
-	** @return
-	** @throws
-	**/
-	public unitData() {
-		 
-	}//end Constructor
-
 	public String getUnitDesignator() {
 		return unitDesignator;
 	}
