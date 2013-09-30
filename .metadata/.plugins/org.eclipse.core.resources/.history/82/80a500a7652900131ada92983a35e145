@@ -1,0 +1,91 @@
+package PSSpackage;
+import javax.swing.JTextField;
+import java.awt.Color;
+import javax.swing.SwingConstants;
+
+public final class PssHeaderFact {
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField createJTextField() {
+		JTextField textField = new JTextField();
+		textField.setToolTipText("Identify your Battalion");
+		textField.setBackground(new Color(128, 128, 128));
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setText("4-5 AMD BN");
+		textField.setColumns(10);
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField OPheader() {
+		JTextField textField = new JTextField();
+		textField.setText("OP");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setEditable(false);
+		textField.setColumns(10);
+		textField.setBackground(new Color(210, 105, 30));
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField gemCheader() {
+		JTextField textField = new JTextField();
+		textField.setText("GEM C");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setEditable(false);
+		textField.setColumns(10);
+		textField.setBackground(new Color(210, 105, 30));
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField pac3Header() {
+		JTextField textField = new JTextField();
+		textField.setBackground(new Color(210, 105, 30));
+		textField.setEditable(false);
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setText("PAC3");
+		textField.setColumns(10);
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField unitHeader() {
+		JTextField textField = new JTextField();
+		textField.setEditable(false);
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBackground(Color.YELLOW);
+		textField.setText("UNIT");
+		textField.setColumns(10);
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField etroHeader() {
+		JTextField textField = new JTextField();
+		textField.setEditable(false);
+		textField.setBackground(Color.YELLOW);
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setText("ETRO");
+		textField.setColumns(10);
+		return textField;
+	}
+	/**
+	 * @wbp.factory
+	 */
+	public static JTextField launcherInopHeader() {
+		JTextField textField = new JTextField();
+		textField.setText("INOP");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setEditable(false);
+		textField.setColumns(10);
+		textField.setBackground(new Color(210, 105, 30));
+		return textField;
+	}
+}

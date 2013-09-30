@@ -1,0 +1,56 @@
+/************************************************************************
+** @author Chad King
+** This interface identifies and explains several key PSS behaviours that are essential to the SamStat itself.
+**
+*************************************************************************/
+
+package pss;
+
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+
+public interface PSSbehaviours {
+	
+	/**
+	** The program allows the user to identify which element they are operating. This selection is stored in a variable called FUtype
+	*  broadCastSetter uses a switch statement with FUtype to set the titles of variable objects through out the program, so the user
+	*  can make relevant and meaningful choices from various menus and buttons. 
+	** @param none
+	** @return none
+	** @throws none
+	**/
+	public void broadCastSetter();
+	
+	/**
+	** missileCounter takes the current user selection from the OP, OH, and INOP fields, adds them together, and produces a total missile count. 
+	** @param none
+	** @return none
+	** @throws nullpointer exception when the fillDropBox method is called.
+	**/
+	public void missileCounter();
+	
+	/**
+	** The fillDropBox method fills the OP drop boxes with the correct amount of missiles that drop box should be holding based on the number of operational launchers
+	** @param int potentialMissiles: This number is set by the setMaxOP method and represents the maximum number of missiles the launchers could have operational. JcomboBox combobox: is the combobox that is going to be filled
+	** @return none
+	** @throws none
+	**/
+	public void fillDropBox(int potentialMissiles, JComboBox combobox);
+	
+	/**
+	** stoIncrementor automatically provides PSS with the next sto number and adds it to the calling JcomboBox
+	** @param comboBox
+	** @return 
+	** @throws
+	**/
+	public void stoIncrementor(JComboBox combobox);
+
+	
+	/**
+	** missileCounter takes the current user selection from the OP, OH, or INOP fields, adds them together, and produces a total missile count. 
+	** @param field1, field2, field3, field4, target
+	** @return none
+	** @throws 
+	**/
+	public void missileCounter(JTextField field1, JTextField field2, JTextField field3, JTextField field4, JTextField target);
+}
