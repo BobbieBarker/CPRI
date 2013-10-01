@@ -967,7 +967,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		getContentPane().add(battery);
 		battery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				FUdata.setUnitName(battery.getSelectedItem().toString());
 				getContentPane().remove(battery);
 				getContentPane().remove(batteryHeader);				
 			}
@@ -1247,7 +1246,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
 		
-		FUdata.setUnitDesignator(battery.getSelectedItem().toString());
+		FUdata.setUnitDesignator( battery.getSelectedItem().toString());
 		FUdata.setUnitType( systemType.getSelectedItem().toString());
 		FUdata.setUnitName(unitId.getText());
 		FUdata.setDefAsset(defendedAssets.getText());
