@@ -1227,25 +1227,19 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setRemarks(remarksField.getText());
 		status.setSto(stoSelector.getSelectedItem().toString());
 		status.setAco((String) acoSelector.getSelectedItem());
-		
 		status.setPac3Op(pac_3OpCount.getSelectedItem().toString());
 		status.setPac3Inop((String) pac_3InopCount.getSelectedItem().toString());
 		status.setPac3Oh(pac_3OhCount.getSelectedItem().toString());
-		
 		status.setGemCOp(gemCOpCount.getSelectedItem().toString());
 		status.setGemCInop(gemCInopCount .getSelectedItem().toString());
 		status.setGemCOh(gemCOhCount.getSelectedItem().toString());
-		
 		status.setGemTOP(gemtOpCount.getSelectedItem().toString());
 		status.setGemTInop(gemtInopCount.getSelectedItem().toString());
-		status.setGemTOh(gemtOhCount.getSelectedItem().toString());
-		
+		status.setGemTOh(gemtInopCount.getSelectedItem().toString());
 		status.setOpPac3L(opLsCount.getSelectedItem().toString());
 		status.setInopPac3L(inopLsCount.getSelectedItem().toString());
-		
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
-		
 		FUdata.setUnitDesignator( battery.getSelectedItem().toString());
 		FUdata.setUnitType( systemType.getSelectedItem().toString());
 		FUdata.setUnitName(unitId.getText());
@@ -1323,7 +1317,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 
 		gemCOpCount.setSelectedItem(status.getGemCOp()); 
 		gemCInopCount.setSelectedItem(status.getGemCInop());
-		gemCOhCount.setSelectedItem(status.getGemCOh());
+		gemCOhCount.setSelectedItem(status.getGemTOh());
 
 		gemtOpCount.setSelectedItem(status.getGemTOP());
 		gemtInopCount.setSelectedItem(status.getGemTInop());

@@ -2082,7 +2082,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	** @throws
 	**/
 	public void dataCopier(fireUnitData fUData){ 
-		if(fUData.getUnitData().getUnitName().equals("ALPHA")){
+		if(fUData.getUnitData().getUnitName().equals("Alpha")){
 			ACurAS.setText(fUData.getCurAs());
 		 	ADirAS.setText(fUData.getDirAs());
 		 	AcurEtro.setText(fUData.getEtro());
@@ -2109,9 +2109,9 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	AInopPac2L.setText(fUData.getInopPac2());
 		 	
 		 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-		 	System.out.println(fUData.getCurAs());
+		 	
 		 }
-		 else if(fUData.getUnitData().getUnitName().equals("BRAVO")){
+		 else if(fUData.getUnitData().getUnitName().equals("Bravo")){
 			 	BCurAS.setText(fUData.getCurAs());
 			 	BDirAS.setText(fUData.getDirAs());
 			 	BcurEtro.setText(fUData.getEtro());
@@ -2139,7 +2139,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
-		 else if(fUData.getUnitData().getUnitName().equals("CHARLIE")){
+		 else if(fUData.getUnitData().getUnitName().equals("Charlie")){
 			 	CCurAS.setText(fUData.getCurAs());
 			 	CDirAS.setText(fUData.getDirAs());
 			 	CcurEtro.setText(fUData.getEtro());
@@ -2167,7 +2167,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
-		 else if(fUData.getUnitData().getUnitName().equals("DELTA")){
+		 else if(fUData.getUnitData().getUnitName().equals("Delta")){
 			 	DCurAS.setText(fUData.getCurAs());
 			 	DDirAS.setText(fUData.getDirAs());
 			 	DcurEtro.setText(fUData.getEtro());
@@ -2220,6 +2220,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	
 			 	HHBOPpac2L.setText(fUData.getOpPac2L());
 			 	HHBInopPac2L.setText(fUData.getInopPac2());
+			 	
 			 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
 	}//End dataCopier
@@ -2418,6 +2419,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					e.printStackTrace(); 			
 				}
 			}
+			
 		}
 }//End Class
 

@@ -2109,7 +2109,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	AInopPac2L.setText(fUData.getInopPac2());
 		 	
 		 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-		 	System.out.println(fUData.getCurAs());
+		 	
 		 }
 		 else if(fUData.getUnitData().getUnitName().equals("BRAVO")){
 			 	BCurAS.setText(fUData.getCurAs());
@@ -2220,6 +2220,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	
 			 	HHBOPpac2L.setText(fUData.getOpPac2L());
 			 	HHBInopPac2L.setText(fUData.getInopPac2());
+			 	
 			 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
 	}//End dataCopier
@@ -2418,6 +2419,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					e.printStackTrace(); 			
 				}
 			}
+			
 		}
 }//End Class
 

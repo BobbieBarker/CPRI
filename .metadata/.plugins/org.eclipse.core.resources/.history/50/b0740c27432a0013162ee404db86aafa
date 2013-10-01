@@ -1238,7 +1238,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		
 		status.setGemTOP(gemtOpCount.getSelectedItem().toString());
 		status.setGemTInop(gemtInopCount.getSelectedItem().toString());
-		status.setGemTOh(gemtOhCount.getSelectedItem().toString());
+		status.setGemTOh(gemtInopCount.getSelectedItem().toString());
 		
 		status.setOpPac3L(opLsCount.getSelectedItem().toString());
 		status.setInopPac3L(inopLsCount.getSelectedItem().toString());
