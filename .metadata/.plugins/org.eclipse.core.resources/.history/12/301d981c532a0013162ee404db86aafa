@@ -2278,7 +2278,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	HHBcurStl.setText(status.getUnitData().getStl());
 			 	
 			 	
-			 	HHBsystemType.setText(status.getUnitData().getUnitType());
+			 	HHBSystemType.setText(status.getUnitData().getUnitType());
 		 }
 	}//End dataCopier
 	
