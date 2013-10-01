@@ -1218,16 +1218,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 	**/
 	public void copyDataToObject()
 	{
-		
-		status.setOpPac3L(opLsCount.getSelectedItem().toString());
-		status.setInopPac3L(inopLsCount.getSelectedItem().toString());
-		
-		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
-		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
-		
-		setMaxOP(status.getOpPac3L(), MPPAC3);//Needs to be sorted out. The way in which the field are updated is important to the process.
-		fillDropBox(maxOP, pac_3OpCount);
-		
 		status.setDtg(currentDtg.getText());
 		status.setStatusBackGround(colorWriter(unitId));
 		
@@ -1239,8 +1229,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setSto(stoSelector.getSelectedItem().toString());
 		status.setAco((String) acoSelector.getSelectedItem());
 		
-		status.setPac3Op(parseInt(pac_3OpCount.getSelectedItem().toString()));
-		status.setPac3Inop(parseInt(pac_3InopCount.getSelectedItem().toString()));
+		status.setPac3Op(pac_3OpCount.getSelectedItem().toString());
+		status.setPac3Inop((String) pac_3InopCount.getSelectedItem().toString());
 		status.setPac3Oh(pac_3OhCount.getSelectedItem().toString());
 		
 		status.setGemCOp(gemCOpCount.getSelectedItem().toString());
@@ -1251,8 +1241,11 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setGemTInop(gemtInopCount.getSelectedItem().toString());
 		status.setGemTOh(gemtOhCount.getSelectedItem().toString());
 		
-
+		status.setOpPac3L(opLsCount.getSelectedItem().toString());
+		status.setInopPac3L(inopLsCount.getSelectedItem().toString());
 		
+		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
+		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
 		
 		FUdata.setUnitDesignator(battery.getSelectedItem().toString());
 		FUdata.setUnitType( systemType.getSelectedItem().toString());
@@ -1262,11 +1255,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		FUdata.setPtl(curPtl.getText());
 		FUdata.setStl(curStl.getText());
 		status.setUnitData(FUdata);		
-	}
-
-private String parseInt(String string) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 /**

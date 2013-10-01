@@ -35,6 +35,9 @@
 			<item value="C:\Users\chad\Desktop\Jarholder\PSS.jar"/>
 		</list>
 	</section>
+	<section name="BuildPathsPropertyPage">
+		<item value="3" key="pageIndex"/>
+	</section>
 	<section name="FatJarPackageWizard">
 		<item value="C:\Users\chad\Desktop\Jarholder\pss.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="PssMain - CPRI" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>

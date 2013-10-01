@@ -2088,7 +2088,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	**/
 	public void dataCopier(fireUnitData status){ 
 		
-		if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("ALPHA")){
+		if(status.getUnitData().getUnitDesignator().equals("ALPHA")){
 			ACurAS.setText(status.getCurAs());
 		 	ADirAS.setText(status.getDirAs());
 		 	AcurEtro.setText(status.getEtro());
@@ -2129,7 +2129,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	
 		 	System.out.println("The Current AS" + status.getCurAs());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("BRAVO")){
+		 else if(status.getUnitData().getUnitDesignator().equals("BRAVO")){
 			 	BCurAS.setText(status.getCurAs());
 			 	BDirAS.setText(status.getDirAs());
 			 	BcurEtro.setText(status.getEtro());
@@ -2167,7 +2167,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	BSystemType.setText(status.getUnitData().getUnitType());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("CHARLIE")){
+		 else if(status.getUnitData().getUnitDesignator().equals("CHARLIE")){
 			 	CCurAS.setText(status.getCurAs());
 			 	CDirAS.setText(status.getDirAs());
 			 	CcurEtro.setText(status.getEtro());
@@ -2205,7 +2205,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	CSystemType.setText(status.getUnitData().getUnitType());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("DELTA")){
+		 else if(status.getUnitData().getUnitDesignator().equals("DELTA")){
 			 	DCurAS.setText(status.getCurAs());
 			 	DDirAS.setText(status.getDirAs());
 			 	DcurEtro.setText(status.getEtro());
@@ -2243,7 +2243,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	DSystemType.setText(status.getUnitData().getUnitType());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("ICC")){
+		 else if(status.getUnitData().getUnitDesignator().equals("ICC")){
 			 	HHBcurSelector.setSelectedItem(status.getCurAs());
 			 	HHBdirSelector.setSelectedItem(status.getDirAs());
 			 	HHBcurEtro.setText(status.getEtro());
@@ -2322,7 +2322,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				System.out.println("TEst");
 				dataCopier(status);
 				System.out.println("TEst");
-				System.out.println(status.getAco());
 			}
 			else
 			{

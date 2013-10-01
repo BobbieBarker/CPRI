@@ -1225,7 +1225,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
 		
-		setMaxOP(status.getOpPac3L(), MPPAC3);//Needs to be sorted out. The way in which the field are updated is important to the process.
+		setMaxOP(status.getOpPac3L(), MPPAC3);
 		fillDropBox(maxOP, pac_3OpCount);
 		
 		status.setDtg(currentDtg.getText());

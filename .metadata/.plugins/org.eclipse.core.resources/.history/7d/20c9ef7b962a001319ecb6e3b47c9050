@@ -2322,7 +2322,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				System.out.println("TEst");
 				dataCopier(status);
 				System.out.println("TEst");
-				System.out.println(status.getAco());
 			}
 			else
 			{
