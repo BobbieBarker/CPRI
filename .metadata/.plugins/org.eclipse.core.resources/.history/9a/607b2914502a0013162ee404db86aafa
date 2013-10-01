@@ -71,7 +71,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField pac_3Header;
 	private JTextField pac_3OpHeader;
 	private JTextField pac_3InopHeader;
-	private JTextField ASystemType;
 	private JTextField pac_3OhHeader;
 	private JTextField gemCHeader;
 	private JTextField GemcOpHeader;
@@ -870,9 +869,9 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AdefendedAssets.setToolTipText("ALPHA'S DEFENDED ASSETS");
 			AdefendedAssets.setColumns(10);
 			AdefendedAssets.setBounds(253, 212, 86, 94);
+			uData.setDefAsset("Jesus");
 			
-			
-			
+			AdefendedAssets.setText(status.getUnitData().getDefAsset());
 			getContentPane().add(AdefendedAssets);
 			
 			AcurLocation = new JTextField();
@@ -2087,7 +2086,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	** @throws
 	**/
 	public void dataCopier(fireUnitData status){ 
-		
 		if(status.getUnitData().getUnitDesignator().equals("ALPHA")){
 			ACurAS.setText(status.getCurAs());
 		 	ADirAS.setText(status.getDirAs());
@@ -2115,18 +2113,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	AInopPac2L.setText(status.getInopPac2());
 		 	
 		 	aUnitId.setBackground(colorReader(status.getStatusBackGround()));
-		 	
-		 	AdefendedAssets.setText(status.getUnitData().getDefAsset());
-		 	aUnitId.setText(status.getUnitData().getUnitName());
-		 	
-		 	AcurLocation.setText(status.getUnitData().getLocation());
-		 	AcurPtl.setText(status.getUnitData().getPtl());
-		 	AcurStl.setText(status.getUnitData().getStl());
-		 	
-		 	
-		 	ASystemType.setText(status.getUnitData().getUnitType());
-		 	
-		 	
 		 	System.out.println("The Current AS" + status.getCurAs());
 		 }
 		 else if(status.getUnitData().getUnitDesignator().equals("BRAVO")){

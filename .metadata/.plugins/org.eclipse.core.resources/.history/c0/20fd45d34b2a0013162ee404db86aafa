@@ -71,7 +71,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField pac_3Header;
 	private JTextField pac_3OpHeader;
 	private JTextField pac_3InopHeader;
-	private JTextField ASystemType;
 	private JTextField pac_3OhHeader;
 	private JTextField gemCHeader;
 	private JTextField GemcOpHeader;
@@ -236,7 +235,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private String starter = "Place Holder";
 	private static int color = 0;
 	
-	private unitData uData;
+	private unitData FUdata;
 	private fireUnitData status;
 	
 	
@@ -248,8 +247,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 			myThread.start();
 			
-			unitData uData = new unitData(null, null, null, null, null, null, null);
-			fireUnitData status = new fireUnitData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, uData);
 			
 			//Sets the title for the JFrame and some behavior/attributes for the frame. 
 			setTitle("PATRIOT SMART SAMSTAT");
@@ -870,9 +867,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AdefendedAssets.setToolTipText("ALPHA'S DEFENDED ASSETS");
 			AdefendedAssets.setColumns(10);
 			AdefendedAssets.setBounds(253, 212, 86, 94);
-			
-			
-			
 			getContentPane().add(AdefendedAssets);
 			
 			AcurLocation = new JTextField();
@@ -1925,7 +1919,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			
 			lBackGround = AOPLs.getBackground();
 			
-			
+			unitData uData = new unitData(starter, starter, starter, starter, starter, starter, starter);
+			fireUnitData fUData = new fireUnitData(starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, uData);
 
 
 
@@ -2086,159 +2081,146 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	** @return
 	** @throws
 	**/
-	public void dataCopier(fireUnitData status){ 
-		
-		if(status.getUnitData().getUnitDesignator().equals("ALPHA")){
-			ACurAS.setText(status.getCurAs());
-		 	ADirAS.setText(status.getDirAs());
-		 	AcurEtro.setText(status.getEtro());
-		 	aCurSto.setText(status.getSto());
-		 	aCurAco.setText(status.getAco());
-		 	aDtg.setText(status.getDtg());
+	public void dataCopier(fireUnitData fUData){ 
+		if(fUData.getUnitData().getUnitDesignator().equals("ALPHA")){
+			ACurAS.setText(fUData.getCurAs());
+		 	ADirAS.setText(fUData.getDirAs());
+		 	AcurEtro.setText(fUData.getEtro());
+		 	aCurSto.setText(fUData.getSto());
+		 	aCurAco.setText(fUData.getAco());
+		 	aDtg.setText(fUData.getDtg());
 	
-		 	AOpPac3.setText(status.getPac3Op());
-		 	AInOpPac3.setText(status.getPac3Inop());
-		 	APac3Oh.setText(status.getPac3Oh());
+		 	AOpPac3.setText(fUData.getPac3Op());
+		 	AInOpPac3.setText(fUData.getPac3Inop());
+		 	APac3Oh.setText(fUData.getPac3Oh());
 		 	
-		 	AGemCOP.setText(status.getGemCOp());
-		 	AGemCInOp.setText(status.getGemCInop());
-		 	AGemCOh.setText(status.getGemCOh());
+		 	AGemCOP.setText(fUData.getGemCOp());
+		 	AGemCInOp.setText(fUData.getGemCInop());
+		 	AGemCOh.setText(fUData.getGemCOh());
 		 	
-		 	AGemTOP.setText(status.getGemCOp());
-		 	AGemTInOp.setText(status.getGemTInop());
-		 	AGemTOH.setText(status.getGemTOh());
+		 	AGemTOP.setText(fUData.getGemCOp());
+		 	AGemTInOp.setText(fUData.getGemTInop());
+		 	AGemTOH.setText(fUData.getGemTOh());
 		 	
-		 	AOPLs.setText(status.getOpPac3L());
-		 	AInopLs.setText(status.getInopPac3L());
+		 	AOPLs.setText(fUData.getOpPac3L());
+		 	AInopLs.setText(fUData.getInopPac3L());
 	
-		 	AOPpac2L.setText(status.getOpPac2L());
-		 	AInopPac2L.setText(status.getInopPac2());
+		 	AOPpac2L.setText(fUData.getOpPac2L());
+		 	AInopPac2L.setText(fUData.getInopPac2());
 		 	
-		 	aUnitId.setBackground(colorReader(status.getStatusBackGround()));
-		 	
-		 	AdefendedAssets.setText(status.getUnitData().getDefAsset());
-		 	aUnitId.setText(status.getUnitData().getUnitName());
-		 	
-		 	AcurLocation.setText(status.getUnitData().getLocation());
-		 	AcurPtl.setText(status.getUnitData().getPtl());
-		 	AcurStl.setText(status.getUnitData().getStl());
-		 	
-		 	
-		 	ASystemType.setText(status.getUnitData().getUnitType());
-		 	
-		 	
-		 	System.out.println("The Current AS" + status.getCurAs());
+		 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
+		 	System.out.println("The Current AS" + fUData.getCurAs());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equals("BRAVO")){
-			 	BCurAS.setText(status.getCurAs());
-			 	BDirAS.setText(status.getDirAs());
-			 	BcurEtro.setText(status.getEtro());
-			 	bCurSto.setText(status.getSto());
-			 	bCurAco.setText(status.getAco());
-			 	bDtg.setText(status.getDtg());
+		 else if(fUData.getUnitData().getUnitDesignator().equals("BRAVO")){
+			 	BCurAS.setText(fUData.getCurAs());
+			 	BDirAS.setText(fUData.getDirAs());
+			 	BcurEtro.setText(fUData.getEtro());
+			 	bCurSto.setText(fUData.getSto());
+			 	bCurAco.setText(fUData.getAco());
+			 	bDtg.setText(fUData.getDtg());
 	
-			 	BOpPac3.setText(status.getPac3Op());
-			 	BInOpPac3.setText(status.getPac3Inop());
-			 	BPac3Oh.setText(status.getPac3Oh());
+			 	BOpPac3.setText(fUData.getPac3Op());
+			 	BInOpPac3.setText(fUData.getPac3Inop());
+			 	BPac3Oh.setText(fUData.getPac3Oh());
 			 	
-			 	BGemCOP.setText(status.getGemCOp());
-			 	BGemCInOp.setText(status.getGemCInop());
-			 	BGemCOh.setText(status.getGemCOh());
+			 	BGemCOP.setText(fUData.getGemCOp());
+			 	BGemCInOp.setText(fUData.getGemCInop());
+			 	BGemCOh.setText(fUData.getGemCOh());
 			 	
-			 	BGemTOP.setText(status.getGemCOp());
-			 	BGemTInOp.setText(status.getGemTInop());
-			 	BGemTOH.setText(status.getGemTOh());
+			 	BGemTOP.setText(fUData.getGemCOp());
+			 	BGemTInOp.setText(fUData.getGemTInop());
+			 	BGemTOH.setText(fUData.getGemTOh());
 			 	
-			 	BOPLs.setText(status.getOpPac3L());
-			 	BInopLs.setText(status.getInopPac3L());
+			 	BOPLs.setText(fUData.getOpPac3L());
+			 	BInopLs.setText(fUData.getInopPac3L());
 	
-			 	BOPpac2L.setText(status.getOpPac2L());
-			 	BInopPac2L.setText(status.getInopPac2());
+			 	BOPpac2L.setText(fUData.getOpPac2L());
+			 	BInopPac2L.setText(fUData.getInopPac2());
 			 	
-			 	bUnitId.setBackground(colorReader(status.getStatusBackGround()));
+			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equals("CHARLIE")){
-			 	CCurAS.setText(status.getCurAs());
-			 	CDirAS.setText(status.getDirAs());
-			 	CcurEtro.setText(status.getEtro());
-			 	cCurSto.setText(status.getSto());
-			 	cCurAco.setText(status.getAco());
-			 	cDtg.setText(status.getDtg());
+		 else if(fUData.getUnitData().getUnitDesignator().equals("CHARLIE")){
+			 	CCurAS.setText(fUData.getCurAs());
+			 	CDirAS.setText(fUData.getDirAs());
+			 	CcurEtro.setText(fUData.getEtro());
+			 	cCurSto.setText(fUData.getSto());
+			 	cCurAco.setText(fUData.getAco());
+			 	cDtg.setText(fUData.getDtg());
 	
-			 	COpPac3.setText(status.getPac3Op());
-			 	CInOpPac3.setText(status.getPac3Inop());
-			 	CPac3Oh.setText(status.getPac3Oh());
+			 	COpPac3.setText(fUData.getPac3Op());
+			 	CInOpPac3.setText(fUData.getPac3Inop());
+			 	CPac3Oh.setText(fUData.getPac3Oh());
 			 	
-			 	CGemCOP.setText(status.getGemCOp());
-			 	CGemCInOp.setText(status.getGemCInop());
-			 	CGemCOh.setText(status.getGemCOh());
+			 	CGemCOP.setText(fUData.getGemCOp());
+			 	CGemCInOp.setText(fUData.getGemCInop());
+			 	CGemCOh.setText(fUData.getGemCOh());
 			 	
-			 	CGemTOP.setText(status.getGemCOp());
-			 	CGemTInOp.setText(status.getGemTInop());
-			 	CGemTOH.setText(status.getGemTOh());
+			 	CGemTOP.setText(fUData.getGemCOp());
+			 	CGemTInOp.setText(fUData.getGemTInop());
+			 	CGemTOH.setText(fUData.getGemTOh());
 			 	
-			 	COPLs.setText(status.getOpPac3L());
-			 	CInopLs.setText(status.getInopPac3L());
+			 	COPLs.setText(fUData.getOpPac3L());
+			 	CInopLs.setText(fUData.getInopPac3L());
 	
-			 	COPpac2L.setText(status.getOpPac2L());
-			 	CInopPac2L.setText(status.getInopPac2());
+			 	COPpac2L.setText(fUData.getOpPac2L());
+			 	CInopPac2L.setText(fUData.getInopPac2());
 			 	
-			 	bUnitId.setBackground(colorReader(status.getStatusBackGround()));
+			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equals("DELTA")){
-			 	DCurAS.setText(status.getCurAs());
-			 	DDirAS.setText(status.getDirAs());
-			 	DcurEtro.setText(status.getEtro());
-			 	dCurSto.setText(status.getSto());
-			 	dCurAco.setText(status.getAco());
-			 	dDtg.setText(status.getDtg());
+		 else if(fUData.getUnitData().getUnitDesignator().equals("DELTA")){
+			 	DCurAS.setText(fUData.getCurAs());
+			 	DDirAS.setText(fUData.getDirAs());
+			 	DcurEtro.setText(fUData.getEtro());
+			 	dCurSto.setText(fUData.getSto());
+			 	dCurAco.setText(fUData.getAco());
+			 	dDtg.setText(fUData.getDtg());
 	
-			 	DOpPac3.setText(status.getPac3Op());
-			 	DInOpPac3.setText(status.getPac3Inop());
-			 	DPac3Oh.setText(status.getPac3Oh());
+			 	DOpPac3.setText(fUData.getPac3Op());
+			 	DInOpPac3.setText(fUData.getPac3Inop());
+			 	DPac3Oh.setText(fUData.getPac3Oh());
 			 	
-			 	DGemCOP.setText(status.getGemCOp());
-			 	DGemCInOp.setText(status.getGemCInop());
-			 	DGemCOh.setText(status.getGemCOh());
+			 	DGemCOP.setText(fUData.getGemCOp());
+			 	DGemCInOp.setText(fUData.getGemCInop());
+			 	DGemCOh.setText(fUData.getGemCOh());
 			 	
-			 	DGemTOP.setText(status.getGemCOp());
-			 	DGemTInOp.setText(status.getGemTInop());
-			 	DGemTOH.setText(status.getGemTOh());
+			 	DGemTOP.setText(fUData.getGemCOp());
+			 	DGemTInOp.setText(fUData.getGemTInop());
+			 	DGemTOH.setText(fUData.getGemTOh());
 			 	
-			 	DOPLs.setText(status.getOpPac3L());
-			 	DInopLs.setText(status.getInopPac3L());
+			 	DOPLs.setText(fUData.getOpPac3L());
+			 	DInopLs.setText(fUData.getInopPac3L());
 	
-			 	DOPpac2L.setText(status.getOpPac2L());
-			 	DInopPac2L.setText(status.getInopPac2());
+			 	DOPpac2L.setText(fUData.getOpPac2L());
+			 	DInopPac2L.setText(fUData.getInopPac2());
 			 	
-			 	dUnitId.setBackground(colorReader(status.getStatusBackGround()));
+			 	dUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equals("ICC")){
-			 	HHBcurSelector.setSelectedItem(status.getCurAs());
-			 	HHBdirSelector.setSelectedItem(status.getDirAs());
-			 	HHBcurEtro.setText(status.getEtro());
-			 	hhbCurSto.setText(status.getSto());
-			 	hhbCurAco.setText(status.getAco());
-			 	hhbDtg.setText(status.getDtg());
+		 else if(fUData.getUnitData().getUnitDesignator().equals("ICC")){
+			 	HHBcurSelector.setSelectedItem(fUData.getCurAs());
+			 	HHBdirSelector.setSelectedItem(fUData.getDirAs());
+			 	HHBcurEtro.setText(fUData.getEtro());
+			 	hhbCurSto.setText(fUData.getSto());
+			 	hhbCurAco.setText(fUData.getAco());
+			 	hhbDtg.setText(fUData.getDtg());
 	
-			 	HHBOpPac3.setText(status.getPac3Op());
-			 	HHBInOpPac3.setText(status.getPac3Inop());
-			 	HHBPac3Oh.setText(status.getPac3Oh());
+			 	HHBOpPac3.setText(fUData.getPac3Op());
+			 	HHBInOpPac3.setText(fUData.getPac3Inop());
+			 	HHBPac3Oh.setText(fUData.getPac3Oh());
 			 	
-			 	HHBGemCOP.setText(status.getGemCOp());
-			 	HHBGemCInOp.setText(status.getGemCInop());
-			 	HHBGemCOh.setText(status.getGemCOh());
+			 	HHBGemCOP.setText(fUData.getGemCOp());
+			 	HHBGemCInOp.setText(fUData.getGemCInop());
+			 	HHBGemCOh.setText(fUData.getGemCOh());
 			 	
-			 	HHBGemTOP.setText(status.getGemCOp());
-			 	HHBGemTInOp.setText(status.getGemTInop());
-			 	HHBGemTOH.setText(status.getGemTOh());
+			 	HHBGemTOP.setText(fUData.getGemCOp());
+			 	HHBGemTInOp.setText(fUData.getGemTInop());
+			 	HHBGemTOH.setText(fUData.getGemTOh());
 			 	
-			 	HHBLs.setText(status.getOpPac3L());
-			 	HHBInopLs.setText(status.getInopPac3L());
+			 	HHBLs.setText(fUData.getOpPac3L());
+			 	HHBInopLs.setText(fUData.getInopPac3L());
 	
-			 	HHBOPpac2L.setText(status.getOpPac2L());
-			 	HHBInopPac2L.setText(status.getInopPac2());
-			 	HHBUnitId.setBackground(colorReader(status.getStatusBackGround()));
+			 	HHBOPpac2L.setText(fUData.getOpPac2L());
+			 	HHBInopPac2L.setText(fUData.getInopPac2());
+			 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 }
 	}//End dataCopier
 	
@@ -2279,9 +2261,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			{		
 				convertJSONToObject(file);
 				
-				System.out.println("TEst");
+				
 				dataCopier(status);
-				System.out.println("TEst");
 			}
 			else
 			{
