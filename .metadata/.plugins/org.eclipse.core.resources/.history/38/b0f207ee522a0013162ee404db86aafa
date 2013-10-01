@@ -2156,16 +2156,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	BInopPac2L.setText(status.getInopPac2());
 			 	
 			 	bUnitId.setBackground(colorReader(status.getStatusBackGround()));
-			 	
-			 	BdefendedAssets.setText(status.getUnitData().getDefAsset());
-			 	bUnitId.setText(status.getUnitData().getUnitName());
-			 	
-			 	BcurLocation.setText(status.getUnitData().getLocation());
-			 	BcurPtl.setText(status.getUnitData().getPtl());
-			 	BcurStl.setText(status.getUnitData().getStl());
-			 	
-			 	
-			 	BSystemType.setText(status.getUnitData().getUnitType());
 		 }
 		 else if(status.getUnitData().getUnitDesignator().equals("CHARLIE")){
 			 	CCurAS.setText(status.getCurAs());
@@ -2193,17 +2183,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	COPpac2L.setText(status.getOpPac2L());
 			 	CInopPac2L.setText(status.getInopPac2());
 			 	
-			 	cUnitId.setBackground(colorReader(status.getStatusBackGround()));
-			 	
-			 	CdefendedAssets.setText(status.getUnitData().getDefAsset());
-			 	cUnitId.setText(status.getUnitData().getUnitName());
-			 	
-			 	CcurLocation.setText(status.getUnitData().getLocation());
-			 	CcurPtl.setText(status.getUnitData().getPtl());
-			 	CcurStl.setText(status.getUnitData().getStl());
-			 	
-			 	
-			 	CSystemType.setText(status.getUnitData().getUnitType());
+			 	bUnitId.setBackground(colorReader(status.getStatusBackGround()));
 		 }
 		 else if(status.getUnitData().getUnitDesignator().equals("DELTA")){
 			 	DCurAS.setText(status.getCurAs());
@@ -2232,16 +2212,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	DInopPac2L.setText(status.getInopPac2());
 			 	
 			 	dUnitId.setBackground(colorReader(status.getStatusBackGround()));
-			 	
-			 	DdefendedAssets.setText(status.getUnitData().getDefAsset());
-			 	dUnitId.setText(status.getUnitData().getUnitName());
-			 	
-			 	DcurLocation.setText(status.getUnitData().getLocation());
-			 	DcurPtl.setText(status.getUnitData().getPtl());
-			 	DcurStl.setText(status.getUnitData().getStl());
-			 	
-			 	
-			 	DSystemType.setText(status.getUnitData().getUnitType());
 		 }
 		 else if(status.getUnitData().getUnitDesignator().equals("ICC")){
 			 	HHBcurSelector.setSelectedItem(status.getCurAs());
@@ -2269,16 +2239,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	HHBOPpac2L.setText(status.getOpPac2L());
 			 	HHBInopPac2L.setText(status.getInopPac2());
 			 	HHBUnitId.setBackground(colorReader(status.getStatusBackGround()));
-			 	
-			 	HHBdefendedAssets.setText(status.getUnitData().getDefAsset());
-			 	HHBUnitId.setText(status.getUnitData().getUnitName());
-			 	
-			 	HHBcurLocation.setText(status.getUnitData().getLocation());
-			 	HHBcurPtl.setText(status.getUnitData().getPtl());
-			 	HHBcurStl.setText(status.getUnitData().getStl());
-			 	
-			 	
-			 	HHBSystemType.setText(status.getUnitData().getUnitType());
 		 }
 	}//End dataCopier
 	
