@@ -16,14 +16,27 @@ import javax.swing.SwingConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import pss.PssGui.FileReceiver2;
+import pss.PssGui.FileReceiver2.ClientHandler;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
 import java.util.TimeZone;
+import flexjson.JSONDeserializer;
 
 public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
@@ -222,13 +235,18 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private String starter = "Place Holder";
 	private static int color = 0;
 	
-	
+	private unitData FUdata;
+	private fireUnitData status;
 	
 	
 	
 	BNPssGUI(){
 		
+			//starts receiver code
+			Thread myThread = new Thread(new FileReceiver2(5000));
 
+			myThread.start();
+			
 			
 			//Sets the title for the JFrame and some behavior/attributes for the frame. 
 			setTitle("PATRIOT SMART SAMSTAT");
@@ -2063,148 +2081,148 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	** @return
 	** @throws
 	**/
-	public void dataCopier(fireUnitData fUData, unitData uData){ 
-	if(uData.getUnitDesignator().equals("Alpha")){
-		ACurAS.setText(fUData.getCurAs());
-	 	ADirAS.setText(fUData.getDirAs());
-	 	AcurEtro.setText(fUData.getEtro());
-	 	aCurSto.setText(fUData.getSto());
-	 	aCurAco.setText(fUData.getAco());
-	 	aDtg.setText(fUData.getDtg());
-
-	 	AOpPac3.setText(fUData.getPac3Op());
-	 	AInOpPac3.setText(fUData.getPac3Inop());
-	 	APac3Oh.setText(fUData.getPac3Oh());
-	 	
-	 	AGemCOP.setText(fUData.getGemCOp());
-	 	AGemCInOp.setText(fUData.getGemCInop());
-	 	AGemCOh.setText(fUData.getGemCOh());
-	 	
-	 	AGemTOP.setText(fUData.getGemCOp());
-	 	AGemTInOp.setText(fUData.getGemTInop());
-	 	AGemTOH.setText(fUData.getGemTOh());
-	 	
-	 	AOPLs.setText(fUData.getOpPac3L());
-	 	AInopLs.setText(fUData.getInopPac3L());
-
-	 	AOPpac2L.setText(fUData.getOpPac2L());
-	 	AInopPac2L.setText(fUData.getInopPac2());
-	 	
-	 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 	
-	 }
-	 else if(uData.getUnitDesignator().equals("Bravo")){
-		 	BCurAS.setText(fUData.getCurAs());
-		 	BDirAS.setText(fUData.getDirAs());
-		 	BcurEtro.setText(fUData.getEtro());
-		 	bCurSto.setText(fUData.getSto());
-		 	bCurAco.setText(fUData.getAco());
-		 	bDtg.setText(fUData.getDtg());
-
-		 	BOpPac3.setText(fUData.getPac3Op());
-		 	BInOpPac3.setText(fUData.getPac3Inop());
-		 	BPac3Oh.setText(fUData.getPac3Oh());
+	public void dataCopier(fireUnitData fUData){ 
+		if(fUData.getUnitData().getUnitName().equals("Alpha")){
+			ACurAS.setText(fUData.getCurAs());
+		 	ADirAS.setText(fUData.getDirAs());
+		 	AcurEtro.setText(fUData.getEtro());
+		 	aCurSto.setText(fUData.getSto());
+		 	aCurAco.setText(fUData.getAco());
+		 	aDtg.setText(fUData.getDtg());
+	
+		 	AOpPac3.setText(fUData.getPac3Op());
+		 	AInOpPac3.setText(fUData.getPac3Inop());
+		 	APac3Oh.setText(fUData.getPac3Oh());
 		 	
-		 	BGemCOP.setText(fUData.getGemCOp());
-		 	BGemCInOp.setText(fUData.getGemCInop());
-		 	BGemCOh.setText(fUData.getGemCOh());
+		 	AGemCOP.setText(fUData.getGemCOp());
+		 	AGemCInOp.setText(fUData.getGemCInop());
+		 	AGemCOh.setText(fUData.getGemCOh());
 		 	
-		 	BGemTOP.setText(fUData.getGemCOp());
-		 	BGemTInOp.setText(fUData.getGemTInop());
-		 	BGemTOH.setText(fUData.getGemTOh());
+		 	AGemTOP.setText(fUData.getGemCOp());
+		 	AGemTInOp.setText(fUData.getGemTInop());
+		 	AGemTOH.setText(fUData.getGemTOh());
 		 	
-		 	BOPLs.setText(fUData.getOpPac3L());
-		 	BInopLs.setText(fUData.getInopPac3L());
-
-		 	BOPpac2L.setText(fUData.getOpPac2L());
-		 	BInopPac2L.setText(fUData.getInopPac2());
+		 	AOPLs.setText(fUData.getOpPac3L());
+		 	AInopLs.setText(fUData.getInopPac3L());
+	
+		 	AOPpac2L.setText(fUData.getOpPac2L());
+		 	AInopPac2L.setText(fUData.getInopPac2());
 		 	
-		 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("Charlie")){
-		 	CCurAS.setText(fUData.getCurAs());
-		 	CDirAS.setText(fUData.getDirAs());
-		 	CcurEtro.setText(fUData.getEtro());
-		 	cCurSto.setText(fUData.getSto());
-		 	cCurAco.setText(fUData.getAco());
-		 	cDtg.setText(fUData.getDtg());
-
-		 	COpPac3.setText(fUData.getPac3Op());
-		 	CInOpPac3.setText(fUData.getPac3Inop());
-		 	CPac3Oh.setText(fUData.getPac3Oh());
+		 	aUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
 		 	
-		 	CGemCOP.setText(fUData.getGemCOp());
-		 	CGemCInOp.setText(fUData.getGemCInop());
-		 	CGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	CGemTOP.setText(fUData.getGemCOp());
-		 	CGemTInOp.setText(fUData.getGemTInop());
-		 	CGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	COPLs.setText(fUData.getOpPac3L());
-		 	CInopLs.setText(fUData.getInopPac3L());
-
-		 	COPpac2L.setText(fUData.getOpPac2L());
-		 	CInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("Delta")){
-		 	DCurAS.setText(fUData.getCurAs());
-		 	DDirAS.setText(fUData.getDirAs());
-		 	DcurEtro.setText(fUData.getEtro());
-		 	dCurSto.setText(fUData.getSto());
-		 	dCurAco.setText(fUData.getAco());
-		 	dDtg.setText(fUData.getDtg());
-
-		 	DOpPac3.setText(fUData.getPac3Op());
-		 	DInOpPac3.setText(fUData.getPac3Inop());
-		 	DPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	DGemCOP.setText(fUData.getGemCOp());
-		 	DGemCInOp.setText(fUData.getGemCInop());
-		 	DGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	DGemTOP.setText(fUData.getGemCOp());
-		 	DGemTInOp.setText(fUData.getGemTInop());
-		 	DGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	DOPLs.setText(fUData.getOpPac3L());
-		 	DInopLs.setText(fUData.getInopPac3L());
-
-		 	DOPpac2L.setText(fUData.getOpPac2L());
-		 	DInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	dUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
-	 else if(uData.getUnitDesignator().equals("ICC")){
-		 	HHBcurSelector.setSelectedItem(fUData.getCurAs());
-		 	HHBdirSelector.setSelectedItem(fUData.getDirAs());
-		 	HHBcurEtro.setText(fUData.getEtro());
-		 	hhbCurSto.setText(fUData.getSto());
-		 	hhbCurAco.setText(fUData.getAco());
-		 	hhbDtg.setText(fUData.getDtg());
-
-		 	HHBOpPac3.setText(fUData.getPac3Op());
-		 	HHBInOpPac3.setText(fUData.getPac3Inop());
-		 	HHBPac3Oh.setText(fUData.getPac3Oh());
-		 	
-		 	HHBGemCOP.setText(fUData.getGemCOp());
-		 	HHBGemCInOp.setText(fUData.getGemCInop());
-		 	HHBGemCOh.setText(fUData.getGemCOh());
-		 	
-		 	HHBGemTOP.setText(fUData.getGemCOp());
-		 	HHBGemTInOp.setText(fUData.getGemTInop());
-		 	HHBGemTOH.setText(fUData.getGemTOh());
-		 	
-		 	HHBLs.setText(fUData.getOpPac3L());
-		 	HHBInopLs.setText(fUData.getInopPac3L());
-
-		 	HHBOPpac2L.setText(fUData.getOpPac2L());
-		 	HHBInopPac2L.setText(fUData.getInopPac2());
-		 	
-		 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
-	 }
+		 }
+		 else if(fUData.getUnitData().getUnitName().equals("Bravo")){
+			 	BCurAS.setText(fUData.getCurAs());
+			 	BDirAS.setText(fUData.getDirAs());
+			 	BcurEtro.setText(fUData.getEtro());
+			 	bCurSto.setText(fUData.getSto());
+			 	bCurAco.setText(fUData.getAco());
+			 	bDtg.setText(fUData.getDtg());
+	
+			 	BOpPac3.setText(fUData.getPac3Op());
+			 	BInOpPac3.setText(fUData.getPac3Inop());
+			 	BPac3Oh.setText(fUData.getPac3Oh());
+			 	
+			 	BGemCOP.setText(fUData.getGemCOp());
+			 	BGemCInOp.setText(fUData.getGemCInop());
+			 	BGemCOh.setText(fUData.getGemCOh());
+			 	
+			 	BGemTOP.setText(fUData.getGemCOp());
+			 	BGemTInOp.setText(fUData.getGemTInop());
+			 	BGemTOH.setText(fUData.getGemTOh());
+			 	
+			 	BOPLs.setText(fUData.getOpPac3L());
+			 	BInopLs.setText(fUData.getInopPac3L());
+	
+			 	BOPpac2L.setText(fUData.getOpPac2L());
+			 	BInopPac2L.setText(fUData.getInopPac2());
+			 	
+			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
+		 }
+		 else if(fUData.getUnitData().getUnitName().equals("Charlie")){
+			 	CCurAS.setText(fUData.getCurAs());
+			 	CDirAS.setText(fUData.getDirAs());
+			 	CcurEtro.setText(fUData.getEtro());
+			 	cCurSto.setText(fUData.getSto());
+			 	cCurAco.setText(fUData.getAco());
+			 	cDtg.setText(fUData.getDtg());
+	
+			 	COpPac3.setText(fUData.getPac3Op());
+			 	CInOpPac3.setText(fUData.getPac3Inop());
+			 	CPac3Oh.setText(fUData.getPac3Oh());
+			 	
+			 	CGemCOP.setText(fUData.getGemCOp());
+			 	CGemCInOp.setText(fUData.getGemCInop());
+			 	CGemCOh.setText(fUData.getGemCOh());
+			 	
+			 	CGemTOP.setText(fUData.getGemCOp());
+			 	CGemTInOp.setText(fUData.getGemTInop());
+			 	CGemTOH.setText(fUData.getGemTOh());
+			 	
+			 	COPLs.setText(fUData.getOpPac3L());
+			 	CInopLs.setText(fUData.getInopPac3L());
+	
+			 	COPpac2L.setText(fUData.getOpPac2L());
+			 	CInopPac2L.setText(fUData.getInopPac2());
+			 	
+			 	bUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
+		 }
+		 else if(fUData.getUnitData().getUnitName().equals("Delta")){
+			 	DCurAS.setText(fUData.getCurAs());
+			 	DDirAS.setText(fUData.getDirAs());
+			 	DcurEtro.setText(fUData.getEtro());
+			 	dCurSto.setText(fUData.getSto());
+			 	dCurAco.setText(fUData.getAco());
+			 	dDtg.setText(fUData.getDtg());
+	
+			 	DOpPac3.setText(fUData.getPac3Op());
+			 	DInOpPac3.setText(fUData.getPac3Inop());
+			 	DPac3Oh.setText(fUData.getPac3Oh());
+			 	
+			 	DGemCOP.setText(fUData.getGemCOp());
+			 	DGemCInOp.setText(fUData.getGemCInop());
+			 	DGemCOh.setText(fUData.getGemCOh());
+			 	
+			 	DGemTOP.setText(fUData.getGemCOp());
+			 	DGemTInOp.setText(fUData.getGemTInop());
+			 	DGemTOH.setText(fUData.getGemTOh());
+			 	
+			 	DOPLs.setText(fUData.getOpPac3L());
+			 	DInopLs.setText(fUData.getInopPac3L());
+	
+			 	DOPpac2L.setText(fUData.getOpPac2L());
+			 	DInopPac2L.setText(fUData.getInopPac2());
+			 	
+			 	dUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
+		 }
+		 else if(fUData.getUnitData().getUnitName().equals("ICC")){
+			 	HHBcurSelector.setSelectedItem(fUData.getCurAs());
+			 	HHBdirSelector.setSelectedItem(fUData.getDirAs());
+			 	HHBcurEtro.setText(fUData.getEtro());
+			 	hhbCurSto.setText(fUData.getSto());
+			 	hhbCurAco.setText(fUData.getAco());
+			 	hhbDtg.setText(fUData.getDtg());
+	
+			 	HHBOpPac3.setText(fUData.getPac3Op());
+			 	HHBInOpPac3.setText(fUData.getPac3Inop());
+			 	HHBPac3Oh.setText(fUData.getPac3Oh());
+			 	
+			 	HHBGemCOP.setText(fUData.getGemCOp());
+			 	HHBGemCInOp.setText(fUData.getGemCInop());
+			 	HHBGemCOh.setText(fUData.getGemCOh());
+			 	
+			 	HHBGemTOP.setText(fUData.getGemCOp());
+			 	HHBGemTInOp.setText(fUData.getGemTInop());
+			 	HHBGemTOH.setText(fUData.getGemTOh());
+			 	
+			 	HHBLs.setText(fUData.getOpPac3L());
+			 	HHBInopLs.setText(fUData.getInopPac3L());
+	
+			 	HHBOPpac2L.setText(fUData.getOpPac2L());
+			 	HHBInopPac2L.setText(fUData.getInopPac2());
+			 	
+			 	HHBUnitId.setBackground(colorReader(fUData.getStatusBackGround()));
+		 }
 	}//End dataCopier
 	
 	/**
@@ -2229,6 +2247,182 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			}
 			return curColor;
 		}
+		
+		
+		
+		/**
+		 * Method that processes received samstat file and loads it into GUI
+		 * @param JButton button to get button text
+		 */
+		public void receiveFile(String fileName)
+		{	
+			File file = new File(fileName);
+			
+			if(file.exists())
+			{		
+				convertJSONToObject(file);
+				
+				
+				dataCopier(status);
+			}
+			else
+			{
+				System.out.println("Received File Does Not Exist");
+			}
+			
+		}
+		
+	
+
+		/**
+		 * JSON Deserialize Object  Method that converts the JSON to fireUnitData object
+		 * @param fireUnitData object
+		 * @return String containing the JSON file
+		 */
+		public void convertJSONToObject(File theFile)
+		{			
+			String jsonString = readFileToString(theFile);		
+			fireUnitData  fud = new fireUnitData();
+				
+			fud = new JSONDeserializer<fireUnitData>().deserialize(jsonString);
+			
+			status = fud;
+			
+		}
+		
+
+		/**
+		 * Method that writes JSON file to a String
+		 * @param FILE the JSON file
+		 * @return String the json file in a String
+		 */
+		private String readFileToString(File file){
+			
+			String jsonString= "";
+			//check if file is valid
+			try
+			{
+				Scanner output = new Scanner(file);
+				
+				//write file lines to console
+				while(output.hasNextLine())
+				{
+					jsonString += output.nextLine();				
+				}
+				output.close();
+						
+			}
+			catch(FileNotFoundException e)
+			{
+				System.out.println("This file does not exist. Try again:");
+			}
+			
+			return jsonString;
+		}
+		
+		/**
+		 * File Receiver Inner Class		
+		 */
+		public class FileReceiver2 implements Runnable 
+		{
+			private int  portNumber;
+			private ServerSocket serverSock = null;	
+			
+			public FileReceiver2(int portNumber)
+			{
+				this.portNumber = portNumber;
+			}	
+			
+			public void startServer() throws IOException
+			{	
+				serverSock = new ServerSocket(portNumber);
+				System.out.println("running");
+				while(true)
+				{
+					Socket socket = serverSock.accept();				
+						
+					Thread t = new Thread(new ClientHandler(socket));			
+					t.start();
+					System.out.println("got a connection");
+				    
+				}
+			}
+			
+			public class ClientHandler implements Runnable 
+			{		
+				Socket socket;
+				ObjectInputStream inStream;
+				String fileName;
+				
+				public ClientHandler(Socket clientSocket)
+				{
+					try
+					{
+						socket = clientSocket;
+						inStream = new ObjectInputStream(socket.getInputStream());
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
+				
+				@Override
+				public void run(){
+					try 
+					{
+						fileName = (String) inStream.readObject();	
+						System.out.println(fileName);
+						FileOutputStream outStream = new FileOutputStream(fileName);
+					    byte[] buffer = new byte[200000];
+			            int bytesRead = 0, counter = 0;
+			 
+			            while (bytesRead >= 0) 
+			            {
+			                bytesRead = inStream.read(buffer);
+			                if (bytesRead >= 0) 
+			                {
+			                    outStream.write(buffer, 0, bytesRead);
+			                    counter += bytesRead;
+			                    System.out.println("total bytes read: " + counter);
+			                }
+			                if (bytesRead < 1024) 
+			                {
+			                    outStream.flush();
+			                    break;
+			                }
+			            }
+					
+				        System.out.println("Download Successfully!");
+				        
+				        receiveFile(fileName);
+				        
+				        
+			            outStream.close(); 
+			            inStream.close();
+					} 
+					catch (Exception e) 
+					{				
+						e.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void run() {
+				try
+				{
+					startServer();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace(); 			
+				}
+			}
+			
+		}
+		
+		
 }//End Class
 
 
