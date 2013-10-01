@@ -50,13 +50,12 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 	private String valHolder;
 	private String valHolder2;
 	private static int OPpac3 = 0;
-	private JTextField txtTest;
 	private static int gemTCount = 0;
 	private static int pac3Count = 0;
 	private int maxOP;
 	private static final int MPPAC3 = 8;
 	private static final int MPPAC2 = 4;
-	private static final JTextField Battery = null; 
+	private JTextField Battery; 
 	private final JPanel panel = new JPanel();
 	private JTextField secretHeaderLeft;
 	private JTextField samStatHeader;
@@ -139,8 +138,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 	private JScrollPane scrollPane_1;
 	private JTextField batteryHeader;
 	private JComboBox battery;
-	private unitData FUdata;
-	private fireUnitData status;
 	private connected unitAddress;
 	
 	
@@ -154,7 +151,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		
 		//starts receiver code
 		Thread myThread = new Thread(new FileReceiver2(5000));
-
 		myThread.start();
 		
 		
@@ -218,7 +214,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		currentDtg.setColumns(10);
 		
 		//Provides a header to the component that identifies the unit. 
-		unitHeader = PssHeaderFact.unitHeader();
+		unitHeader = new JTextField();
 		unitHeader.setBounds(0, 42, 79, 20);
 		getContentPane().add(unitHeader);
 		
@@ -344,7 +340,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		getContentPane().add(stoSelector);
 		stoSelector.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				stoIncrementor(stoSelector);
+				stoIncrementor(stoSelector);//allows user to increase sto number via mouseclick
 				
 			}
 		});
@@ -424,7 +420,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		
 		//This component provides a header to the jtextfield that stores the ETRO information on the unit. 
-		etroHeader = PssHeaderFact.etroHeader();
+		etroHeader = new JTextField();
 		etroHeader.setBounds(474, 62, 50, 52);
 		getContentPane().add(etroHeader);
 		
@@ -480,15 +476,15 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		missileHeader.setColumns(10);
 		
 		//These "header" jtextfields prove the labels to our drop boxes that track the current number of Pac-3 Missiles.
-		pac_3Header = PssHeaderFact.pac3Header();
+		pac_3Header = new JTextField();
 		pac_3Header.setBounds(625, 42, 155, 20);
 		getContentPane().add(pac_3Header);
 		
-		pac_3OpHeader = PssHeaderFact.OPheader();
+		pac_3OpHeader = new JTextField();
 		pac_3OpHeader.setBounds(625, 63, 50, 52);
 		getContentPane().add(pac_3OpHeader);
 		
-		pac_3InopHeader = PssHeaderFact.launcherInopHeader();
+		pac_3InopHeader = new JTextField();
 		pac_3InopHeader.setBounds(677, 63, 50, 52);
 		getContentPane().add(pac_3InopHeader);
 		
@@ -534,6 +530,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		pac_3InopCount.setToolTipText("ENTER # OF INOP PAC3");
 		pac_3InopCount.setBounds(677, 116, 50, 172);
 		getContentPane().add(pac_3InopCount);
+		
 		//Pac 3 OH component
 		pac_3OhCount = new JComboBox();
 		pac_3OhCount.setToolTipText("ENTER # OF OH PAC3");
@@ -550,7 +547,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		
 		//These Gem-C "header" jtextfields provide the labels to the drop boxes that track the current Gem-C Missile Counts.
-		gemCHeader = PssHeaderFact.gemCheader();
+		gemCHeader = new JTextField();
 		gemCHeader.setBounds(780, 42, 155, 20);
 		getContentPane().add(gemCHeader);
 		
@@ -711,7 +708,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemtOhCount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					missileCounter();
+				missileCounter();
 				} catch (Exception e1) {
 						//nothing to handle just catching the initial NPE from the fields being null at the start
 				}
@@ -778,22 +775,26 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		totalMissileCount.setColumns(10);
 		
 		//The LsCount and Pac2Count family of components covers the Launchers section of the samstat.
-		opLsCount = new JComboBox();
-		opLsCount.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { //grab current selection from drop box
-				valHolder2 = (String)opLsCount.getSelectedItem();
-				setMaxOP(valHolder2, MPPAC3);
-				fillDropBox(maxOP, pac_3OpCount);
-				oldPac3 = getMaxPac3OP();
-				
-			}
-		});
+		opLsCount =  new JComboBox();
 		opLsCount.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
 		opLsCount.setToolTipText("NUMBER OF OP L'S LAUNCHERS");
 		opLsCount.setEditable(false);
 		opLsCount.setBackground(new Color(205, 133, 63));
 		opLsCount.setBounds(1244, 116, 77, 86);
 		getContentPane().add(opLsCount);
+		opLsCount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { //grab current selection from drop box
+				valHolder2 = (String)opLsCount.getSelectedItem();
+				setMaxOP(valHolder2, MPPAC3);
+				fillDropBox(maxOP, pac_3OpCount);
+				
+				System.out.println(status.getPac3Op());
+				oldPac3 = getMaxPac3OP();
+				
+				
+			}
+		});
+		
 		
 		inopLsCount = new JComboBox();
 		inopLsCount.setToolTipText("NUMBER OF INOP L'S");
@@ -804,7 +805,11 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		getContentPane().add(inopLsCount);
 		
 		opPac_2Count = new JComboBox();
-		opPac_2Count.addActionListener(new ActionListener() {
+		opPac_2Count.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
+		opPac_2Count.setToolTipText("NUMBER OF OP PAC2 ");
+		opPac_2Count.setEditable(false);
+		opPac_2Count.setBackground(new Color(205, 133, 63));
+		opPac_2Count.setBounds(1244, 202, 77, 86);		opPac_2Count.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				valHolder2 = (String)opPac_2Count.getSelectedItem();
 				setMaxOP(valHolder2, MPPAC2);
@@ -815,11 +820,6 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 				missileCounter();
 			}
 		});
-		opPac_2Count.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
-		opPac_2Count.setToolTipText("NUMBER OF OP PAC2 ");
-		opPac_2Count.setEditable(false);
-		opPac_2Count.setBackground(new Color(205, 133, 63));
-		opPac_2Count.setBounds(1244, 202, 77, 86);
 		getContentPane().add(opPac_2Count);
 		
 		inop_Pac2Count = new JComboBox();
@@ -848,14 +848,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		remarksField.setBackground(Color.LIGHT_GRAY);
 		remarksField.setToolTipText("Enter All Current System Faults and Deadlines Here");
 		remarksField.setColumns(10);
-		/*
-		 * This section is for the objects that should be used with the json
-		 */
-		
-		
-			FUdata = new unitData(null, null, null, null, null, null, null);
-			status = new fireUnitData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-					null, null, null, null, null, null, null, null);
+
 		
 
 		
@@ -898,7 +891,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 			public void actionPerformed(ActionEvent e) {
 				missileCounter();
 				currentDtg.setText(zTime());
-				System.out.println(tocButton.getName());
+				
 				//WRITE TRANSMIT CODE HERE
 				sendFile(tocButton);
 			}
@@ -930,19 +923,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 			}
 		});
 
-		
-		try {
-			//OH Counts
-			fillDropBox(gemcCount, gemCOhCount);
-			fillDropBox(gemTCount, gemtOhCount);
-			fillDropBox(pac3Count, pac_3OhCount);
-			//INOP Counts, which are set equal to OH counts since you can never have more INOP than OH missiles.
-			fillDropBox(pac3Count, pac_3InopCount);
-			fillDropBox(gemcCount, gemCInopCount);
-			fillDropBox(gemTCount, gemtInopCount);
-		} catch (Exception e1) {
-			//Nothing to catch just handling initial NPEs
-		}
+
 		//Set the Jboxes so that they start with the correct/current OH counts. 
 		pac_3OhCount.setSelectedItem(pac3Count);
 		gemtOhCount.setSelectedItem(gemTCount);
@@ -967,7 +948,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		getContentPane().add(battery);
 		battery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				FUdata.setUnitName(battery.getSelectedItem().toString());
+				
+				FUdata.setUnitDesignator((battery.getSelectedItem().toString()));
 				getContentPane().remove(battery);
 				getContentPane().remove(batteryHeader);				
 			}
@@ -976,6 +958,14 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		broadCastSetter(); //Appropriately set the Labels to the three buttons on the bottom of the GUI. 
 		
 	}//End Constructor
+	
+	/*
+	 * This section is for the objects that should be used with the json
+	 */
+	unitData FUdata = new unitData(null, null, null, null, null, null, null);
+	fireUnitData status = new fireUnitData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+				null, null, null, null, null, null, null, null);
+	
 	
 	/**
 	** setMaxOP sets the maximum amount of operational missiles a Fire Unit could have based on the type of launcher they are using.
@@ -1142,33 +1132,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		// TODO Auto-generated method stub
 	}
 	
-	public String getStringer(JTextField field1){
-		String stringer = null;
-		stringer = field1.getText();
-		
-		
-		return stringer;
-		
-	}//end getStringer
 	
-	public String getStringer(JComboBox box1){
-		String stringer = null;
-		stringer = (String) box1.getSelectedItem();
-		return stringer;
-		
-	}
-	public String getStringer(JTextArea area1){
-		String stringer = null;
-		stringer = (String) area1.getText();
-		return stringer;
-		
-	}
 	
-	public Color getCurColor(JTextField field1){
-		Color curColor;
-		curColor = field1.getBackground();
-		return curColor;	
-	}
 	
 	/**
 	 * Method that sends the file to an ip address
@@ -1199,6 +1164,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 			convertJSONToObject(file);
 			
 			copyObjectToGUI();
+
+			
 		}
 		else
 		{
@@ -1225,8 +1192,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
 		
-		setMaxOP(status.getOpPac3L(), MPPAC3);//Needs to be sorted out. The way in which the field are updated is important to the process.
-		fillDropBox(maxOP, pac_3OpCount);
+		
 		
 		status.setDtg(currentDtg.getText());
 		status.setStatusBackGround(colorWriter(unitId));
@@ -1239,8 +1205,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setSto(stoSelector.getSelectedItem().toString());
 		status.setAco((String) acoSelector.getSelectedItem());
 		
-		status.setPac3Op(parseInt(pac_3OpCount.getSelectedItem().toString()));
-		status.setPac3Inop(parseInt(pac_3InopCount.getSelectedItem().toString()));
+		status.setPac3Op(pac_3OpCount.getSelectedItem().toString());
+		status.setPac3Inop(pac_3InopCount.getSelectedItem().toString());
 		status.setPac3Oh(pac_3OhCount.getSelectedItem().toString());
 		
 		status.setGemCOp(gemCOpCount.getSelectedItem().toString());
@@ -1264,10 +1230,9 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setUnitData(FUdata);		
 	}
 
-private String parseInt(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
+
 
 /**
 ** Color reader accepts strings as arguments runs them through a switch statement and returns the corresponding Color.
@@ -1321,6 +1286,11 @@ private String parseInt(String string) {
 	
 	public void copyObjectToGUI()
 	{
+		opLsCount.setSelectedItem(status.getOpPac3L());
+		inopLsCount.setSelectedItem(status.getInopPac3L());
+		opPac_2Count.setSelectedItem(status.getOpPac2L());
+		inop_Pac2Count.setSelectedItem(status.getInopPac2());
+		
 		currentDtg.setText(status.getDtg());
 		unitId.setBackground(colorReader(status.getStatusBackGround()));
 		curSelector.setSelectedItem(status.getCurAs());
@@ -1330,10 +1300,12 @@ private String parseInt(String string) {
 		stoSelector.setSelectedItem(status.getSto()); 
 		acoSelector.setSelectedItem(status.getAco());
 
-		pac_3OpCount.setSelectedItem(status.getPac3Op());  
+		
+		pac_3OpCount.setSelectedItem(status.getPac3Op());
 		pac_3InopCount.setSelectedItem(status.getPac3Inop());
 		pac_3OhCount.setSelectedItem(status.getPac3Oh());
-
+		
+		
 		gemCOpCount.setSelectedItem(status.getGemCOp()); 
 		gemCInopCount.setSelectedItem(status.getGemCInop());
 		gemCOhCount.setSelectedItem(status.getGemCOh());
@@ -1342,19 +1314,15 @@ private String parseInt(String string) {
 		gemtInopCount.setSelectedItem(status.getGemTInop());
 		gemtOhCount.setSelectedItem(status.getGemTOh());
 
-		opLsCount.setSelectedItem(status.getOpPac3L());
-		inopLsCount.setSelectedItem(status.getInopPac3L());
 
-		opPac_2Count.setSelectedItem(status.getOpPac2L());
-		inop_Pac2Count.setSelectedItem(status.getInopPac2());
 
-		FUdata = status.getUnitData();
-		systemType.setSelectedItem(FUdata.getUnitType());
-		unitId.setText(FUdata.getUnitName());
-		defendedAssets.setText(FUdata.getDefAsset());
-		curLocation.setText(FUdata.getLocation());
-		curPtl.setText(FUdata.getPtl());
-		curStl.setText(FUdata.getStl());
+		
+		systemType.setSelectedItem(status.getUnitData().getUnitType());
+		unitId.setText(status.getUnitData().getUnitName());
+		defendedAssets.setText(status.getUnitData().getDefAsset());
+		curLocation.setText(status.getUnitData().getLocation());
+		curPtl.setText(status.getUnitData().getPtl());
+		curStl.setText(status.getUnitData().getStl());
 	}
 
 	
@@ -1546,8 +1514,10 @@ private String parseInt(String string) {
 		            }
 				
 			        System.out.println("Download Successfully!");
-			        
-			        receiveFile(fileName);
+			
+					
+			       
+					receiveFile(fileName);
 			        
 			        
 		            outStream.close(); 
