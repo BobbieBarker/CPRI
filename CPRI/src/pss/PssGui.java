@@ -1197,7 +1197,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		{		
 			convertJSONToObject(file);
 			
-			///copyDataToObject();
+			copyObjectToGUI();
 		}
 		else
 		{
