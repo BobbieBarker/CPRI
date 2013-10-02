@@ -1192,6 +1192,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		status.setOpPac2L(opPac_2Count.getSelectedItem().toString());
 		status.setInopPac2(inop_Pac2Count .getSelectedItem().toString());
 		
+		
+		
 		status.setDtg(currentDtg.getText());
 		status.setStatusBackGround(colorWriter(unitId));
 		

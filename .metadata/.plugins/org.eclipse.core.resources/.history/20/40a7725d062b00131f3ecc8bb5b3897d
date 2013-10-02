@@ -320,7 +320,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			currentDtg.setColumns(10);
 			
 			//Provides a header to the component that identifies the unit. 
-			unitHeader = new JTextField();
+			unitHeader = PssHeaderFact.unitHeader();
 			unitHeader.setBounds(0, 42, 79, 20);
 			getContentPane().add(unitHeader);
 			
@@ -473,7 +473,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			getContentPane().add(HHBcurLocation);
 			
 			//This component provides a header to the jtextfield that stores the ETRO information on the unit. 
-			etroHeader = new JTextField();
+			etroHeader = PssHeaderFact.etroHeader();
 			etroHeader.setBounds(425, 62, 121, 53);
 			getContentPane().add(etroHeader);
 			
@@ -531,11 +531,11 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			getContentPane().add(missileHeader);
 			missileHeader.setColumns(10);
 			
-			pac_3OpHeader = new JTextField();
+			pac_3OpHeader = PssHeaderFact.OPheader();
 			pac_3OpHeader.setBounds(853, 63, 40, 52);
 			getContentPane().add(pac_3OpHeader);
 			
-			pac_3InopHeader = new JTextField();
+			pac_3InopHeader = PssHeaderFact.launcherInopHeader();
 			pac_3InopHeader.setBounds(893, 63, 40, 52);
 			getContentPane().add(pac_3InopHeader);
 			
@@ -549,11 +549,11 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			getContentPane().add(pac_3OhHeader);
 		
 			//These "header" jtextfields prove the labels to our drop boxes that track the current number of Pac-3 Missiles.
-			pac_3Header = new JTextField();
+			pac_3Header = PssHeaderFact.pac3Header();
 			pac_3Header.setBounds(853, 42, 121, 20);
 			getContentPane().add(pac_3Header);
 		
-			gemCHeader = new JTextField();
+			gemCHeader = PssHeaderFact.gemCheader();
 			gemCHeader.setBounds(984, 42, 121, 20);
 			getContentPane().add(gemCHeader);
 			
