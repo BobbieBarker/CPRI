@@ -2088,7 +2088,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	**/
 	public void dataCopier(fireUnitData status){ 
 		
-		if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Alpha")){
+		if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("ALPHA")){
 			ACurAS.setText(status.getCurAs());
 		 	ADirAS.setText(status.getDirAs());
 		 	AcurEtro.setText(status.getEtro());
@@ -2129,7 +2129,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	
 		 	System.out.println("The Current AS" + status.getCurAs());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Bravo")){
+		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("BRAVO")){
 			 	BCurAS.setText(status.getCurAs());
 			 	BDirAS.setText(status.getDirAs());
 			 	BcurEtro.setText(status.getEtro());
@@ -2167,7 +2167,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	BSystemType.setText(status.getUnitData().getUnitType());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Charlie")){
+		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("CHARLIE")){
 			 	CCurAS.setText(status.getCurAs());
 			 	CDirAS.setText(status.getDirAs());
 			 	CcurEtro.setText(status.getEtro());
@@ -2205,7 +2205,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	CSystemType.setText(status.getUnitData().getUnitType());
 		 }
-		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Delta")){
+		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("DELTA")){
 			 	DCurAS.setText(status.getCurAs());
 			 	DDirAS.setText(status.getDirAs());
 			 	DcurEtro.setText(status.getEtro());
