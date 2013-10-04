@@ -1,8 +1,10 @@
 package pss;
 
 import javax.swing.JFrame;
+
 import java.awt.EventQueue;
 import java.awt.Rectangle;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,6 +15,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -36,7 +41,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
 import java.util.TimeZone;
+
 import flexjson.JSONDeserializer;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
@@ -57,6 +66,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JComboBox HHBcurSelector;
 	private JComboBox HHBdirSelector;
 	private JTextField blackspace;
+	private JTextArea ARemarks;
 	private JTextPane DefAssetHeader;
 	private JTextArea HHBdefendedAssets;
 	private JTextField locationHeader;
@@ -71,7 +81,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField pac_3Header;
 	private JTextField pac_3OpHeader;
 	private JTextField pac_3InopHeader;
-	private JTextField ASystemType;
 	private JTextField pac_3OhHeader;
 	private JTextField gemCHeader;
 	private JTextField GemcOpHeader;
@@ -87,6 +96,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField launchersInopHeader;
 	private JTextField launchersOPheader;
 	private JTextField HHBtotalMissileCount;
+	private JTextField ASystemType;
 	private JTextPane faultHeader;
 	private JTextArea remarksField;
 	private JTextField HHBOpPac3;
@@ -236,20 +246,22 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private String starter = "Place Holder";
 	private static int color = 0;
 	
-	private unitData uData;
+	private unitData FUdata;
 	private fireUnitData status;
+	private JTextArea HHBRemarks;
 	
 	
 	
 	BNPssGUI(){
 		
 			//starts receiver code
-			Thread myThread = new Thread(new FileReceiver2(5000));
+			startFileReceiver();	
+		
+		
+			//Thread myThread = new Thread(new FileReceiver2(5000));
 
-			myThread.start();
+			//myThread.start();
 			
-			unitData uData = new unitData(null, null, null, null, null, null, null);
-			fireUnitData status = new fireUnitData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, uData);
 			
 			//Sets the title for the JFrame and some behavior/attributes for the frame. 
 			setTitle("PATRIOT SMART SAMSTAT");
@@ -321,6 +333,11 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			
 			//Provides a header to the component that identifies the unit. 
 			unitHeader = new JTextField();
+			unitHeader.setEditable(false);
+			unitHeader.setBackground(Color.ORANGE);
+			unitHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			unitHeader.setToolTipText("Unit Name");
+			unitHeader.setText("Unit");
 			unitHeader.setBounds(0, 42, 79, 20);
 			getContentPane().add(unitHeader);
 			
@@ -398,7 +415,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					
 				}
 			});
-			HHBUnitId.setBackground(Color.GREEN);
 			HHBUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:" + "<br/>GREEN-MC" + "<br/>RED-NMC" + "<br/>WHITE-UNIT IN TRANSISTION</html>");
 			HHBUnitId.setText("Set Unit Name");
@@ -413,7 +429,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBsystemType = new JTextField();
 			HHBsystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBsystemType.setToolTipText("<html>ENTER SYSTEM TYPE:" + "<br/>PAT" + "<br/>AVENGER"+ "<br/>STINGER" + "<br/>THAAD</html>");
-			HHBsystemType.setEditable(false);
 			HHBsystemType.setBounds(83, 116, 79, 96);
 			getContentPane().add(HHBsystemType);
 			
@@ -474,6 +489,10 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			
 			//This component provides a header to the jtextfield that stores the ETRO information on the unit. 
 			etroHeader = new JTextField();
+			etroHeader.setToolTipText("Estimated Time to Return to Operations");
+			etroHeader.setBackground(Color.ORANGE);
+			etroHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			etroHeader.setText("ETRO");
 			etroHeader.setBounds(425, 62, 121, 53);
 			getContentPane().add(etroHeader);
 			
@@ -532,11 +551,19 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			missileHeader.setColumns(10);
 			
 			pac_3OpHeader = new JTextField();
+			pac_3OpHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			pac_3OpHeader.setText("OP");
 			pac_3OpHeader.setBounds(853, 63, 40, 52);
+			pac_3OpHeader.setBackground(new Color(210, 105, 30));
 			getContentPane().add(pac_3OpHeader);
 			
 			pac_3InopHeader = new JTextField();
+			pac_3InopHeader.setForeground(Color.BLACK);
+			pac_3InopHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			pac_3InopHeader.setEditable(false);
+			pac_3InopHeader.setText("INOP");
 			pac_3InopHeader.setBounds(893, 63, 40, 52);
+			pac_3InopHeader.setBackground(new Color(210, 105, 30));
 			getContentPane().add(pac_3InopHeader);
 			
 			pac_3OhHeader = new JTextField();
@@ -550,10 +577,18 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		
 			//These "header" jtextfields prove the labels to our drop boxes that track the current number of Pac-3 Missiles.
 			pac_3Header = new JTextField();
+			pac_3Header.setEditable(false);
+			pac_3Header.setHorizontalAlignment(SwingConstants.CENTER);
+			pac_3Header.setBackground(new Color(210, 105, 30));
+			pac_3Header.setText("PAC 3");
 			pac_3Header.setBounds(853, 42, 121, 20);
 			getContentPane().add(pac_3Header);
 		
 			gemCHeader = new JTextField();
+			gemCHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			gemCHeader.setEditable(false);
+			gemCHeader.setText("GEM C");
+			gemCHeader.setBackground(new Color(210, 105, 30));
 			gemCHeader.setBounds(984, 42, 121, 20);
 			getContentPane().add(gemCHeader);
 			
@@ -774,7 +809,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBInopLs.setBounds(1469, 116, 77, 48);
 			getContentPane().add(HHBInopLs);
 			
-			JTextArea HHBRemarks = new JTextArea();
+			HHBRemarks = new JTextArea();
 			HHBRemarks.setToolTipText("Enter All Current System Faults and Deadlines Here");
 			HHBRemarks.setWrapStyleWord(true);
 			HHBRemarks.setLineWrap(true);
@@ -803,7 +838,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aUnitId.setText("Set Unit Name");
 			aUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			aUnitId.setColumns(10);
-			aUnitId.setBackground(Color.GREEN);
+			
 			aUnitId.setBounds(0, 212, 84, 96);
 			getContentPane().add(aUnitId);
 			
@@ -812,7 +847,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bUnitId.setText("Set Unit Name");
 			bUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			bUnitId.setColumns(10);
-			bUnitId.setBackground(Color.GREEN);
+			
 			bUnitId.setBounds(0, 307, 84, 96);
 			getContentPane().add(bUnitId);
 			
@@ -821,7 +856,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cUnitId.setText("Set Unit Name");
 			cUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			cUnitId.setColumns(10);
-			cUnitId.setBackground(Color.GREEN);
+			
 			cUnitId.setBounds(0, 402, 84, 96);
 			getContentPane().add(cUnitId);
 			
@@ -830,7 +865,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dUnitId.setText("Set Unit Name");
 			dUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			dUnitId.setColumns(10);
-			dUnitId.setBackground(Color.GREEN);
+			
 			dUnitId.setBounds(0, 498, 84, 96);
 			getContentPane().add(dUnitId);
 			
@@ -843,24 +878,23 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			getContentPane().add(stoHeader);
 			stoHeader.setColumns(10);
 			
-			JTextField ASystemType = new JTextField();
+			ASystemType = new JTextField();
 			ASystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			ASystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
-			ASystemType.setEditable(false);
 			ASystemType.setBounds(82, 212, 79, 96);
 			getContentPane().add(ASystemType);
 			
-			JTextField ACurAS = new JTextField();
+			ACurAS = new JTextField();
+			ACurAS.setColumns(10);
 			ACurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			ACurAS.setToolTipText("ALPHA CURRENT ALERT STATE");
-			ACurAS.setEditable(false);
 			ACurAS.setBounds(161, 212, 45, 96);
 			getContentPane().add(ACurAS);
 			
-			JTextField ADirAS = new JTextField();
+			ADirAS = new JTextField();
+			ADirAS.setColumns(10);
 			ADirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			ADirAS.setToolTipText("ALPHA DIRECTED ALERT STATE");
-			ADirAS.setEditable(false);
 			ADirAS.setBounds(207, 212, 45, 96);
 			getContentPane().add(ADirAS);
 			
@@ -870,9 +904,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AdefendedAssets.setToolTipText("ALPHA'S DEFENDED ASSETS");
 			AdefendedAssets.setColumns(10);
 			AdefendedAssets.setBounds(253, 212, 86, 94);
-			
-			
-			
 			getContentPane().add(AdefendedAssets);
 			
 			AcurLocation = new JTextField();
@@ -909,6 +940,38 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AOpPac3.setColumns(10);
 			AOpPac3.setBackground(Color.WHITE);
 			AOpPac3.setBounds(853, 212, 40, 96);
+			AOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+					
+					
+				}
+			
+			});//End LIsenter
 			getContentPane().add(AOpPac3);
 			
 			AInOpPac3 = new JTextField();
@@ -917,6 +980,38 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AInOpPac3.setColumns(10);
 			AInOpPac3.setBackground(Color.WHITE);
 			AInOpPac3.setBounds(893, 212, 40, 96);
+			AInOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				
+				
+			});
 			getContentPane().add(AInOpPac3);
 			
 			APac3Oh = new JTextField();
@@ -925,6 +1020,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			APac3Oh.setColumns(10);
 			APac3Oh.setBackground(Color.WHITE);
 			APac3Oh.setBounds(934, 212, 40, 96);
+			APac3Oh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(APac3Oh);
 			
 			AGemCOP = new JTextField();
@@ -933,6 +1058,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemCOP.setColumns(10);
 			AGemCOP.setBackground(Color.WHITE);
 			AGemCOP.setBounds(983, 212, 40, 96);
+			AGemCOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AGemCOP);
 			
 			AGemCInOp = new JTextField();
@@ -941,6 +1097,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemCInOp.setColumns(10);
 			AGemCInOp.setBackground(Color.WHITE);
 			AGemCInOp.setBounds(1024, 212, 40, 96);
+			AGemCInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AGemCInOp);
 			
 			AGemCOh = new JTextField();
@@ -949,6 +1136,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemCOh.setColumns(10);
 			AGemCOh.setBackground(Color.WHITE);
 			AGemCOh.setBounds(1065, 212, 40, 96);
+			AGemCOh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					//
+					
+				}
+				
+			});
 			getContentPane().add(AGemCOh);
 			
 			AGemTOP = new JTextField();
@@ -957,6 +1175,42 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemTOP.setColumns(10);
 			AGemTOP.setBackground(Color.WHITE);
 			AGemTOP.setBounds(1114, 212, 40, 96);
+			AGemTOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+				
+			});
 			getContentPane().add(AGemTOP);
 			
 			AGemTInOp = new JTextField();
@@ -965,6 +1219,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemTInOp.setColumns(10);
 			AGemTInOp.setBackground(Color.WHITE);
 			AGemTInOp.setBounds(1156, 212, 40, 96);
+			AGemTInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AGemTInOp);
 			
 			AGemTOH = new JTextField();
@@ -973,6 +1258,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AGemTOH.setColumns(10);
 			AGemTOH.setBackground(Color.WHITE);
 			AGemTOH.setBounds(1196, 212, 40, 96);
+			AGemTInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AGemTOH);
 			
 			AtotalMissileCount = new JTextField();
@@ -991,6 +1307,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AOPLs.setColumns(10);
 			AOPLs.setBackground(new Color(205, 133, 63));
 			AOPLs.setBounds(1391, 212, 77, 48);
+			AOPLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AOPLs);
 			
 			AOPpac2L = new JTextField();
@@ -999,6 +1346,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AOPpac2L.setColumns(10);
 			AOPpac2L.setBackground(new Color(205, 133, 63));
 			AOPpac2L.setBounds(1391, 260, 77, 48);
+			AOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					//
+					
+				}
+				
+			});
 			getContentPane().add(AOPpac2L);
 			
 			AInopLs = new JTextField();
@@ -1007,6 +1385,37 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AInopLs.setColumns(10);
 			AInopLs.setBackground(new Color(205, 133, 63));
 			AInopLs.setBounds(1469, 212, 77, 48);
+			AInopLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AInopLs);
 			
 			AInopPac2L = new JTextField();
@@ -1015,9 +1424,40 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AInopPac2L.setColumns(10);
 			AInopPac2L.setBackground(new Color(205, 133, 63));
 			AInopPac2L.setBounds(1469, 260, 77, 48);
+			AInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e1) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			getContentPane().add(AInopPac2L);
 			
-			JTextArea ARemarks = new JTextArea();
+			ARemarks = new JTextArea();
 			ARemarks.setWrapStyleWord(true);
 			ARemarks.setToolTipText("Alpha's Current System Faults and Deadlines ");
 			ARemarks.setLineWrap(true);
@@ -1028,63 +1468,57 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BSystemType = new JTextField();
 			BSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			BSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
-			BSystemType.setEditable(false);
 			BSystemType.setBounds(83, 307, 79, 96);
 			getContentPane().add(BSystemType);
 			
 			CSystemType = new JTextField();
 			CSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			CSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
-			CSystemType.setEditable(false);
 			CSystemType.setBounds(83, 402, 79, 96);
 			getContentPane().add(CSystemType);
 			
 			DSystemType = new JTextField();
 			DSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			DSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
-			DSystemType.setEditable(false);
 			DSystemType.setBounds(83, 498, 79, 96);
 			getContentPane().add(DSystemType);
 			
 			BCurAS = new JTextField();
+			BCurAS.setColumns(10);
 			BCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			BCurAS.setToolTipText("BRAVO CURRENT ALERT STATE");
-			BCurAS.setEditable(false);
 			BCurAS.setBounds(161, 307, 45, 96);
 			getContentPane().add(BCurAS);
 			
 			CCurAS = new JTextField();
+			CCurAS.setColumns(10);
 			CCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			CCurAS.setToolTipText("CHARLIE CURRENT ALERT STATE");
-			CCurAS.setEditable(false);
 			CCurAS.setBounds(161, 402, 45, 96);
 			getContentPane().add(CCurAS);
 			
 			DCurAS = new JTextField();
+			DCurAS.setColumns(10);
 			DCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			DCurAS.setToolTipText("DELTA CURRENT ALERT STATE");
-			DCurAS.setEditable(false);
 			DCurAS.setBounds(161, 498, 45, 96);
 			getContentPane().add(DCurAS);
 			
 			BDirAS = new JTextField();
 			BDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			BDirAS.setToolTipText("BRAVO DIRECTED ALERT STATE");
-			BDirAS.setEditable(false);
 			BDirAS.setBounds(207, 307, 45, 96);
 			getContentPane().add(BDirAS);
 			
 			CDirAS = new JTextField();
 			CDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			CDirAS.setToolTipText("CHARLIE DIRECTED ALERT STATE");
-			CDirAS.setEditable(false);
 			CDirAS.setBounds(207, 402, 45, 96);
 			getContentPane().add(CDirAS);
 			
 			DDirAS = new JTextField();
 			DDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			DDirAS.setToolTipText("DELTA DIRECTED ALERT STATE");
-			DDirAS.setEditable(false);
 			DDirAS.setBounds(207, 498, 45, 96);
 			getContentPane().add(DDirAS);
 			
@@ -1202,6 +1636,38 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BOpPac3.setColumns(10);
 			BOpPac3.setBackground(Color.WHITE);
 			BOpPac3.setBounds(853, 307, 40, 96);
+			BOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+					
+					
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BOpPac3);
 			
 			COpPac3 = new JTextField();
@@ -1210,6 +1676,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			COpPac3.setColumns(10);
 			COpPac3.setBackground(Color.WHITE);
 			COpPac3.setBounds(853, 402, 40, 96);
+			COpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(COpPac3);
 			
 			DOpPac3 = new JTextField();
@@ -1218,6 +1714,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DOpPac3.setColumns(10);
 			DOpPac3.setBackground(Color.WHITE);
 			DOpPac3.setBounds(853, 498, 40, 96);
+			DOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DOpPac3);
 			
 			BInOpPac3 = new JTextField();
@@ -1226,6 +1752,35 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BInOpPac3.setColumns(10);
 			BInOpPac3.setBackground(Color.WHITE);
 			BInOpPac3.setBounds(893, 307, 40, 96);
+			BInOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BInOpPac3);
 			
 			CInOpPac3 = new JTextField();
@@ -1234,6 +1789,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CInOpPac3.setColumns(10);
 			CInOpPac3.setBackground(Color.WHITE);
 			CInOpPac3.setBounds(893, 402, 40, 96);
+			CInOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CInOpPac3);
 			
 			DInOpPac3 = new JTextField();
@@ -1242,6 +1827,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DInOpPac3.setColumns(10);
 			DInOpPac3.setBackground(Color.WHITE);
 			DInOpPac3.setBounds(893, 498, 40, 96);
+			DInOpPac3.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DInOpPac3);
 			
 			BPac3Oh = new JTextField();
@@ -1250,6 +1865,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BPac3Oh.setColumns(10);
 			BPac3Oh.setBackground(Color.WHITE);
 			BPac3Oh.setBounds(934, 307, 40, 96);
+			BPac3Oh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BPac3Oh);
 			
 			CPac3Oh = new JTextField();
@@ -1258,6 +1903,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CPac3Oh.setColumns(10);
 			CPac3Oh.setBackground(Color.WHITE);
 			CPac3Oh.setBounds(934, 402, 40, 96);
+			CPac3Oh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CPac3Oh);
 			
 			DPac3Oh = new JTextField();
@@ -1266,6 +1941,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DPac3Oh.setColumns(10);
 			DPac3Oh.setBackground(Color.WHITE);
 			DPac3Oh.setBounds(934, 498, 40, 96);
+			DPac3Oh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DPac3Oh);
 			
 			BGemCOP = new JTextField();
@@ -1274,6 +1979,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemCOP.setColumns(10);
 			BGemCOP.setBackground(Color.WHITE);
 			BGemCOP.setBounds(983, 307, 40, 96);
+			BGemCOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemCOP);
 			
 			CGemCOP = new JTextField();
@@ -1282,6 +2017,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemCOP.setColumns(10);
 			CGemCOP.setBackground(Color.WHITE);
 			CGemCOP.setBounds(983, 402, 40, 96);
+			CGemCOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemCOP);
 			
 			DGemCOP = new JTextField();
@@ -1290,6 +2055,35 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemCOP.setColumns(10);
 			DGemCOP.setBackground(Color.WHITE);
 			DGemCOP.setBounds(983, 498, 40, 96);
+			DGemCOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemCOP);
 			
 			BGemCInOp = new JTextField();
@@ -1298,6 +2092,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemCInOp.setColumns(10);
 			BGemCInOp.setBackground(Color.WHITE);
 			BGemCInOp.setBounds(1024, 307, 40, 96);
+			BGemCInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemCInOp);
 			
 			CGemCInOp = new JTextField();
@@ -1306,6 +2130,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemCInOp.setColumns(10);
 			CGemCInOp.setBackground(Color.WHITE);
 			CGemCInOp.setBounds(1024, 402, 40, 96);
+			CGemCInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemCInOp);
 			
 			DGemCInOp = new JTextField();
@@ -1314,6 +2168,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemCInOp.setColumns(10);
 			DGemCInOp.setBackground(Color.WHITE);
 			DGemCInOp.setBounds(1024, 498, 40, 96);
+			DGemCInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemCInOp);
 			
 			BGemCOh = new JTextField();
@@ -1322,6 +2206,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemCOh.setColumns(10);
 			BGemCOh.setBackground(Color.WHITE);
 			BGemCOh.setBounds(1065, 307, 40, 96);
+			BGemCOh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemCOh);
 			
 			CGemCOh = new JTextField();
@@ -1330,6 +2244,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemCOh.setColumns(10);
 			CGemCOh.setBackground(Color.WHITE);
 			CGemCOh.setBounds(1065, 402, 40, 96);
+			CGemCOh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemCOh);
 			
 			DGemCOh = new JTextField();
@@ -1338,6 +2282,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemCOh.setColumns(10);
 			DGemCOh.setBackground(Color.WHITE);
 			DGemCOh.setBounds(1065, 498, 40, 96);
+			DGemCOh.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemCOh);
 			
 			BGemTOP = new JTextField();
@@ -1346,6 +2320,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemTOP.setColumns(10);
 			BGemTOP.setBackground(Color.WHITE);
 			BGemTOP.setBounds(1114, 307, 40, 96);
+			BGemTOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemTOP);
 			
 			CGemTOP = new JTextField();
@@ -1354,6 +2358,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemTOP.setColumns(10);
 			CGemTOP.setBackground(Color.WHITE);
 			CGemTOP.setBounds(1114, 402, 40, 96);
+			CGemTOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemTOP);
 			
 			DGemTOP = new JTextField();
@@ -1362,6 +2396,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemTOP.setColumns(10);
 			DGemTOP.setBackground(Color.WHITE);
 			DGemTOP.setBounds(1114, 498, 40, 96);
+			DGemTOP.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemTOP);
 			
 			BGemTInOp = new JTextField();
@@ -1370,6 +2434,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemTInOp.setColumns(10);
 			BGemTInOp.setBackground(Color.WHITE);
 			BGemTInOp.setBounds(1156, 307, 40, 96);
+			BGemTInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemTInOp);
 			
 			CGemTInOp = new JTextField();
@@ -1378,6 +2472,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemTInOp.setColumns(10);
 			CGemTInOp.setBackground(Color.WHITE);
 			CGemTInOp.setBounds(1156, 402, 40, 96);
+			CGemTInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemTInOp);
 			
 			DGemTInOp = new JTextField();
@@ -1386,6 +2510,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemTInOp.setColumns(10);
 			DGemTInOp.setBackground(Color.WHITE);
 			DGemTInOp.setBounds(1156, 498, 40, 96);
+			DGemTInOp.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemTInOp);
 			
 			BGemTOH = new JTextField();
@@ -1394,6 +2548,36 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BGemTOH.setColumns(10);
 			BGemTOH.setBackground(Color.WHITE);
 			BGemTOH.setBounds(1196, 307, 40, 96);
+			BGemTOH.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BGemTOH);
 			
 			CGemTOH = new JTextField();
@@ -1402,6 +2586,35 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CGemTOH.setColumns(10);
 			CGemTOH.setBackground(Color.WHITE);
 			CGemTOH.setBounds(1196, 402, 40, 96);
+			CGemTOH.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CGemTOH);
 			
 			DGemTOH = new JTextField();
@@ -1410,6 +2623,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DGemTOH.setColumns(10);
 			DGemTOH.setBackground(Color.WHITE);
 			DGemTOH.setBounds(1196, 498, 40, 96);
+			DGemTOH.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DGemTOH);
 			
 			BtotalMissileCount = new JTextField();
@@ -1472,6 +2713,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BOPLs.setColumns(10);
 			BOPLs.setBackground(new Color(205, 133, 63));
 			BOPLs.setBounds(1391, 308, 77, 48);
+			BOPLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BOPLs);
 			
 			BInopLs = new JTextField();
@@ -1480,6 +2749,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BInopLs.setColumns(10);
 			BInopLs.setBackground(new Color(205, 133, 63));
 			BInopLs.setBounds(1469, 308, 77, 48);
+			BInopLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BInopLs);
 			
 			BOPpac2L = new JTextField();
@@ -1488,6 +2785,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BOPpac2L.setColumns(10);
 			BOPpac2L.setBackground(new Color(205, 133, 63));
 			BOPpac2L.setBounds(1391, 356, 77, 48);
+			BOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BOPpac2L);
 			
 			BInopPac2L = new JTextField();
@@ -1496,6 +2821,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BInopPac2L.setColumns(10);
 			BInopPac2L.setBackground(new Color(205, 133, 63));
 			BInopPac2L.setBounds(1469, 356, 77, 48);
+			BInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(BInopPac2L);
 			
 			COPLs = new JTextField();
@@ -1504,6 +2857,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			COPLs.setColumns(10);
 			COPLs.setBackground(new Color(205, 133, 63));
 			COPLs.setBounds(1391, 404, 77, 48);
+			COPLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(COPLs);
 			
 			CInopLs = new JTextField();
@@ -1512,6 +2893,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CInopLs.setColumns(10);
 			CInopLs.setBackground(new Color(205, 133, 63));
 			CInopLs.setBounds(1469, 404, 77, 48);
+			CInopLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CInopLs);
 			
 			COPpac2L = new JTextField();
@@ -1520,6 +2929,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			COPpac2L.setColumns(10);
 			COPpac2L.setBackground(new Color(205, 133, 63));
 			COPpac2L.setBounds(1391, 452, 77, 48);
+			COPpac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(COPpac2L);
 			
 			CInopPac2L = new JTextField();
@@ -1528,6 +2965,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CInopPac2L.setColumns(10);
 			CInopPac2L.setBackground(new Color(205, 133, 63));
 			CInopPac2L.setBounds(1469, 452, 77, 48);
+			CInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(CInopPac2L);
 			
 			DOPLs = new JTextField();
@@ -1536,6 +3001,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DOPLs.setColumns(10);
 			DOPLs.setBackground(new Color(205, 133, 63));
 			DOPLs.setBounds(1391, 500, 77, 48);
+			DOPLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DOPLs);
 			
 			DInopLs = new JTextField();
@@ -1544,6 +3037,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DInopLs.setColumns(10);
 			DInopLs.setBackground(new Color(205, 133, 63));
 			DInopLs.setBounds(1469, 500, 77, 48);
+			DInopLs.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DInopLs);
 			
 			DOPpac2L = new JTextField();
@@ -1552,6 +3073,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DOPpac2L.setColumns(10);
 			DOPpac2L.setBackground(new Color(205, 133, 63));
 			DOPpac2L.setBounds(1391, 548, 77, 48);
+			DOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DOPpac2L);
 			
 			DInopPac2L = new JTextField();
@@ -1560,6 +3109,34 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DInopPac2L.setColumns(10);
 			DInopPac2L.setBackground(new Color(205, 133, 63));
 			DInopPac2L.setBounds(1469, 548, 77, 48);
+			DInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					try {
+						compMissileUpdater();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					//blah
+				}
+			
+			});//End LIsenter
 			getContentPane().add(DInopPac2L);
 			
 			stoSelector = new JTextField();
@@ -1800,7 +3377,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aCurSto = new JTextField();
 			aCurSto.setToolTipText("UNIT'S CURRENT STO");
 			aCurSto.setHorizontalAlignment(SwingConstants.CENTER);
-			aCurSto.setEditable(false);
 			aCurSto.setColumns(10);
 			aCurSto.setBackground(Color.WHITE);
 			aCurSto.setBounds(638, 212, 40, 96);
@@ -1809,7 +3385,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bCurSto = new JTextField();
 			bCurSto.setToolTipText("UNIT'S CURRENT STO");
 			bCurSto.setHorizontalAlignment(SwingConstants.CENTER);
-			bCurSto.setEditable(false);
 			bCurSto.setColumns(10);
 			bCurSto.setBackground(Color.WHITE);
 			bCurSto.setBounds(638, 307, 40, 96);
@@ -1818,7 +3393,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cCurSto = new JTextField();
 			cCurSto.setToolTipText("UNIT'S CURRENT STO");
 			cCurSto.setHorizontalAlignment(SwingConstants.CENTER);
-			cCurSto.setEditable(false);
 			cCurSto.setColumns(10);
 			cCurSto.setBackground(Color.WHITE);
 			cCurSto.setBounds(638, 402, 40, 96);
@@ -1827,7 +3401,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dCurSto = new JTextField();
 			dCurSto.setToolTipText("UNIT'S CURRENT STO");
 			dCurSto.setHorizontalAlignment(SwingConstants.CENTER);
-			dCurSto.setEditable(false);
 			dCurSto.setColumns(10);
 			dCurSto.setBackground(Color.WHITE);
 			dCurSto.setBounds(638, 498, 40, 96);
@@ -1845,7 +3418,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aCurAco = new JTextField();
 			aCurAco.setToolTipText("UNIT'S CURRENT ACO");
 			aCurAco.setHorizontalAlignment(SwingConstants.CENTER);
-			aCurAco.setEditable(false);
 			aCurAco.setColumns(10);
 			aCurAco.setBackground(Color.WHITE);
 			aCurAco.setBounds(680, 212, 40, 96);
@@ -1854,7 +3426,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bCurAco = new JTextField();
 			bCurAco.setToolTipText("UNIT'S CURRENT ACO");
 			bCurAco.setHorizontalAlignment(SwingConstants.CENTER);
-			bCurAco.setEditable(false);
 			bCurAco.setColumns(10);
 			bCurAco.setBackground(Color.WHITE);
 			bCurAco.setBounds(680, 307, 40, 96);
@@ -1863,7 +3434,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cCurAco = new JTextField();
 			cCurAco.setToolTipText("UNIT'S CURRENT ACO");
 			cCurAco.setHorizontalAlignment(SwingConstants.CENTER);
-			cCurAco.setEditable(false);
 			cCurAco.setColumns(10);
 			cCurAco.setBackground(Color.WHITE);
 			cCurAco.setBounds(680, 402, 40, 96);
@@ -1872,7 +3442,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dCurAco = new JTextField();
 			dCurAco.setToolTipText("UNIT'S CURRENT ACO");
 			dCurAco.setHorizontalAlignment(SwingConstants.CENTER);
-			dCurAco.setEditable(false);
 			dCurAco.setColumns(10);
 			dCurAco.setBackground(Color.WHITE);
 			dCurAco.setBounds(680, 498, 40, 96);
@@ -1881,7 +3450,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			hhbDtg = new JTextField();
 			hhbDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
 			hhbDtg.setHorizontalAlignment(SwingConstants.CENTER);
-			hhbDtg.setEditable(false);
 			hhbDtg.setColumns(10);
 			hhbDtg.setBackground(Color.WHITE);
 			hhbDtg.setBounds(722, 116, 121, 96);
@@ -1890,7 +3458,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aDtg = new JTextField();
 			aDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
 			aDtg.setHorizontalAlignment(SwingConstants.CENTER);
-			aDtg.setEditable(false);
 			aDtg.setColumns(10);
 			aDtg.setBackground(Color.WHITE);
 			aDtg.setBounds(722, 212, 121, 96);
@@ -1899,7 +3466,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bDtg = new JTextField();
 			bDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
 			bDtg.setHorizontalAlignment(SwingConstants.CENTER);
-			bDtg.setEditable(false);
 			bDtg.setColumns(10);
 			bDtg.setBackground(Color.WHITE);
 			bDtg.setBounds(722, 307, 121, 96);
@@ -1908,7 +3474,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cDtg = new JTextField();
 			cDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
 			cDtg.setHorizontalAlignment(SwingConstants.CENTER);
-			cDtg.setEditable(false);
 			cDtg.setColumns(10);
 			cDtg.setBackground(Color.WHITE);
 			cDtg.setBounds(722, 402, 121, 96);
@@ -1917,7 +3482,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dDtg = new JTextField();
 			dDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
 			dDtg.setHorizontalAlignment(SwingConstants.CENTER);
-			dDtg.setEditable(false);
 			dDtg.setColumns(10);
 			dDtg.setBackground(Color.WHITE);
 			dDtg.setBounds(722, 498, 121, 96);
@@ -1925,7 +3489,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			
 			lBackGround = AOPLs.getBackground();
 			
-			
+			unitData uData = new unitData(starter, starter, starter, starter, starter, starter, starter);
+			fireUnitData fUData = new fireUnitData(starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, uData);
 
 
 
@@ -2086,10 +3651,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	** @return
 	** @throws
 	**/
-	public void dataCopier(fireUnitData status){ 
+public void dataCopier(fireUnitData status){ 
 		
 		if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Alpha")){
+			
 			ACurAS.setText(status.getCurAs());
+			
 		 	ADirAS.setText(status.getDirAs());
 		 	AcurEtro.setText(status.getEtro());
 		 	aCurSto.setText(status.getSto());
@@ -2115,17 +3682,15 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 	AInopPac2L.setText(status.getInopPac2());
 		 	
 		 	aUnitId.setBackground(colorReader(status.getStatusBackGround()));
+		 	System.out.println(status.getStatusBackGround());
 		 	
 		 	AdefendedAssets.setText(status.getUnitData().getDefAsset());
 		 	aUnitId.setText(status.getUnitData().getUnitName());
-		 	
 		 	AcurLocation.setText(status.getUnitData().getLocation());
 		 	AcurPtl.setText(status.getUnitData().getPtl());
 		 	AcurStl.setText(status.getUnitData().getStl());
-		 	
-		 	
 		 	ASystemType.setText(status.getUnitData().getUnitType());
-		 	
+		 	ARemarks.setText(status.getRemarks());
 		 	
 		 	System.out.println("The Current AS" + status.getCurAs());
 		 }
@@ -2163,8 +3728,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	BcurLocation.setText(status.getUnitData().getLocation());
 			 	BcurPtl.setText(status.getUnitData().getPtl());
 			 	BcurStl.setText(status.getUnitData().getStl());
-			 	
-			 	
+			 	BRemarks.setText(status.getRemarks());
 			 	BSystemType.setText(status.getUnitData().getUnitType());
 		 }
 		 else if(status.getUnitData().getUnitDesignator().equalsIgnoreCase("Charlie")){
@@ -2201,7 +3765,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	CcurLocation.setText(status.getUnitData().getLocation());
 			 	CcurPtl.setText(status.getUnitData().getPtl());
 			 	CcurStl.setText(status.getUnitData().getStl());
-			 	
+			 	CRemarks.setText(status.getRemarks());
 			 	
 			 	CSystemType.setText(status.getUnitData().getUnitType());
 		 }
@@ -2235,7 +3799,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	DdefendedAssets.setText(status.getUnitData().getDefAsset());
 			 	dUnitId.setText(status.getUnitData().getUnitName());
-			 	
+			 	DRemarks.setText(status.getRemarks());
 			 	DcurLocation.setText(status.getUnitData().getLocation());
 			 	DcurPtl.setText(status.getUnitData().getPtl());
 			 	DcurStl.setText(status.getUnitData().getStl());
@@ -2272,7 +3836,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 	
 			 	HHBdefendedAssets.setText(status.getUnitData().getDefAsset());
 			 	HHBUnitId.setText(status.getUnitData().getUnitName());
-			 	
+			 	HHBRemarks.setText(status.getRemarks());
 			 	HHBcurLocation.setText(status.getUnitData().getLocation());
 			 	HHBcurPtl.setText(status.getUnitData().getPtl());
 			 	HHBcurStl.setText(status.getUnitData().getStl());
@@ -2297,10 +3861,13 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			switch (color){
 			case WHITE:
 				curColor = Color.WHITE;
+				break;
 			case RED: 
 				curColor = Color.RED;
+				break;
 			case GREEN:
 				curColor = Color.GREEN;
+				break;
 			}
 			return curColor;
 		}
@@ -2313,16 +3880,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 		 */
 		public void receiveFile(String fileName)
 		{	
+			System.out.println("Received File Method Called");
 			File file = new File(fileName);
 			
 			if(file.exists())
 			{		
-				convertJSONToObject(file);
+				convertJSONToObject(file);			
 				
-				System.out.println("TEst");
 				dataCopier(status);
-				System.out.println("TEst");
-				System.out.println(status.getAco());
 			}
 			else
 			{
@@ -2400,7 +3965,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				{
 					Socket socket = serverSock.accept();				
 						
-					Thread t = new Thread(new ClientHandler(socket));			
+					Thread t = new Thread(new ClientHandler(socket));	
+					t.setPriority(Thread.MAX_PRIORITY);
 					t.start();
 					System.out.println("got a connection");
 				    
@@ -2415,7 +3981,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				
 				public ClientHandler(Socket clientSocket)
 				{
-					try
+					try 
 					{
 						socket = clientSocket;
 						inStream = new ObjectInputStream(socket.getInputStream());
@@ -2452,7 +4018,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			                }
 			            }
 					
-				        System.out.println("Download Successfully! on BNPssGui");
+				        System.out.println("Download Successfully!");
 				        
 				        receiveFile(fileName);
 				        
@@ -2479,6 +4045,154 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			}
 		}
+		
+		
+		
+		public void startFileReceiver()
+		{
+			
+			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>()
+			{
+
+				@Override
+				protected Void doInBackground() throws Exception {
+						
+					ServerSocket serverSock = new ServerSocket(5000);
+					System.out.println("running");
+					while(true)
+					{
+						Socket socket = serverSock.accept();				
+							
+						startFileReceiver2(socket);
+						
+					    
+					}	
+					
+					
+				}
+			};
+	
+			
+			worker.execute();
+		}
+		
+		public static class serverInfo
+		{
+			public String fileName;
+			public Socket socket;
+		}
+		
+		
+		public void startFileReceiver2(Socket sock)
+		{
+			
+			final serverInfo si = new serverInfo();
+			
+			si.socket = sock;
+			
+			
+			
+			
+			SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
+			{
+
+				@Override
+				protected Boolean doInBackground() throws Exception {
+						
+					ObjectInputStream inStream = new ObjectInputStream(si.socket.getInputStream());
+					si.fileName = (String) inStream.readObject();	
+					System.out.println(si.fileName);
+					FileOutputStream outStream = new FileOutputStream(si.fileName);
+				    byte[] buffer = new byte[200000];
+		            int bytesRead = 0, counter = 0;
+		 
+		            while (bytesRead >= 0) 
+		            {
+		                bytesRead = inStream.read(buffer);
+		                if (bytesRead >= 0) 
+		                {
+		                    outStream.write(buffer, 0, bytesRead);
+		                    counter += bytesRead;
+		                    System.out.println("total bytes read: " + counter);
+		                }
+		                if (bytesRead < 1024) 
+		                {
+		                    outStream.flush();
+		                    break;
+		                }
+		            }
+				
+			        System.out.println("Download Successfully!");
+			        
+			      
+			        
+		            outStream.close(); 
+		            inStream.close();
+					
+					
+					return true;
+				}
+
+				/* (non-Javadoc)
+				 * @see javax.swing.SwingWorker#done()
+				 */
+				@Override
+				protected void done() {
+					// TODO Auto-generated method stub
+					
+					
+					receiveFile(si.fileName);
+					super.done();
+				}
+			};
+	
+			
+			worker.execute();
+		}
+public void compMissileUpdater(){
+	//PAC3 COUNTS FOR THE BN
+	missileCounter(AOpPac3, BOpPac3, COpPac3, DOpPac3, Pac3OPcount);
+ 	missileCounter(AInOpPac3, BInOpPac3, CInOpPac3, DInOpPac3, Pac3InopCount);
+	missileCounter(APac3Oh, BPac3Oh, CPac3Oh, DPac3Oh, Pac3OHCount);
+	//GEMC COUNTS FOR THE BN
+	missileCounter(AGemCOP, BGemCOP, CGemCOP, DGemCOP, GemCOPCount);
+	missileCounter(AGemCInOp, BGemCInOp, CGemCInOp, DGemCInOp, GemCInopCount);
+	missileCounter(AGemCOh, BGemCOh, CGemCOh, DGemCOh, GemCOHCount);
+	//GEMT COUNTS FOR THE BN
+	missileCounter(AGemTOP, BGemTOP, CGemTOP, DGemTOP, GemTOPCount);
+	missileCounter(AGemTInOp, BGemTInOp, CGemTInOp, DGemTInOp, GemTInopCount);
+	missileCounter(AGemTOH, BGemTOH, CGemTOH, DGemTOH, GemTOHCount);
+	//MISSILE COUNTS PER UNIT
+	missileCounter(AOpPac3, AInOpPac3, APac3Oh, AGemCOP, AGemCInOp, AGemCOh, AGemTOP, AGemTInOp, AGemTOH, AtotalMissileCount);
+	missileCounter(BOpPac3, BInOpPac3, BPac3Oh, BGemCOP, BGemCInOp, BGemCOh, BGemTOP, BGemTInOp, BGemTOH, BtotalMissileCount);
+	missileCounter(COpPac3, CInOpPac3, CPac3Oh, CGemCOP, CGemCInOp, CGemCOh, CGemTOP, CGemTInOp, CGemTOH, CtotalMissileCount);
+	missileCounter(DOpPac3, DInOpPac3, DPac3Oh, DGemCOP, DGemCInOp, DGemCOh, DGemTOP, DGemTInOp, DGemTOH, DtotalMissileCount);
+	//TOTAL COUNT FOR THE BN
+	
+	missileCounter(Pac3OPcount, Pac3InopCount, Pac3OHCount, GemCOPCount, GemCInopCount, GemCOHCount, GemTOPCount, GemTInopCount, GemTOHCount, BnTotalCount);
+	//Resetting the boxes back to orange is a lot easier than writing a special case or method to handle these boxes
+	//with out this manual reset on the background the IOvalidator method will set these boxes to white when we call missileCounter to add up the BN totals.
+	Pac3OPcount.setBackground(new Color(210, 105, 30));
+	Pac3InopCount.setBackground(new Color(210, 105, 30));
+	Pac3OHCount.setBackground(new Color(210, 105, 30));
+	GemCOPCount.setBackground(new Color(210, 105, 30));
+	GemCOPCount.setBackground(new Color(210, 105, 30));
+	GemCInopCount.setBackground(new Color(210, 105, 30));
+	GemCOHCount.setBackground(new Color(210, 105, 30));
+	GemTOPCount.setBackground(new Color(210, 105, 30));
+	GemTInopCount.setBackground(new Color(210, 105, 30));
+	GemTOHCount.setBackground(new Color(210, 105, 30));
+	
+	//COUNT UP LAUNCHERS
+	missileCounter(AOPLs, BOPLs, COPLs, DOPLs, BnOpLsCount);
+	missileCounter(AOPpac2L, BOPpac2L, COPpac2L, DOPpac2L, BnPac2OPCount);
+	missileCounter(AInopLs, BInopLs, CInopLs, DInopLs, BnLsInopCount);
+	missileCounter(AInopPac2L, BInopPac2L, CInopPac2L, DInopPac2L, BnPac2InopCount);
+						
+	currentDtg.setText(zTime()); //Update time stamp
+}
+
+		
 }//End Class
 
 
