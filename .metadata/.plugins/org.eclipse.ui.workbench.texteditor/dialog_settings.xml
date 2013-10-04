@@ -2,29 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="257" key="DIALOG_WIDTH"/>
-		<item value="161" key="DIALOG_Y_ORIGIN"/>
+		<item value="239" key="DIALOG_Y_ORIGIN"/>
+		<item value="1027" key="DIALOG_X_ORIGIN"/>
 		<item value="381" key="DIALOG_HEIGHT"/>
-		<item value="168" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="true" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
-		<item value="true" key="wholeword"/>
-		<item value="TEst" key="selection"/>
+		<item value="false" key="wholeword"/>
+		<item value="HHBRemarks" key="selection"/>
 		<list key="findhistory">
-			<item value="TEst"/>
-			<item value="gemtOhCount"/>
-			<item value="fillDropBox"/>
-			<item value="addActionListener"/>
-			<item value="//"/>
-			<item value="null"/>
-			<item value="status"/>
-			<item value="getCurColor"/>
+			<item value="HHBRemarks"/>
+			<item value="ARemarks"/>
+			<item value="Aremarks"/>
+			<item value="// TODO Auto-generated catch block"/>
+			<item value="compMissileUpdater"/>
+			<item value="unitId"/>
+			<item value="bUnitId"/>
+			<item value="aUnitId"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
 			<item value="status"/>
 		</list>
 	</section>

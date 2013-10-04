@@ -838,8 +838,24 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aUnitId.setText("Set Unit Name");
 			aUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			aUnitId.setColumns(10);
-			
 			aUnitId.setBounds(0, 212, 84, 96);
+			aUnitId.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+				//This if/else if/else statement allows the user to control the background of this JTextField by clicking on the box
+					if(color==0){
+						aUnitId.setBackground(Color.WHITE);
+						color++;
+					}
+					else if(color==1){
+						aUnitId.setBackground(Color.RED);
+						color++;
+					}else{
+						color=0;
+						aUnitId.setBackground(Color.GREEN);	
+					}	
+				}
+			});//End mouseListener
 			getContentPane().add(aUnitId);
 			
 			bUnitId = new JTextField();
@@ -847,8 +863,24 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bUnitId.setText("Set Unit Name");
 			bUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			bUnitId.setColumns(10);
-			
 			bUnitId.setBounds(0, 307, 84, 96);
+			bUnitId.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+				//This if/else if/else statement allows the user to control the background of this JTextField by clicking on the box
+					if(color==0){
+						bUnitId.setBackground(Color.WHITE);
+						color++;
+					}
+					else if(color==1){
+						bUnitId.setBackground(Color.RED);
+						color++;
+					}else{
+						color=0;
+						bUnitId.setBackground(Color.GREEN);	
+					}	
+				}
+			});//End mouseListener
 			getContentPane().add(bUnitId);
 			
 			cUnitId = new JTextField();
@@ -856,8 +888,24 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cUnitId.setText("Set Unit Name");
 			cUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			cUnitId.setColumns(10);
-			
 			cUnitId.setBounds(0, 402, 84, 96);
+			cUnitId.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+				//This if/else if/else statement allows the user to control the background of this JTextField by clicking on the box
+					if(color==0){
+						cUnitId.setBackground(Color.WHITE);
+						color++;
+					}
+					else if(color==1){
+						cUnitId.setBackground(Color.RED);
+						color++;
+					}else{
+						color=0;
+						cUnitId.setBackground(Color.GREEN);	
+					}	
+				}
+			});//End mouseListener
 			getContentPane().add(cUnitId);
 			
 			dUnitId = new JTextField();
@@ -865,8 +913,24 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dUnitId.setText("Set Unit Name");
 			dUnitId.setHorizontalAlignment(SwingConstants.CENTER);
 			dUnitId.setColumns(10);
-			
 			dUnitId.setBounds(0, 498, 84, 96);
+			dUnitId.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+				//This if/else if/else statement allows the user to control the background of this JTextField by clicking on the box
+					if(color==0){
+						dUnitId.setBackground(Color.WHITE);
+						color++;
+					}
+					else if(color==1){
+						dUnitId.setBackground(Color.RED);
+						color++;
+					}else{
+						color=0;
+						dUnitId.setBackground(Color.GREEN);	
+					}	
+				}
+			});//End mouseListener
 			getContentPane().add(dUnitId);
 			
 			stoHeader = new JTextField();
