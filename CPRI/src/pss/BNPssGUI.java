@@ -2,6 +2,7 @@ package pss;
 
 import javax.swing.JFrame;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 
@@ -16,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -245,15 +247,20 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private Color lBackGround;
 	private String starter = "Place Holder";
 	private static int color = 0;
-	
+	private JScrollPane panel;
 	private unitData FUdata;
 	private fireUnitData status;
 	private JTextArea HHBRemarks;
-	
+	private JTextField opPac3Lheader;
+	private JTextField opPac2LHeader;
+	private JTextField inopPac2LHeader;
+	private JTextField inopPac3LHeader;
+	private JPanel bnGui;
 	
 	
 	BNPssGUI(){
-		
+			
+			
 			//starts receiver code
 			startFileReceiver();	
 		
@@ -267,16 +274,26 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			setTitle("PATRIOT SMART SAMSTAT");
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setAlwaysOnTop(true);
-			getContentPane().setBackground(Color.GRAY);
-			setBounds(new Rectangle(1500, 500, 1844, 675));
-			getContentPane().setLayout(null);
+			
+			setBounds(1500, 500, 1844, 675);
+			bnGui = new JPanel();
+			bnGui.setLayout(null);
+			bnGui.setBackground(Color.GRAY);
+			bnGui.setBorder(new EmptyBorder(5, 5, 5, 5));
+			bnGui.setPreferredSize(new Dimension(1850, 650));
+			//bnGui.setLayout(null);
+			//setContentPane(bnGui);
+			setLocationRelativeTo(null);
+			    
+			
+			
 			
 			//This component exists for esthetic purposes. 
 			blackspace = new JTextField();
 			blackspace.setEditable(false);
 			blackspace.setBackground(Color.BLACK);
 			blackspace.setBounds(299, 21, 554, 41);
-			getContentPane().add(blackspace);
+			bnGui.add(blackspace);
 			blackspace.setColumns(10);
 			
 			
@@ -288,7 +305,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			secretHeaderLeft.setHorizontalAlignment(SwingConstants.CENTER);
 			secretHeaderLeft.setText("SECRET WHEN FILLED IN");
 			secretHeaderLeft.setBounds(0, 0, 301, 20);
-			getContentPane().add(secretHeaderLeft);
+			bnGui.add(secretHeaderLeft);
 			secretHeaderLeft.setColumns(10);
 			
 			//Provides a header as per the design of the SamStat report.
@@ -298,7 +315,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			samStatHeader.setText("BATTALION SAMSTATREP");
 			samStatHeader.setEditable(false);
 			samStatHeader.setBounds(299, 0, 1247, 20);
-			getContentPane().add(samStatHeader);
+			bnGui.add(samStatHeader);
 			samStatHeader.setColumns(10);
 			
 			//Provides a header as per the design of the SamStat report. 
@@ -309,7 +326,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			secretHeaderRight.setEditable(false);
 			secretHeaderRight.setColumns(10);
 			secretHeaderRight.setBounds(1544, 0, 284, 20);
-			getContentPane().add(secretHeaderRight);
+			bnGui.add(secretHeaderRight);
 			
 			//PRovides a header for our current DTG component. 
 			effectiveDtg = new JTextField();
@@ -317,7 +334,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			effectiveDtg.setHorizontalAlignment(SwingConstants.CENTER);
 			effectiveDtg.setText("EFFECTIVE DTG:");
 			effectiveDtg.setBounds(0, 21, 161, 20);
-			getContentPane().add(effectiveDtg);
+			bnGui.add(effectiveDtg);
 			effectiveDtg.setColumns(10);
 			
 			//This component will store the current DTG for the samstat. 
@@ -328,7 +345,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			currentDtg.setBounds(161, 21, 140, 20);
 			currentDtg.setText(zTime());
 			//currentDtg.setText(zTime());
-			getContentPane().add(currentDtg);
+			bnGui.add(currentDtg);
 			currentDtg.setColumns(10);
 			
 			//Provides a header to the component that identifies the unit. 
@@ -339,7 +356,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			unitHeader.setToolTipText("Unit Name");
 			unitHeader.setText("Unit");
 			unitHeader.setBounds(0, 42, 79, 20);
-			getContentPane().add(unitHeader);
+			bnGui.add(unitHeader);
 			
 			//Provides a header to the unit type box. 
 			typeHeader = new JTextField();
@@ -349,7 +366,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			typeHeader.setColumns(10);
 			typeHeader.setBackground(Color.YELLOW);
 			typeHeader.setBounds(75, 42, 86, 20);
-			getContentPane().add(typeHeader);
+			bnGui.add(typeHeader);
 			
 			//provides a header for our current and directed alert state components. 
 			alertStateHeader = new JTextField();
@@ -359,7 +376,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			alertStateHeader.setEditable(false);
 			alertStateHeader.setColumns(10);
 			alertStateHeader.setBounds(161, 42, 92, 20);
-			getContentPane().add(alertStateHeader);
+			bnGui.add(alertStateHeader);
 			
 			//This component may need to be adjusted to either a drop box containing all current active battalions or an editable box allowing the user to place what ever they want
 			//This component provides information on which battalion the unit belongs to. 
@@ -369,7 +386,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bnId.setHorizontalAlignment(SwingConstants.CENTER);
 			bnId.setText("4-5 AMD BN");
 			bnId.setBounds(0, 63, 161, 52);
-			getContentPane().add(bnId);
+			bnGui.add(bnId);
 			bnId.setColumns(10);
 			
 			//This component provides a header to the current AS box.
@@ -379,7 +396,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			curHeader.setText("CUR");
 			curHeader.setHorizontalAlignment(SwingConstants.CENTER);
 			curHeader.setBounds(161, 63, 45, 52);
-			getContentPane().add(curHeader);
+			bnGui.add(curHeader);
 			curHeader.setColumns(10);
 			
 			//This Component provides a header to the dir AS box. 
@@ -390,7 +407,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dirHeader.setText("DIR");
 			dirHeader.setColumns(10);
 			dirHeader.setBounds(207, 63, 45, 52);
-			getContentPane().add(dirHeader);
+			bnGui.add(dirHeader);
 			
 			//This component allows the user to store information on current unit identifier. Maybe necessary to pass this in as an arguement to the PssGui since there is no accounting for callsigns. 
 			//This component also needs to be updated with a mouse click event that can turn the color of the box to reflect the tooltip text.
@@ -419,7 +436,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:" + "<br/>GREEN-MC" + "<br/>RED-NMC" + "<br/>WHITE-UNIT IN TRANSISTION</html>");
 			HHBUnitId.setText("Set Unit Name");
 			HHBUnitId.setBounds(0, 116, 84, 96);
-			getContentPane().add(HHBUnitId);
+			bnGui.add(HHBUnitId);
 			HHBUnitId.setColumns(10);
 		
 			
@@ -430,7 +447,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBsystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBsystemType.setToolTipText("<html>ENTER SYSTEM TYPE:" + "<br/>PAT" + "<br/>AVENGER"+ "<br/>STINGER" + "<br/>THAAD</html>");
 			HHBsystemType.setBounds(83, 116, 79, 96);
-			getContentPane().add(HHBsystemType);
+			bnGui.add(HHBsystemType);
 			
 			//This component allows the user to store information about the alert state they are currently at. 
 			HHBcurSelector = new JComboBox();
@@ -438,7 +455,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBcurSelector.setEditable(false);
 			HHBcurSelector.setToolTipText("CURRENT ALERT STATE");
 			HHBcurSelector.setBounds(161, 116, 45, 96);
-			getContentPane().add(HHBcurSelector);
+			bnGui.add(HHBcurSelector);
 			
 			//This component allows the user to store information on which alert state they are being directed to. 
 			HHBdirSelector = new JComboBox();
@@ -446,7 +463,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBdirSelector.setEditable(false);
 			HHBdirSelector.setToolTipText("DIRECTED ALERT STATE");
 			HHBdirSelector.setBounds(207, 116, 45, 96);
-			getContentPane().add(HHBdirSelector);
+			bnGui.add(HHBdirSelector);
 			
 			//This component provides a header for the defendedAssets jtextfield prompting the user to enter in their defended assets. 
 			DefAssetHeader = new JTextPane();
@@ -458,7 +475,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DefAssetHeader.setText("DEFENDED ASSET");
 			DefAssetHeader.setBackground(Color.YELLOW);
 			DefAssetHeader.setBounds(253, 62, 86, 53);
-			getContentPane().add(DefAssetHeader);
+			bnGui.add(DefAssetHeader);
 			
 			//This component stores information about the units defended assets. 
 			HHBdefendedAssets = new JTextArea();
@@ -466,7 +483,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBdefendedAssets.setLineWrap(true);
 			HHBdefendedAssets.setToolTipText("ENTER YOUR DEFENDED ASSETS");
 			HHBdefendedAssets.setBounds(253, 116, 86, 95);
-			getContentPane().add(HHBdefendedAssets);
+			bnGui.add(HHBdefendedAssets);
 			HHBdefendedAssets.setColumns(10);
 			
 			//This component provides a header prompting the user to enter their units location. 
@@ -477,7 +494,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			locationHeader.setColumns(10);
 			locationHeader.setBackground(Color.YELLOW);
 			locationHeader.setBounds(340, 62, 86, 53);
-			getContentPane().add(locationHeader);
+			bnGui.add(locationHeader);
 			
 			//This component stores the units current location in latitude and longitude. 
 			HHBcurLocation = new JTextField();
@@ -485,7 +502,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBcurLocation.setToolTipText("ENTER LAT/LONG & MGRS FOR CURRENT LOCATION");
 			HHBcurLocation.setColumns(10);
 			HHBcurLocation.setBounds(340, 116, 86, 96);
-			getContentPane().add(HHBcurLocation);
+			bnGui.add(HHBcurLocation);
 			
 			//This component provides a header to the jtextfield that stores the ETRO information on the unit. 
 			etroHeader = new JTextField();
@@ -494,7 +511,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			etroHeader.setHorizontalAlignment(SwingConstants.CENTER);
 			etroHeader.setText("ETRO");
 			etroHeader.setBounds(425, 62, 121, 53);
-			getContentPane().add(etroHeader);
+			bnGui.add(etroHeader);
 			
 			//This jtextfield provides the user a header for the jtextfield that stores information on the PTL.
 			ptlHeader = new JTextField();
@@ -504,14 +521,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			ptlHeader.setText("PTL");
 			ptlHeader.setColumns(10);
 			ptlHeader.setBounds(546, 63, 40, 53);
-			getContentPane().add(ptlHeader);
+			bnGui.add(ptlHeader);
 			
 			//This jtextfield stores information about the current estimated time to return to operation or (ETRO).
 			HHBcurEtro = new JTextField();
 			HHBcurEtro.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBcurEtro.setToolTipText("ENTER DTG OF CURRENT ETRO");
 			HHBcurEtro.setBounds(425, 116, 121, 96);
-			getContentPane().add(HHBcurEtro);
+			bnGui.add(HHBcurEtro);
 			HHBcurEtro.setColumns(10);
 			
 			//This component stores information about the primary target line or (PTL).
@@ -520,7 +537,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBcurPtl.setToolTipText("HHB'S PRIMARY TARGET LINE");
 			HHBcurPtl.setColumns(10);
 			HHBcurPtl.setBounds(546, 116, 40, 96);
-			getContentPane().add(HHBcurPtl);
+			bnGui.add(HHBcurPtl);
 			
 			//this jtextfield provides a header letting the user know that the jtextfield below is for storing the STL. 
 			stlHeader = new JTextField();
@@ -530,7 +547,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			stlHeader.setColumns(10);
 			stlHeader.setBackground(Color.YELLOW);
 			stlHeader.setBounds(586, 63, 40, 53);
-			getContentPane().add(stlHeader);
+			bnGui.add(stlHeader);
 			
 			//This JTextField stores information about the secondary target line or (STL).
 			HHBcurStl = new JTextField();
@@ -538,7 +555,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBcurStl.setToolTipText("HHB'S SECONDARY TARGET LINE");
 			HHBcurStl.setColumns(10);
 			HHBcurStl.setBounds(586, 116, 40, 96);
-			getContentPane().add(HHBcurStl);
+			bnGui.add(HHBcurStl);
 			
 			//This component is just a header for the missile section of the samstat
 			missileHeader = new JTextField();
@@ -547,15 +564,16 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			missileHeader.setText("MISSILES");
 			missileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 			missileHeader.setBounds(853, 21, 975, 20);
-			getContentPane().add(missileHeader);
+			bnGui.add(missileHeader);
 			missileHeader.setColumns(10);
 			
 			pac_3OpHeader = new JTextField();
+			pac_3OpHeader.setEditable(false);
 			pac_3OpHeader.setHorizontalAlignment(SwingConstants.CENTER);
 			pac_3OpHeader.setText("OP");
 			pac_3OpHeader.setBounds(853, 63, 40, 52);
 			pac_3OpHeader.setBackground(new Color(210, 105, 30));
-			getContentPane().add(pac_3OpHeader);
+			bnGui.add(pac_3OpHeader);
 			
 			pac_3InopHeader = new JTextField();
 			pac_3InopHeader.setForeground(Color.BLACK);
@@ -564,7 +582,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			pac_3InopHeader.setText("INOP");
 			pac_3InopHeader.setBounds(893, 63, 40, 52);
 			pac_3InopHeader.setBackground(new Color(210, 105, 30));
-			getContentPane().add(pac_3InopHeader);
+			bnGui.add(pac_3InopHeader);
 			
 			pac_3OhHeader = new JTextField();
 			pac_3OhHeader.setText("OH");
@@ -573,7 +591,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			pac_3OhHeader.setColumns(10);
 			pac_3OhHeader.setBackground(new Color(210, 105, 30));
 			pac_3OhHeader.setBounds(934, 63, 40, 52);
-			getContentPane().add(pac_3OhHeader);
+			bnGui.add(pac_3OhHeader);
 		
 			//These "header" jtextfields prove the labels to our drop boxes that track the current number of Pac-3 Missiles.
 			pac_3Header = new JTextField();
@@ -582,7 +600,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			pac_3Header.setBackground(new Color(210, 105, 30));
 			pac_3Header.setText("PAC 3");
 			pac_3Header.setBounds(853, 42, 121, 20);
-			getContentPane().add(pac_3Header);
+			bnGui.add(pac_3Header);
 		
 			gemCHeader = new JTextField();
 			gemCHeader.setHorizontalAlignment(SwingConstants.CENTER);
@@ -590,7 +608,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			gemCHeader.setText("GEM C");
 			gemCHeader.setBackground(new Color(210, 105, 30));
 			gemCHeader.setBounds(984, 42, 121, 20);
-			getContentPane().add(gemCHeader);
+			bnGui.add(gemCHeader);
 			
 			GemcOpHeader = new JTextField();
 			GemcOpHeader.setText("OP");
@@ -599,7 +617,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemcOpHeader.setColumns(10);
 			GemcOpHeader.setBackground(new Color(210, 105, 30));
 			GemcOpHeader.setBounds(983, 63, 40, 52);
-			getContentPane().add(GemcOpHeader);
+			bnGui.add(GemcOpHeader);
 			
 			GemcInopHeader = new JTextField();
 			GemcInopHeader.setText("INOP");
@@ -608,7 +626,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemcInopHeader.setColumns(10);
 			GemcInopHeader.setBackground(new Color(210, 105, 30));
 			GemcInopHeader.setBounds(1024, 63, 40, 52);
-			getContentPane().add(GemcInopHeader);
+			bnGui.add(GemcInopHeader);
 			
 			GemCOhHeader = new JTextField();
 			GemCOhHeader.setText("OH");
@@ -617,7 +635,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemCOhHeader.setColumns(10);
 			GemCOhHeader.setBackground(new Color(210, 105, 30));
 			GemCOhHeader.setBounds(1065, 63, 40, 52);
-			getContentPane().add(GemCOhHeader);
+			bnGui.add(GemCOhHeader);
 		
 			//These "header" components provide the labels for the drop boxes that handle the Gem-T missile counts.
 			gemTHeader = new JTextField();
@@ -627,7 +645,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			gemTHeader.setColumns(10);
 			gemTHeader.setBackground(new Color(210, 105, 30));
 			gemTHeader.setBounds(1115, 42, 121, 20);
-			getContentPane().add(gemTHeader);
+			bnGui.add(gemTHeader);
 			
 			gemtOpHeader = new JTextField();
 			gemtOpHeader.setText("OP");
@@ -636,7 +654,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			gemtOpHeader.setColumns(10);
 			gemtOpHeader.setBackground(new Color(210, 105, 30));
 			gemtOpHeader.setBounds(1114, 63, 40, 52);
-			getContentPane().add(gemtOpHeader);
+			bnGui.add(gemtOpHeader);
 			
 			gemtInopHeader = new JTextField();
 			gemtInopHeader.setText("INOP");
@@ -645,7 +663,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			gemtInopHeader.setColumns(10);
 			gemtInopHeader.setBackground(new Color(210, 105, 30));
 			gemtInopHeader.setBounds(1156, 63, 40, 52);
-			getContentPane().add(gemtInopHeader);
+			bnGui.add(gemtInopHeader);
 			
 			gemtOhHeader = new JTextField();
 			gemtOhHeader.setText("OH");
@@ -654,7 +672,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			gemtOhHeader.setColumns(10);
 			gemtOhHeader.setBackground(new Color(210, 105, 30));
 			gemtOhHeader.setBounds(1196, 63, 40, 52);
-			getContentPane().add(gemtOhHeader);
+			bnGui.add(gemtOhHeader);
 			
 			missileCountHeader = new JTextField();
 			missileCountHeader.setText("TOTAL MISSILES");
@@ -663,7 +681,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			missileCountHeader.setColumns(10);
 			missileCountHeader.setBackground(new Color(210, 105, 30));
 			missileCountHeader.setBounds(1236, 42, 155, 73);
-			getContentPane().add(missileCountHeader);
+			bnGui.add(missileCountHeader);
 			
 			launchersHeader = new JTextField();
 			launchersHeader.setText("LAUNCHERS");
@@ -672,7 +690,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			launchersHeader.setColumns(10);
 			launchersHeader.setBackground(new Color(205, 133, 63));
 			launchersHeader.setBounds(1391, 42, 155, 20);
-			getContentPane().add(launchersHeader);
+			bnGui.add(launchersHeader);
 			
 			remarksHeader = new JTextField();
 			remarksHeader.setText("REMARKS/GENERAL FAULTS");
@@ -681,7 +699,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			remarksHeader.setColumns(10);
 			remarksHeader.setBackground(Color.YELLOW);
 			remarksHeader.setBounds(1544, 42, 284, 20);
-			getContentPane().add(remarksHeader);
+			bnGui.add(remarksHeader);
 			
 			launchersInopHeader = new JTextField();
 			launchersInopHeader.setText("INOP");
@@ -689,8 +707,8 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			launchersInopHeader.setEditable(false);
 			launchersInopHeader.setColumns(10);
 			launchersInopHeader.setBackground(new Color(205, 133, 63));
-			launchersInopHeader.setBounds(1469, 63, 77, 52);
-			getContentPane().add(launchersInopHeader);
+			launchersInopHeader.setBounds(1469, 89, 77, 26);
+			bnGui.add(launchersInopHeader);
 			
 			launchersOPheader = new JTextField();
 			launchersOPheader.setText("OP");
@@ -698,88 +716,106 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			launchersOPheader.setEditable(false);
 			launchersOPheader.setColumns(10);
 			launchersOPheader.setBackground(new Color(205, 133, 63));
-			launchersOPheader.setBounds(1391, 63, 77, 52);
-			getContentPane().add(launchersOPheader);
+			launchersOPheader.setBounds(1391, 89, 77, 26);
+			bnGui.add(launchersOPheader);
 			
 			//This section handled the fault reporting on the samstat. 
 			faultHeader = new JTextPane();
 			faultHeader.setEditable(false);
 			faultHeader.setText("A-AMG B-ECS C-CRG D-BCP E-EPP/EPU F-FORKLIFT G-GMT J-LSTS K-IFF L-LS I-ICC M-MISSILES R-RS");
 			faultHeader.setBounds(1544, 63, 284, 52);
-			getContentPane().add(faultHeader);
+			bnGui.add(faultHeader);
 			
 			HHBOpPac3 = new JTextField();
+			HHBOpPac3.setEditable(false);
+			HHBOpPac3.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBOpPac3.setEnabled(false);
 			HHBOpPac3.setBackground(Color.GRAY);
 			HHBOpPac3.setToolTipText("");
 			HHBOpPac3.setColumns(10);
 			HHBOpPac3.setBounds(853, 116, 40, 96);
-			getContentPane().add(HHBOpPac3);
+			bnGui.add(HHBOpPac3);
 			
 			HHBInOpPac3 = new JTextField();
+			HHBInOpPac3.setEditable(false);
+			HHBInOpPac3.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBInOpPac3.setEnabled(false);
 			HHBInOpPac3.setBackground(Color.GRAY);
 			HHBInOpPac3.setToolTipText("");
 			HHBInOpPac3.setColumns(10);
 			HHBInOpPac3.setBounds(893, 116, 40, 96);
-			getContentPane().add(HHBInOpPac3);
+			bnGui.add(HHBInOpPac3);
 			
 			HHBPac3Oh = new JTextField();
+			HHBPac3Oh.setEditable(false);
+			HHBPac3Oh.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBPac3Oh.setEnabled(false);
 			HHBPac3Oh.setBackground(Color.GRAY);
 			HHBPac3Oh.setToolTipText("");
 			HHBPac3Oh.setColumns(10);
 			HHBPac3Oh.setBounds(934, 116, 40, 96);
-			getContentPane().add(HHBPac3Oh);
+			bnGui.add(HHBPac3Oh);
 			
 			HHBGemCOP = new JTextField();
+			HHBGemCOP.setEditable(false);
+			HHBGemCOP.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemCOP.setEnabled(false);
 			HHBGemCOP.setBackground(Color.GRAY);
 			HHBGemCOP.setToolTipText("");
 			HHBGemCOP.setColumns(10);
 			HHBGemCOP.setBounds(983, 116, 40, 96);
-			getContentPane().add(HHBGemCOP);
+			bnGui.add(HHBGemCOP);
 			
 			HHBGemCInOp = new JTextField();
+			HHBGemCInOp.setEditable(false);
+			HHBGemCInOp.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemCInOp.setEnabled(false);
 			HHBGemCInOp.setBackground(Color.GRAY);
 			HHBGemCInOp.setToolTipText("");
 			HHBGemCInOp.setColumns(10);
 			HHBGemCInOp.setBounds(1024, 116, 40, 96);
-			getContentPane().add(HHBGemCInOp);
+			bnGui.add(HHBGemCInOp);
 			
 			HHBGemCOh = new JTextField();
+			HHBGemCOh.setEditable(false);
+			HHBGemCOh.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemCOh.setEnabled(false);
 			HHBGemCOh.setBackground(Color.GRAY);
 			HHBGemCOh.setToolTipText("");
 			HHBGemCOh.setColumns(10);
 			HHBGemCOh.setBounds(1065, 116, 40, 96);
-			getContentPane().add(HHBGemCOh);
+			bnGui.add(HHBGemCOh);
 			
 			HHBGemTOP = new JTextField();
+			HHBGemTOP.setEditable(false);
+			HHBGemTOP.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemTOP.setBackground(Color.GRAY);
 			HHBGemTOP.setEnabled(false);
 			HHBGemTOP.setBackground(Color.GRAY);
 			HHBGemTOP.setToolTipText("");
 			HHBGemTOP.setColumns(10);
 			HHBGemTOP.setBounds(1114, 116, 40, 96);
-			getContentPane().add(HHBGemTOP);
+			bnGui.add(HHBGemTOP);
 			
 			HHBGemTInOp = new JTextField();
+			HHBGemTInOp.setEditable(false);
+			HHBGemTInOp.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemTInOp.setBackground(Color.GRAY);
 			HHBGemTInOp.setEnabled(false);
 			HHBGemTInOp.setToolTipText("");
 			HHBGemTInOp.setColumns(10);
 			HHBGemTInOp.setBounds(1156, 116, 40, 96);
-			getContentPane().add(HHBGemTInOp);
+			bnGui.add(HHBGemTInOp);
 			
 			HHBGemTOH = new JTextField();
+			HHBGemTOH.setEditable(false);
+			HHBGemTOH.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBGemTOH.setBackground(Color.GRAY);
 			HHBGemTOH.setEnabled(false);
 			HHBGemTOH.setToolTipText("");
 			HHBGemTOH.setColumns(10);
 			HHBGemTOH.setBounds(1196, 116, 40, 96);
-			getContentPane().add(HHBGemTOH);
+			bnGui.add(HHBGemTOH);
 			
 			//totalMissileCount represents the total amount of missiles on the site. It is only comprised of this sincle JTextField.
 			HHBtotalMissileCount = new JTextField();
@@ -789,49 +825,58 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBtotalMissileCount.setForeground(Color.WHITE);
 			HHBtotalMissileCount.setBackground(new Color(0, 0, 0));
 			HHBtotalMissileCount.setBounds(1236, 116, 155, 96);
-			getContentPane().add(HHBtotalMissileCount);
+			bnGui.add(HHBtotalMissileCount);
 			HHBtotalMissileCount.setColumns(10);
 			
 			HHBLs = new JTextField();
+			HHBLs.setForeground(Color.GRAY);
 			HHBLs.setEnabled(false);
+			HHBLs.setEditable(false);
 			HHBLs.setBackground(Color.GRAY);
 			HHBLs.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBLs.setToolTipText("");
 			HHBLs.setColumns(10);
 			HHBLs.setBounds(1391, 116, 77, 48);
-			getContentPane().add(HHBLs);
+			bnGui.add(HHBLs);
 			
 			HHBInopLs = new JTextField();
+			HHBInopLs.setForeground(Color.GRAY);
 			HHBInopLs.setEnabled(false);
+			HHBInopLs.setEditable(false);
+			HHBInopLs.setHorizontalAlignment(SwingConstants.CENTER);
 			HHBInopLs.setBackground(Color.GRAY);
 			HHBInopLs.setToolTipText("");
 			HHBInopLs.setColumns(10);
 			HHBInopLs.setBounds(1469, 116, 77, 48);
-			getContentPane().add(HHBInopLs);
+			bnGui.add(HHBInopLs);
 			
 			HHBRemarks = new JTextArea();
 			HHBRemarks.setToolTipText("Enter All Current System Faults and Deadlines Here");
 			HHBRemarks.setWrapStyleWord(true);
 			HHBRemarks.setLineWrap(true);
 			HHBRemarks.setBackground(Color.LIGHT_GRAY);
-			HHBRemarks.setBounds(1544, 116, 284, 95);
-			getContentPane().add(HHBRemarks);
+			HHBRemarks.setBounds(1547, 116, 280, 94);
+			bnGui.add(HHBRemarks);
 			
 			HHBOPpac2L = new JTextField();
-			HHBOPpac2L.setBackground(Color.GRAY);
 			HHBOPpac2L.setEnabled(false);
+			HHBOPpac2L.setEditable(false);
+			HHBOPpac2L.setHorizontalAlignment(SwingConstants.CENTER);
+			HHBOPpac2L.setBackground(Color.GRAY);
 			HHBOPpac2L.setToolTipText("");
 			HHBOPpac2L.setColumns(10);
 			HHBOPpac2L.setBounds(1391, 164, 77, 48);
-			getContentPane().add(HHBOPpac2L);
+			bnGui.add(HHBOPpac2L);
 			
 			HHBInopPac2L = new JTextField();
-			HHBInopPac2L.setBackground(Color.GRAY);
 			HHBInopPac2L.setEnabled(false);
+			HHBInopPac2L.setEditable(false);
+			HHBInopPac2L.setHorizontalAlignment(SwingConstants.CENTER);
+			HHBInopPac2L.setBackground(Color.GRAY);
 			HHBInopPac2L.setToolTipText("");
 			HHBInopPac2L.setColumns(10);
 			HHBInopPac2L.setBounds(1469, 164, 77, 48);
-			getContentPane().add(HHBInopPac2L);
+			bnGui.add(HHBInopPac2L);
 			
 			aUnitId = new JTextField();
 			aUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
@@ -856,7 +901,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					}	
 				}
 			});//End mouseListener
-			getContentPane().add(aUnitId);
+			bnGui.add(aUnitId);
 			
 			bUnitId = new JTextField();
 			bUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
@@ -881,7 +926,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					}	
 				}
 			});//End mouseListener
-			getContentPane().add(bUnitId);
+			bnGui.add(bUnitId);
 			
 			cUnitId = new JTextField();
 			cUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
@@ -906,7 +951,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					}	
 				}
 			});//End mouseListener
-			getContentPane().add(cUnitId);
+			bnGui.add(cUnitId);
 			
 			dUnitId = new JTextField();
 			dUnitId.setToolTipText("<html>SHADE CELLS TO REFLECT CURRENT UNIT STATUS:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
@@ -931,7 +976,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 					}	
 				}
 			});//End mouseListener
-			getContentPane().add(dUnitId);
+			bnGui.add(dUnitId);
 			
 			stoHeader = new JTextField();
 			stoHeader.setEditable(false);
@@ -939,28 +984,28 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			stoHeader.setText("Current STO");
 			stoHeader.setBackground(Color.YELLOW);
 			stoHeader.setBounds(0, 594, 163, 40);
-			getContentPane().add(stoHeader);
+			bnGui.add(stoHeader);
 			stoHeader.setColumns(10);
 			
 			ASystemType = new JTextField();
 			ASystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			ASystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
 			ASystemType.setBounds(82, 212, 79, 96);
-			getContentPane().add(ASystemType);
+			bnGui.add(ASystemType);
 			
 			ACurAS = new JTextField();
 			ACurAS.setColumns(10);
 			ACurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			ACurAS.setToolTipText("ALPHA CURRENT ALERT STATE");
 			ACurAS.setBounds(161, 212, 45, 96);
-			getContentPane().add(ACurAS);
+			bnGui.add(ACurAS);
 			
 			ADirAS = new JTextField();
 			ADirAS.setColumns(10);
 			ADirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			ADirAS.setToolTipText("ALPHA DIRECTED ALERT STATE");
 			ADirAS.setBounds(207, 212, 45, 96);
-			getContentPane().add(ADirAS);
+			bnGui.add(ADirAS);
 			
 			AdefendedAssets = new JTextArea();
 			AdefendedAssets.setWrapStyleWord(true);
@@ -968,35 +1013,35 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AdefendedAssets.setToolTipText("ALPHA'S DEFENDED ASSETS");
 			AdefendedAssets.setColumns(10);
 			AdefendedAssets.setBounds(253, 212, 86, 94);
-			getContentPane().add(AdefendedAssets);
+			bnGui.add(AdefendedAssets);
 			
 			AcurLocation = new JTextField();
 			AcurLocation.setHorizontalAlignment(SwingConstants.CENTER);
 			AcurLocation.setToolTipText("ALPHA'S CURRENT LOCATION");
 			AcurLocation.setColumns(10);
 			AcurLocation.setBounds(340, 212, 86, 96);
-			getContentPane().add(AcurLocation);
+			bnGui.add(AcurLocation);
 			
 			AcurEtro = new JTextField();
 			AcurEtro.setHorizontalAlignment(SwingConstants.CENTER);
 			AcurEtro.setToolTipText("ALPHA'S CURRENT ETRO");
 			AcurEtro.setColumns(10);
 			AcurEtro.setBounds(425, 212, 121, 96);
-			getContentPane().add(AcurEtro);
+			bnGui.add(AcurEtro);
 			
 			AcurPtl = new JTextField();
 			AcurPtl.setHorizontalAlignment(SwingConstants.CENTER);
 			AcurPtl.setToolTipText("ALPHA'S PRIMARY TARGET LINE");
 			AcurPtl.setColumns(10);
 			AcurPtl.setBounds(546, 212, 40, 96);
-			getContentPane().add(AcurPtl);
+			bnGui.add(AcurPtl);
 			
 			AcurStl = new JTextField();
 			AcurStl.setHorizontalAlignment(SwingConstants.CENTER);
 			AcurStl.setToolTipText("ALPHA'S SECONDARY TARGET LINE");
 			AcurStl.setColumns(10);
 			AcurStl.setBounds(586, 212, 40, 96);
-			getContentPane().add(AcurStl);
+			bnGui.add(AcurStl);
 			
 			AOpPac3 = new JTextField();
 			AOpPac3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1036,7 +1081,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(AOpPac3);
+			bnGui.add(AOpPac3);
 			
 			AInOpPac3 = new JTextField();
 			AInOpPac3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1069,14 +1114,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 				
 				
 			});
-			getContentPane().add(AInOpPac3);
+			bnGui.add(AInOpPac3);
 			
 			APac3Oh = new JTextField();
 			APac3Oh.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1109,12 +1154,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(APac3Oh);
+			bnGui.add(APac3Oh);
 			
 			AGemCOP = new JTextField();
 			AGemCOP.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1148,12 +1193,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AGemCOP);
+			bnGui.add(AGemCOP);
 			
 			AGemCInOp = new JTextField();
 			AGemCInOp.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1187,12 +1232,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AGemCInOp);
+			bnGui.add(AGemCInOp);
 			
 			AGemCOh = new JTextField();
 			AGemCOh.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1231,7 +1276,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 				
 			});
-			getContentPane().add(AGemCOh);
+			bnGui.add(AGemCOh);
 			
 			AGemTOP = new JTextField();
 			AGemTOP.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1275,7 +1320,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 				
 			});
-			getContentPane().add(AGemTOP);
+			bnGui.add(AGemTOP);
 			
 			AGemTInOp = new JTextField();
 			AGemTInOp.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1309,12 +1354,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AGemTInOp);
+			bnGui.add(AGemTInOp);
 			
 			AGemTOH = new JTextField();
 			AGemTOH.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1348,12 +1393,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AGemTOH);
+			bnGui.add(AGemTOH);
 			
 			AtotalMissileCount = new JTextField();
 			AtotalMissileCount.setToolTipText("Total Missile Count for Alpha");
@@ -1363,14 +1408,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			AtotalMissileCount.setColumns(10);
 			AtotalMissileCount.setBackground(Color.BLACK);
 			AtotalMissileCount.setBounds(1236, 212, 155, 96);
-			getContentPane().add(AtotalMissileCount);
+			bnGui.add(AtotalMissileCount);
 			
 			AOPLs = new JTextField();
 			AOPLs.setToolTipText("Current Number of OP Pac3 Launchers");
 			AOPLs.setHorizontalAlignment(SwingConstants.CENTER);
 			AOPLs.setColumns(10);
 			AOPLs.setBackground(new Color(205, 133, 63));
-			AOPLs.setBounds(1391, 212, 77, 48);
+			AOPLs.setBounds(1391, 212, 38, 94);
 			AOPLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -1397,19 +1442,19 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AOPLs);
+			bnGui.add(AOPLs);
 			
 			AOPpac2L = new JTextField();
 			AOPpac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			AOPpac2L.setToolTipText("Current Number of OP Pac2 Launchers\r\n");
 			AOPpac2L.setColumns(10);
 			AOPpac2L.setBackground(new Color(205, 133, 63));
-			AOPpac2L.setBounds(1391, 260, 77, 48);
+			AOPpac2L.setBounds(1429, 212, 39, 94);
 			AOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -1441,14 +1486,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 				
 			});
-			getContentPane().add(AOPpac2L);
+			bnGui.add(AOPpac2L);
 			
 			AInopLs = new JTextField();
 			AInopLs.setHorizontalAlignment(SwingConstants.CENTER);
 			AInopLs.setToolTipText("Current number of INOP Pac3 Launchers\r\n");
 			AInopLs.setColumns(10);
 			AInopLs.setBackground(new Color(205, 133, 63));
-			AInopLs.setBounds(1469, 212, 77, 48);
+			AInopLs.setBounds(1469, 212, 36, 94);
 			AInopLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -1475,19 +1520,19 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AInopLs);
+			bnGui.add(AInopLs);
 			
 			AInopPac2L = new JTextField();
 			AInopPac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			AInopPac2L.setToolTipText("Current Number of INOP Pac2 Launchers");
 			AInopPac2L.setColumns(10);
 			AInopPac2L.setBackground(new Color(205, 133, 63));
-			AInopPac2L.setBounds(1469, 260, 77, 48);
+			AInopPac2L.setBounds(1506, 212, 40, 94);
 			AInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -1514,77 +1559,77 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 				@Override
 				public void removeUpdate(DocumentEvent e) {
-					// TODO Auto-generated method stub
+					
 					
 				}
 				
 			});
-			getContentPane().add(AInopPac2L);
+			bnGui.add(AInopPac2L);
 			
 			ARemarks = new JTextArea();
 			ARemarks.setWrapStyleWord(true);
 			ARemarks.setToolTipText("Alpha's Current System Faults and Deadlines ");
 			ARemarks.setLineWrap(true);
 			ARemarks.setBackground(Color.LIGHT_GRAY);
-			ARemarks.setBounds(1544, 212, 284, 96);
-			getContentPane().add(ARemarks);
+			ARemarks.setBounds(1547, 212, 280, 94);
+			bnGui.add(ARemarks);
 			
 			BSystemType = new JTextField();
 			BSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			BSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
 			BSystemType.setBounds(83, 307, 79, 96);
-			getContentPane().add(BSystemType);
+			bnGui.add(BSystemType);
 			
 			CSystemType = new JTextField();
 			CSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			CSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
 			CSystemType.setBounds(83, 402, 79, 96);
-			getContentPane().add(CSystemType);
+			bnGui.add(CSystemType);
 			
 			DSystemType = new JTextField();
 			DSystemType.setHorizontalAlignment(SwingConstants.CENTER);
 			DSystemType.setToolTipText("<html>ENTER SYSTEM TYPE:<br/>PAT<br/>AVENGER<br/>STINGER<br/>THAAD</html>");
 			DSystemType.setBounds(83, 498, 79, 96);
-			getContentPane().add(DSystemType);
+			bnGui.add(DSystemType);
 			
 			BCurAS = new JTextField();
 			BCurAS.setColumns(10);
 			BCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			BCurAS.setToolTipText("BRAVO CURRENT ALERT STATE");
 			BCurAS.setBounds(161, 307, 45, 96);
-			getContentPane().add(BCurAS);
+			bnGui.add(BCurAS);
 			
 			CCurAS = new JTextField();
 			CCurAS.setColumns(10);
 			CCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			CCurAS.setToolTipText("CHARLIE CURRENT ALERT STATE");
 			CCurAS.setBounds(161, 402, 45, 96);
-			getContentPane().add(CCurAS);
+			bnGui.add(CCurAS);
 			
 			DCurAS = new JTextField();
 			DCurAS.setColumns(10);
 			DCurAS.setHorizontalAlignment(SwingConstants.CENTER);
 			DCurAS.setToolTipText("DELTA CURRENT ALERT STATE");
 			DCurAS.setBounds(161, 498, 45, 96);
-			getContentPane().add(DCurAS);
+			bnGui.add(DCurAS);
 			
 			BDirAS = new JTextField();
 			BDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			BDirAS.setToolTipText("BRAVO DIRECTED ALERT STATE");
 			BDirAS.setBounds(207, 307, 45, 96);
-			getContentPane().add(BDirAS);
+			bnGui.add(BDirAS);
 			
 			CDirAS = new JTextField();
 			CDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			CDirAS.setToolTipText("CHARLIE DIRECTED ALERT STATE");
 			CDirAS.setBounds(207, 402, 45, 96);
-			getContentPane().add(CDirAS);
+			bnGui.add(CDirAS);
 			
 			DDirAS = new JTextField();
 			DDirAS.setHorizontalAlignment(SwingConstants.CENTER);
 			DDirAS.setToolTipText("DELTA DIRECTED ALERT STATE");
 			DDirAS.setBounds(207, 498, 45, 96);
-			getContentPane().add(DDirAS);
+			bnGui.add(DDirAS);
 			
 			BdefendedAssets = new JTextArea();
 			BdefendedAssets.setWrapStyleWord(true);
@@ -1592,7 +1637,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BdefendedAssets.setToolTipText("BRAVO'S DEFENDED ASSETS");
 			BdefendedAssets.setColumns(10);
 			BdefendedAssets.setBounds(253, 307, 86, 94);
-			getContentPane().add(BdefendedAssets);
+			bnGui.add(BdefendedAssets);
 			
 			CdefendedAssets = new JTextArea();
 			CdefendedAssets.setWrapStyleWord(true);
@@ -1600,7 +1645,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CdefendedAssets.setToolTipText("CHARLIE'S DEFENDED ASSETS");
 			CdefendedAssets.setColumns(10);
 			CdefendedAssets.setBounds(253, 402, 86, 95);
-			getContentPane().add(CdefendedAssets);
+			bnGui.add(CdefendedAssets);
 			
 			DdefendedAssets = new JTextArea();
 			DdefendedAssets.setWrapStyleWord(true);
@@ -1608,91 +1653,91 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DdefendedAssets.setToolTipText("DELTA'S DEFENDED ASSETS");
 			DdefendedAssets.setColumns(10);
 			DdefendedAssets.setBounds(253, 498, 86, 96);
-			getContentPane().add(DdefendedAssets);
+			bnGui.add(DdefendedAssets);
 			
 			BcurLocation = new JTextField();
 			BcurLocation.setHorizontalAlignment(SwingConstants.CENTER);
 			BcurLocation.setToolTipText("BRAVO'S CURRENT LOCATION");
 			BcurLocation.setColumns(10);
 			BcurLocation.setBounds(340, 307, 86, 96);
-			getContentPane().add(BcurLocation);
+			bnGui.add(BcurLocation);
 			
 			CcurLocation = new JTextField();
 			CcurLocation.setHorizontalAlignment(SwingConstants.CENTER);
 			CcurLocation.setToolTipText("CHARLIE'S CURRENT LOCATION");
 			CcurLocation.setColumns(10);
 			CcurLocation.setBounds(340, 402, 86, 96);
-			getContentPane().add(CcurLocation);
+			bnGui.add(CcurLocation);
 			
 			DcurLocation = new JTextField();
 			DcurLocation.setHorizontalAlignment(SwingConstants.CENTER);
 			DcurLocation.setToolTipText("DELTA'S CURRENT LOCATION");
 			DcurLocation.setColumns(10);
 			DcurLocation.setBounds(340, 498, 86, 96);
-			getContentPane().add(DcurLocation);
+			bnGui.add(DcurLocation);
 			
 			BcurEtro = new JTextField();
 			BcurEtro.setHorizontalAlignment(SwingConstants.CENTER);
 			BcurEtro.setToolTipText("BRAVO'S CURRENT ETRO");
 			BcurEtro.setColumns(10);
 			BcurEtro.setBounds(425, 307, 121, 96);
-			getContentPane().add(BcurEtro);
+			bnGui.add(BcurEtro);
 			
 			CcurEtro = new JTextField();
 			CcurEtro.setHorizontalAlignment(SwingConstants.CENTER);
 			CcurEtro.setToolTipText("ENTER DTG OF CURRENT ETRO");
 			CcurEtro.setColumns(10);
 			CcurEtro.setBounds(425, 402, 121, 96);
-			getContentPane().add(CcurEtro);
+			bnGui.add(CcurEtro);
 			
 			DcurEtro = new JTextField();
 			DcurEtro.setHorizontalAlignment(SwingConstants.CENTER);
 			DcurEtro.setToolTipText("DELTA'S CURRENT ETRO");
 			DcurEtro.setColumns(10);
 			DcurEtro.setBounds(425, 498, 121, 96);
-			getContentPane().add(DcurEtro);
+			bnGui.add(DcurEtro);
 			
 			BcurPtl = new JTextField();
 			BcurPtl.setToolTipText("BRAVO'S PRIMARY TARGET LINE");
 			BcurPtl.setHorizontalAlignment(SwingConstants.CENTER);
 			BcurPtl.setColumns(10);
 			BcurPtl.setBounds(546, 307, 40, 96);
-			getContentPane().add(BcurPtl);
+			bnGui.add(BcurPtl);
 			
 			CcurPtl = new JTextField();
 			CcurPtl.setToolTipText("CHARLIE'S PRIMARY TARGET LINE");
 			CcurPtl.setHorizontalAlignment(SwingConstants.CENTER);
 			CcurPtl.setColumns(10);
 			CcurPtl.setBounds(546, 402, 40, 96);
-			getContentPane().add(CcurPtl);
+			bnGui.add(CcurPtl);
 			
 			DcurPtl = new JTextField();
 			DcurPtl.setToolTipText("DELTA'S PRIMARY TARGET LINE");
 			DcurPtl.setHorizontalAlignment(SwingConstants.CENTER);
 			DcurPtl.setColumns(10);
 			DcurPtl.setBounds(546, 498, 40, 96);
-			getContentPane().add(DcurPtl);
+			bnGui.add(DcurPtl);
 			
 			BcurStl = new JTextField();
 			BcurStl.setToolTipText("BRAVO'S SECONDARY TARGET LINE");
 			BcurStl.setHorizontalAlignment(SwingConstants.CENTER);
 			BcurStl.setColumns(10);
 			BcurStl.setBounds(586, 307, 40, 96);
-			getContentPane().add(BcurStl);
+			bnGui.add(BcurStl);
 			
 			CcurStl = new JTextField();
 			CcurStl.setToolTipText("CHARLIE'S SECONDARY TARGET LINE");
 			CcurStl.setHorizontalAlignment(SwingConstants.CENTER);
 			CcurStl.setColumns(10);
 			CcurStl.setBounds(586, 402, 40, 96);
-			getContentPane().add(CcurStl);
+			bnGui.add(CcurStl);
 			
 			DcurStl = new JTextField();
 			DcurStl.setToolTipText("DELTA'S SECONDARY TARGET LINE");
 			DcurStl.setHorizontalAlignment(SwingConstants.CENTER);
 			DcurStl.setColumns(10);
 			DcurStl.setBounds(586, 498, 40, 96);
-			getContentPane().add(DcurStl);
+			bnGui.add(DcurStl);
 			
 			BOpPac3 = new JTextField();
 			BOpPac3.setToolTipText("Number of OP Pac3");
@@ -1732,7 +1777,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BOpPac3);
+			bnGui.add(BOpPac3);
 			
 			COpPac3 = new JTextField();
 			COpPac3.setToolTipText("Number of OP Pac3");
@@ -1770,7 +1815,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(COpPac3);
+			bnGui.add(COpPac3);
 			
 			DOpPac3 = new JTextField();
 			DOpPac3.setToolTipText("Number of OP Pac3");
@@ -1808,7 +1853,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DOpPac3);
+			bnGui.add(DOpPac3);
 			
 			BInOpPac3 = new JTextField();
 			BInOpPac3.setToolTipText("Number of INOP Pac3");
@@ -1845,7 +1890,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BInOpPac3);
+			bnGui.add(BInOpPac3);
 			
 			CInOpPac3 = new JTextField();
 			CInOpPac3.setToolTipText("Number of INOP Pac3");
@@ -1883,7 +1928,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CInOpPac3);
+			bnGui.add(CInOpPac3);
 			
 			DInOpPac3 = new JTextField();
 			DInOpPac3.setToolTipText("Number of INOP Pac3");
@@ -1921,7 +1966,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DInOpPac3);
+			bnGui.add(DInOpPac3);
 			
 			BPac3Oh = new JTextField();
 			BPac3Oh.setToolTipText("Number of OH Pac3");
@@ -1959,7 +2004,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BPac3Oh);
+			bnGui.add(BPac3Oh);
 			
 			CPac3Oh = new JTextField();
 			CPac3Oh.setToolTipText("Number of OH Pac3");
@@ -1997,7 +2042,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CPac3Oh);
+			bnGui.add(CPac3Oh);
 			
 			DPac3Oh = new JTextField();
 			DPac3Oh.setToolTipText("Number of OH Pac3");
@@ -2035,7 +2080,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DPac3Oh);
+			bnGui.add(DPac3Oh);
 			
 			BGemCOP = new JTextField();
 			BGemCOP.setToolTipText("Number of OP GemC");
@@ -2073,7 +2118,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemCOP);
+			bnGui.add(BGemCOP);
 			
 			CGemCOP = new JTextField();
 			CGemCOP.setToolTipText("Number of OP GemC");
@@ -2111,7 +2156,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemCOP);
+			bnGui.add(CGemCOP);
 			
 			DGemCOP = new JTextField();
 			DGemCOP.setToolTipText("Number of OP GemC");
@@ -2148,7 +2193,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemCOP);
+			bnGui.add(DGemCOP);
 			
 			BGemCInOp = new JTextField();
 			BGemCInOp.setToolTipText("Number of INOP GemC");
@@ -2186,7 +2231,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemCInOp);
+			bnGui.add(BGemCInOp);
 			
 			CGemCInOp = new JTextField();
 			CGemCInOp.setToolTipText("Number of INOP GemC");
@@ -2224,7 +2269,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemCInOp);
+			bnGui.add(CGemCInOp);
 			
 			DGemCInOp = new JTextField();
 			DGemCInOp.setToolTipText("Number of INOP GemC");
@@ -2262,7 +2307,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemCInOp);
+			bnGui.add(DGemCInOp);
 			
 			BGemCOh = new JTextField();
 			BGemCOh.setToolTipText("Number of OH GemC");
@@ -2300,7 +2345,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemCOh);
+			bnGui.add(BGemCOh);
 			
 			CGemCOh = new JTextField();
 			CGemCOh.setToolTipText("Number of OH GemC");
@@ -2338,7 +2383,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemCOh);
+			bnGui.add(CGemCOh);
 			
 			DGemCOh = new JTextField();
 			DGemCOh.setToolTipText("Number of OH GemC");
@@ -2376,7 +2421,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemCOh);
+			bnGui.add(DGemCOh);
 			
 			BGemTOP = new JTextField();
 			BGemTOP.setToolTipText("Number of OP GemT");
@@ -2414,7 +2459,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemTOP);
+			bnGui.add(BGemTOP);
 			
 			CGemTOP = new JTextField();
 			CGemTOP.setToolTipText("Number of OP GemT");
@@ -2452,7 +2497,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemTOP);
+			bnGui.add(CGemTOP);
 			
 			DGemTOP = new JTextField();
 			DGemTOP.setToolTipText("Number of OP GemT");
@@ -2490,7 +2535,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemTOP);
+			bnGui.add(DGemTOP);
 			
 			BGemTInOp = new JTextField();
 			BGemTInOp.setToolTipText("Number of Inop GemT");
@@ -2528,7 +2573,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemTInOp);
+			bnGui.add(BGemTInOp);
 			
 			CGemTInOp = new JTextField();
 			CGemTInOp.setToolTipText("Number of Inop GemT");
@@ -2566,7 +2611,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemTInOp);
+			bnGui.add(CGemTInOp);
 			
 			DGemTInOp = new JTextField();
 			DGemTInOp.setToolTipText("Number of Inop GemT");
@@ -2604,7 +2649,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemTInOp);
+			bnGui.add(DGemTInOp);
 			
 			BGemTOH = new JTextField();
 			BGemTOH.setToolTipText("Number of OH GemT");
@@ -2642,7 +2687,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BGemTOH);
+			bnGui.add(BGemTOH);
 			
 			CGemTOH = new JTextField();
 			CGemTOH.setToolTipText("Number of OH GemT");
@@ -2679,7 +2724,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CGemTOH);
+			bnGui.add(CGemTOH);
 			
 			DGemTOH = new JTextField();
 			DGemTOH.setToolTipText("Number of OH GemT");
@@ -2715,7 +2760,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DGemTOH);
+			bnGui.add(DGemTOH);
 			
 			BtotalMissileCount = new JTextField();
 			BtotalMissileCount.setToolTipText("Total Missile Count for Bravo");
@@ -2725,7 +2770,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BtotalMissileCount.setColumns(10);
 			BtotalMissileCount.setBackground(Color.BLACK);
 			BtotalMissileCount.setBounds(1236, 308, 155, 96);
-			getContentPane().add(BtotalMissileCount);
+			bnGui.add(BtotalMissileCount);
 			
 			CtotalMissileCount = new JTextField();
 			CtotalMissileCount.setToolTipText("Total Missile Count for Charlie");
@@ -2735,7 +2780,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			CtotalMissileCount.setColumns(10);
 			CtotalMissileCount.setBackground(Color.BLACK);
 			CtotalMissileCount.setBounds(1236, 404, 155, 96);
-			getContentPane().add(CtotalMissileCount);
+			bnGui.add(CtotalMissileCount);
 			
 			DtotalMissileCount = new JTextField();
 			DtotalMissileCount.setToolTipText("Total Missile Count for Delta");
@@ -2745,38 +2790,38 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DtotalMissileCount.setColumns(10);
 			DtotalMissileCount.setBackground(Color.BLACK);
 			DtotalMissileCount.setBounds(1236, 500, 155, 96);
-			getContentPane().add(DtotalMissileCount);
+			bnGui.add(DtotalMissileCount);
 			
 			BRemarks = new JTextArea();
 			BRemarks.setWrapStyleWord(true);
 			BRemarks.setToolTipText("Bravo's Current System Faults and Deadlines ");
 			BRemarks.setLineWrap(true);
 			BRemarks.setBackground(Color.LIGHT_GRAY);
-			BRemarks.setBounds(1544, 310, 284, 94);
-			getContentPane().add(BRemarks);
+			BRemarks.setBounds(1547, 307, 280, 94);
+			bnGui.add(BRemarks);
 			
 			CRemarks = new JTextArea();
 			CRemarks.setWrapStyleWord(true);
 			CRemarks.setToolTipText("Charlie's Current System Faults and Deadlines");
 			CRemarks.setLineWrap(true);
 			CRemarks.setBackground(Color.LIGHT_GRAY);
-			CRemarks.setBounds(1544, 405, 284, 95);
-			getContentPane().add(CRemarks);
+			CRemarks.setBounds(1547, 404, 280, 94);
+			bnGui.add(CRemarks);
 			
 			DRemarks = new JTextArea();
 			DRemarks.setWrapStyleWord(true);
 			DRemarks.setToolTipText("Delta's Current System Faults and Deadlines");
 			DRemarks.setLineWrap(true);
 			DRemarks.setBackground(Color.LIGHT_GRAY);
-			DRemarks.setBounds(1544, 501, 284, 96);
-			getContentPane().add(DRemarks);
+			DRemarks.setBounds(1547, 500, 280, 94);
+			bnGui.add(DRemarks);
 			
 			BOPLs = new JTextField();
 			BOPLs.setToolTipText("Current Number of OP Pac3 Launchers");
 			BOPLs.setHorizontalAlignment(SwingConstants.CENTER);
 			BOPLs.setColumns(10);
 			BOPLs.setBackground(new Color(205, 133, 63));
-			BOPLs.setBounds(1391, 308, 77, 48);
+			BOPLs.setBounds(1391, 307, 38, 94);
 			BOPLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2805,14 +2850,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BOPLs);
+			bnGui.add(BOPLs);
 			
 			BInopLs = new JTextField();
 			BInopLs.setHorizontalAlignment(SwingConstants.CENTER);
 			BInopLs.setToolTipText("Current number of INOP Pac3 Launchers\r\n");
 			BInopLs.setColumns(10);
 			BInopLs.setBackground(new Color(205, 133, 63));
-			BInopLs.setBounds(1469, 308, 77, 48);
+			BInopLs.setBounds(1469, 307, 36, 94);
 			BInopLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2841,14 +2886,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BInopLs);
+			bnGui.add(BInopLs);
 			
 			BOPpac2L = new JTextField();
 			BOPpac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			BOPpac2L.setToolTipText("Current Number of OP Pac2 Launchers\r\n");
 			BOPpac2L.setColumns(10);
 			BOPpac2L.setBackground(new Color(205, 133, 63));
-			BOPpac2L.setBounds(1391, 356, 77, 48);
+			BOPpac2L.setBounds(1429, 307, 38, 94);
 			BOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2877,14 +2922,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BOPpac2L);
+			bnGui.add(BOPpac2L);
 			
 			BInopPac2L = new JTextField();
 			BInopPac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			BInopPac2L.setToolTipText("Current Number of INOP Pac2 Launchers");
 			BInopPac2L.setColumns(10);
 			BInopPac2L.setBackground(new Color(205, 133, 63));
-			BInopPac2L.setBounds(1469, 356, 77, 48);
+			BInopPac2L.setBounds(1506, 307, 40, 94);
 			BInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2913,14 +2958,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(BInopPac2L);
+			bnGui.add(BInopPac2L);
 			
 			COPLs = new JTextField();
 			COPLs.setToolTipText("Current Number of OP Pac3 Launchers");
 			COPLs.setHorizontalAlignment(SwingConstants.CENTER);
 			COPLs.setColumns(10);
 			COPLs.setBackground(new Color(205, 133, 63));
-			COPLs.setBounds(1391, 404, 77, 48);
+			COPLs.setBounds(1391, 404, 38, 94);
 			COPLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2949,14 +2994,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(COPLs);
+			bnGui.add(COPLs);
 			
 			CInopLs = new JTextField();
 			CInopLs.setHorizontalAlignment(SwingConstants.CENTER);
 			CInopLs.setToolTipText("Current number of INOP Pac3 Launchers\r\n");
 			CInopLs.setColumns(10);
 			CInopLs.setBackground(new Color(205, 133, 63));
-			CInopLs.setBounds(1469, 404, 77, 48);
+			CInopLs.setBounds(1469, 404, 38, 94);
 			CInopLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -2985,14 +3030,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CInopLs);
+			bnGui.add(CInopLs);
 			
 			COPpac2L = new JTextField();
 			COPpac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			COPpac2L.setToolTipText("Current Number of OP Pac2 Launchers\r\n");
 			COPpac2L.setColumns(10);
 			COPpac2L.setBackground(new Color(205, 133, 63));
-			COPpac2L.setBounds(1391, 452, 77, 48);
+			COPpac2L.setBounds(1429, 404, 38, 94);
 			COPpac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3021,14 +3066,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(COPpac2L);
+			bnGui.add(COPpac2L);
 			
 			CInopPac2L = new JTextField();
 			CInopPac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			CInopPac2L.setToolTipText("Current Number of INOP Pac2 Launchers");
 			CInopPac2L.setColumns(10);
 			CInopPac2L.setBackground(new Color(205, 133, 63));
-			CInopPac2L.setBounds(1469, 452, 77, 48);
+			CInopPac2L.setBounds(1506, 404, 38, 94);
 			CInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3057,14 +3102,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(CInopPac2L);
+			bnGui.add(CInopPac2L);
 			
 			DOPLs = new JTextField();
 			DOPLs.setToolTipText("Current Number of OP Pac3 Launchers");
 			DOPLs.setHorizontalAlignment(SwingConstants.CENTER);
 			DOPLs.setColumns(10);
 			DOPLs.setBackground(new Color(205, 133, 63));
-			DOPLs.setBounds(1391, 500, 77, 48);
+			DOPLs.setBounds(1391, 500, 38, 94);
 			DOPLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3093,14 +3138,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DOPLs);
+			bnGui.add(DOPLs);
 			
 			DInopLs = new JTextField();
 			DInopLs.setHorizontalAlignment(SwingConstants.CENTER);
 			DInopLs.setToolTipText("Current number of INOP Pac3 Launchers\r\n");
 			DInopLs.setColumns(10);
 			DInopLs.setBackground(new Color(205, 133, 63));
-			DInopLs.setBounds(1469, 500, 77, 48);
+			DInopLs.setBounds(1469, 500, 38, 94);
 			DInopLs.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3129,14 +3174,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DInopLs);
+			bnGui.add(DInopLs);
 			
 			DOPpac2L = new JTextField();
 			DOPpac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			DOPpac2L.setToolTipText("Current Number of OP Pac2 Launchers\r\n");
 			DOPpac2L.setColumns(10);
 			DOPpac2L.setBackground(new Color(205, 133, 63));
-			DOPpac2L.setBounds(1391, 548, 77, 48);
+			DOPpac2L.setBounds(1429, 500, 38, 94);
 			DOPpac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3165,14 +3210,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DOPpac2L);
+			bnGui.add(DOPpac2L);
 			
 			DInopPac2L = new JTextField();
 			DInopPac2L.setHorizontalAlignment(SwingConstants.CENTER);
 			DInopPac2L.setToolTipText("Current Number of INOP Pac2 Launchers");
 			DInopPac2L.setColumns(10);
 			DInopPac2L.setBackground(new Color(205, 133, 63));
-			DInopPac2L.setBounds(1469, 548, 77, 48);
+			DInopPac2L.setBounds(1506, 500, 38, 94);
 			DInopPac2L.getDocument().addDocumentListener(new DocumentListener(){
 
 				@Override
@@ -3201,11 +3246,11 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			
 			});//End LIsenter
-			getContentPane().add(DInopPac2L);
+			bnGui.add(DInopPac2L);
 			
 			stoSelector = new JTextField();
 			stoSelector.setBounds(161, 594, 68, 40);
-			getContentPane().add(stoSelector);
+			bnGui.add(stoSelector);
 			stoSelector.setColumns(10);
 			
 			txtAcospins = new JTextField();
@@ -3214,20 +3259,20 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			txtAcospins.setText("ACO/SPINS");
 			txtAcospins.setHorizontalAlignment(SwingConstants.CENTER);
 			txtAcospins.setBounds(227, 594, 74, 40);
-			getContentPane().add(txtAcospins);
+			bnGui.add(txtAcospins);
 			txtAcospins.setColumns(10);
 			
 			acoSelector = new JTextField();
 			acoSelector.setColumns(10);
 			acoSelector.setBounds(299, 594, 86, 40);
-			getContentPane().add(acoSelector);
+			bnGui.add(acoSelector);
 			
 			Pac3OPcount = new JTextField();
 			Pac3OPcount.setToolTipText("TOTAL OP PAC3 FOR THE BN");
 			Pac3OPcount.setEditable(false);
 			Pac3OPcount.setHorizontalAlignment(SwingConstants.CENTER);
 			Pac3OPcount.setBounds(853, 594, 40, 40);
-			getContentPane().add(Pac3OPcount);
+			bnGui.add(Pac3OPcount);
 			Pac3OPcount.setColumns(10);
 			Pac3OPcount.setBackground(new Color(210, 105, 30));
 			
@@ -3238,7 +3283,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			Pac3InopCount.setColumns(10);
 			Pac3InopCount.setBounds(893, 594, 40, 40);
 			Pac3InopCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(Pac3InopCount);
+			bnGui.add(Pac3InopCount);
 			
 			
 			Pac3OHCount = new JTextField();
@@ -3248,7 +3293,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			Pac3OHCount.setColumns(10);
 			Pac3OHCount.setBounds(934, 594, 40, 40);
 			Pac3OHCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(Pac3OHCount);
+			bnGui.add(Pac3OHCount);
 			
 			GemCOPCount = new JTextField();
 			GemCOPCount.setToolTipText("TOTAL OP GEMC'S FOR THE BN");
@@ -3257,7 +3302,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemCOPCount.setColumns(10);
 			GemCOPCount.setBounds(983, 594, 40, 40);
 			GemCOPCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemCOPCount);
+			bnGui.add(GemCOPCount);
 			
 			GemCInopCount = new JTextField();
 			GemCInopCount.setToolTipText("TOTAL INOP GEMC'S FOR THE BN");
@@ -3266,7 +3311,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemCInopCount.setColumns(10);
 			GemCInopCount.setBounds(1024, 594, 40, 40);
 			GemCInopCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemCInopCount);
+			bnGui.add(GemCInopCount);
 			
 			GemCOHCount = new JTextField();
 			GemCOHCount.setToolTipText("TOTAL OH GEMC'S FOR THE BN");
@@ -3275,7 +3320,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemCOHCount.setColumns(10);
 			GemCOHCount.setBounds(1065, 594, 40, 40);
 			GemCOHCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemCOHCount);
+			bnGui.add(GemCOHCount);
 			
 			GemTOPCount = new JTextField();
 			GemTOPCount.setToolTipText("TOTAL OP GEMT'S FOR THE BN");
@@ -3284,7 +3329,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemTOPCount.setColumns(10);
 			GemTOPCount.setBounds(1114, 594, 40, 40);
 			GemTOPCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemTOPCount);
+			bnGui.add(GemTOPCount);
 			
 			GemTInopCount = new JTextField();
 			GemTInopCount.setToolTipText("TOTAL INOP GEMT'S FOR THE BN");
@@ -3293,7 +3338,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemTInopCount.setColumns(10);
 			GemTInopCount.setBounds(1156, 594, 40, 40);
 			GemTInopCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemTInopCount);
+			bnGui.add(GemTInopCount);
 			
 			GemTOHCount = new JTextField();
 			GemTOHCount.setToolTipText("TOTAL OH GEMT'S FOR THE BN");
@@ -3302,7 +3347,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			GemTOHCount.setColumns(10);
 			GemTOHCount.setBounds(1196, 594, 40, 40);
 			GemTOHCount.setBackground(new Color(210, 105, 30));
-			getContentPane().add(GemTOHCount);
+			bnGui.add(GemTOHCount);
 			
 			BnTotalCount = new JTextField();
 			BnTotalCount.setToolTipText("TOTAL MISSILE COUNTS FOR THE BN");
@@ -3312,15 +3357,15 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BnTotalCount.setBackground(Color.BLACK);
 			BnTotalCount.setColumns(10);
 			BnTotalCount.setBounds(1236, 594, 155, 40);
-			getContentPane().add(BnTotalCount);
+			bnGui.add(BnTotalCount);
 			
 			BnOpLsCount = new JTextField();
 			BnOpLsCount.setToolTipText("TOTAL NUMBER OF OP PAC3 LAUNCHERS");
 			BnOpLsCount.setEditable(false);
 			BnOpLsCount.setHorizontalAlignment(SwingConstants.CENTER);
-			BnOpLsCount.setBounds(1391, 594, 77, 20);
+			BnOpLsCount.setBounds(1391, 594, 38, 40);
 			BnOpLsCount.setBackground(new Color(205, 133, 63));
-			getContentPane().add(BnOpLsCount);
+			bnGui.add(BnOpLsCount);
 			BnOpLsCount.setColumns(10);
 			
 			BnPac2OPCount = new JTextField();
@@ -3328,27 +3373,27 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			BnPac2OPCount.setToolTipText("TOTAL NUMBER OF OP PAC2 LAUNCHERS");
 			BnPac2OPCount.setHorizontalAlignment(SwingConstants.CENTER);
 			BnPac2OPCount.setColumns(10);
-			BnPac2OPCount.setBounds(1391, 614, 77, 20);
+			BnPac2OPCount.setBounds(1429, 594, 38, 40);
 			BnPac2OPCount.setBackground(new Color(205, 133, 63));
-			getContentPane().add(BnPac2OPCount);
+			bnGui.add(BnPac2OPCount);
 			
 			BnLsInopCount = new JTextField();
 			BnLsInopCount.setEditable(false);
 			BnLsInopCount.setToolTipText("TOTAL NUMBER OF INOP PAC3 LAUNCHERS");
 			BnLsInopCount.setHorizontalAlignment(SwingConstants.CENTER);
 			BnLsInopCount.setColumns(10);
-			BnLsInopCount.setBounds(1469, 594, 77, 20);
+			BnLsInopCount.setBounds(1469, 594, 38, 40);
 			BnLsInopCount.setBackground(new Color(205, 133, 63));
-			getContentPane().add(BnLsInopCount);
+			bnGui.add(BnLsInopCount);
 			
 			BnPac2InopCount = new JTextField();
 			BnPac2InopCount.setToolTipText("TOTAL NUMBER OF INOP PAC2 LAUNCHERS");
 			BnPac2InopCount.setEditable(false);
 			BnPac2InopCount.setHorizontalAlignment(SwingConstants.CENTER);
 			BnPac2InopCount.setColumns(10);
-			BnPac2InopCount.setBounds(1469, 614, 77, 20);
+			BnPac2InopCount.setBounds(1506, 594, 38, 40);
 			BnPac2InopCount.setBackground(new Color(205, 133, 63));
-			getContentPane().add(BnPac2InopCount);
+			bnGui.add(BnPac2InopCount);
 			
 			JButton btnNewButton = new JButton("UPDATE");
 			btnNewButton.setToolTipText("Click to refresh the program");
@@ -3398,7 +3443,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 				}
 			});
 			btnNewButton.setBounds(1701, 603, 89, 23);
-			getContentPane().add(btnNewButton);
+			bnGui.add(btnNewButton);
 			
 			curSto = new JTextField();
 			curSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3408,7 +3453,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			curSto.setColumns(10);
 			curSto.setBackground(Color.RED);
 			curSto.setBounds(638, 63, 40, 53);
-			getContentPane().add(curSto);
+			bnGui.add(curSto);
 			
 			curAco = new JTextField();
 			curAco.setText("ACO");
@@ -3417,7 +3462,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			curAco.setColumns(10);
 			curAco.setBackground(Color.RED);
 			curAco.setBounds(680, 63, 40, 53);
-			getContentPane().add(curAco);
+			bnGui.add(curAco);
 			
 			curDTG = new JTextField();
 			curDTG.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3427,7 +3472,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			curDTG.setColumns(10);
 			curDTG.setBackground(Color.RED);
 			curDTG.setBounds(722, 63, 121, 53);
-			getContentPane().add(curDTG);
+			bnGui.add(curDTG);
 			
 			hhbCurSto = new JTextField();
 			hhbCurSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3436,7 +3481,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			hhbCurSto.setColumns(10);
 			hhbCurSto.setBackground(Color.WHITE);
 			hhbCurSto.setBounds(638, 116, 40, 96);
-			getContentPane().add(hhbCurSto);
+			bnGui.add(hhbCurSto);
 			
 			aCurSto = new JTextField();
 			aCurSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3444,7 +3489,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aCurSto.setColumns(10);
 			aCurSto.setBackground(Color.WHITE);
 			aCurSto.setBounds(638, 212, 40, 96);
-			getContentPane().add(aCurSto);
+			bnGui.add(aCurSto);
 			
 			bCurSto = new JTextField();
 			bCurSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3452,7 +3497,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bCurSto.setColumns(10);
 			bCurSto.setBackground(Color.WHITE);
 			bCurSto.setBounds(638, 307, 40, 96);
-			getContentPane().add(bCurSto);
+			bnGui.add(bCurSto);
 			
 			cCurSto = new JTextField();
 			cCurSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3460,7 +3505,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cCurSto.setColumns(10);
 			cCurSto.setBackground(Color.WHITE);
 			cCurSto.setBounds(638, 402, 40, 96);
-			getContentPane().add(cCurSto);
+			bnGui.add(cCurSto);
 			
 			dCurSto = new JTextField();
 			dCurSto.setToolTipText("UNIT'S CURRENT STO");
@@ -3468,7 +3513,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dCurSto.setColumns(10);
 			dCurSto.setBackground(Color.WHITE);
 			dCurSto.setBounds(638, 498, 40, 96);
-			getContentPane().add(dCurSto);
+			bnGui.add(dCurSto);
 			
 			hhbCurAco = new JTextField();
 			hhbCurAco.setToolTipText("UNIT'S CURRENT ACO");
@@ -3477,7 +3522,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			hhbCurAco.setColumns(10);
 			hhbCurAco.setBackground(Color.WHITE);
 			hhbCurAco.setBounds(680, 116, 40, 96);
-			getContentPane().add(hhbCurAco);
+			bnGui.add(hhbCurAco);
 			
 			aCurAco = new JTextField();
 			aCurAco.setToolTipText("UNIT'S CURRENT ACO");
@@ -3485,7 +3530,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aCurAco.setColumns(10);
 			aCurAco.setBackground(Color.WHITE);
 			aCurAco.setBounds(680, 212, 40, 96);
-			getContentPane().add(aCurAco);
+			bnGui.add(aCurAco);
 			
 			bCurAco = new JTextField();
 			bCurAco.setToolTipText("UNIT'S CURRENT ACO");
@@ -3493,7 +3538,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bCurAco.setColumns(10);
 			bCurAco.setBackground(Color.WHITE);
 			bCurAco.setBounds(680, 307, 40, 96);
-			getContentPane().add(bCurAco);
+			bnGui.add(bCurAco);
 			
 			cCurAco = new JTextField();
 			cCurAco.setToolTipText("UNIT'S CURRENT ACO");
@@ -3501,7 +3546,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cCurAco.setColumns(10);
 			cCurAco.setBackground(Color.WHITE);
 			cCurAco.setBounds(680, 402, 40, 96);
-			getContentPane().add(cCurAco);
+			bnGui.add(cCurAco);
 			
 			dCurAco = new JTextField();
 			dCurAco.setToolTipText("UNIT'S CURRENT ACO");
@@ -3509,7 +3554,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dCurAco.setColumns(10);
 			dCurAco.setBackground(Color.WHITE);
 			dCurAco.setBounds(680, 498, 40, 96);
-			getContentPane().add(dCurAco);
+			bnGui.add(dCurAco);
 			
 			hhbDtg = new JTextField();
 			hhbDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3517,7 +3562,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			hhbDtg.setColumns(10);
 			hhbDtg.setBackground(Color.WHITE);
 			hhbDtg.setBounds(722, 116, 121, 96);
-			getContentPane().add(hhbDtg);
+			bnGui.add(hhbDtg);
 			
 			aDtg = new JTextField();
 			aDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3525,7 +3570,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			aDtg.setColumns(10);
 			aDtg.setBackground(Color.WHITE);
 			aDtg.setBounds(722, 212, 121, 96);
-			getContentPane().add(aDtg);
+			bnGui.add(aDtg);
 			
 			bDtg = new JTextField();
 			bDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3533,7 +3578,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			bDtg.setColumns(10);
 			bDtg.setBackground(Color.WHITE);
 			bDtg.setBounds(722, 307, 121, 96);
-			getContentPane().add(bDtg);
+			bnGui.add(bDtg);
 			
 			cDtg = new JTextField();
 			cDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3541,7 +3586,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			cDtg.setColumns(10);
 			cDtg.setBackground(Color.WHITE);
 			cDtg.setBounds(722, 402, 121, 96);
-			getContentPane().add(cDtg);
+			bnGui.add(cDtg);
 			
 			dDtg = new JTextField();
 			dDtg.setToolTipText("DTG FOR LAST RECIEVED SAMSTAT");
@@ -3549,7 +3594,43 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			dDtg.setColumns(10);
 			dDtg.setBackground(Color.WHITE);
 			dDtg.setBounds(722, 498, 121, 96);
-			getContentPane().add(dDtg);
+			bnGui.add(dDtg);
+			
+			opPac3Lheader = new JTextField();
+			opPac3Lheader.setEditable(false);
+			opPac3Lheader.setText("PAC3");
+			opPac3Lheader.setHorizontalAlignment(SwingConstants.CENTER);
+			opPac3Lheader.setBounds(1391, 63, 38, 26);
+			bnGui.add(opPac3Lheader);
+			opPac3Lheader.setBackground(new Color(205, 133, 63));
+			opPac3Lheader.setColumns(10);
+			
+			opPac2LHeader = new JTextField();
+			opPac2LHeader.setEditable(false);
+			opPac2LHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			opPac2LHeader.setText("PAC2");
+			opPac2LHeader.setColumns(10);
+			opPac2LHeader.setBounds(1429, 63, 38, 26);
+			opPac2LHeader.setBackground(new Color(205, 133, 63));
+			bnGui.add(opPac2LHeader);
+			
+			inopPac2LHeader = new JTextField();
+			inopPac2LHeader.setEditable(false);
+			inopPac2LHeader.setText("PAC2");
+			inopPac2LHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			inopPac2LHeader.setColumns(10);
+			inopPac2LHeader.setBounds(1505, 63, 37, 26);
+			inopPac2LHeader.setBackground(new Color(205, 133, 63));
+			bnGui.add(inopPac2LHeader);
+			
+			inopPac3LHeader = new JTextField();
+			inopPac3LHeader.setEditable(false);
+			inopPac3LHeader.setHorizontalAlignment(SwingConstants.CENTER);
+			inopPac3LHeader.setText("PAC3");
+			inopPac3LHeader.setColumns(10);
+			inopPac3LHeader.setBounds(1469, 63, 36, 26);
+			inopPac3LHeader.setBackground(new Color(205, 133, 63));
+			bnGui.add(inopPac3LHeader);
 			
 			lBackGround = AOPLs.getBackground();
 			
@@ -3557,8 +3638,12 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			fireUnitData fUData = new fireUnitData(starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, starter, uData);
 
 
-
-			
+			 panel = new JScrollPane();
+			 panel.setVisible(true);
+			 panel.setBounds(0,0,1500,600);
+			 panel.getViewport().add(bnGui);
+			 panel.setViewportView(bnGui);
+			 setContentPane(panel);
 			
 	}//End Constructor
 
@@ -3571,7 +3656,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 	@Override
 	public void broadCastSetter() {
-		// TODO Auto-generated method stub
+		
 		
 	}//end broadCastSetter
 
@@ -3631,14 +3716,14 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 	@Override
 	public void fillDropBox(int potentialMissiles, JComboBox combobox) {
-		// TODO Auto-generated method stub
+		
 		
 	}//end fillDropBox
 
 
 	@Override
 	public void stoIncrementor(JComboBox combobox) {
-		// TODO Auto-generated method stub
+		
 		
 	}//end stoIncrementor
 
@@ -3649,7 +3734,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 
 	@Override
 	public void findIpAddy() {
-		// TODO Auto-generated method stub
+		
 		
 	}//end findIpAddy
 
@@ -3666,7 +3751,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	
 	@Override
 	public void missileCounter() {
-		// TODO Auto-generated method stub
+		
 		
 	}//end missileCounter
 	
@@ -4202,7 +4287,7 @@ public void dataCopier(fireUnitData status){
 				 */
 				@Override
 				protected void done() {
-					// TODO Auto-generated method stub
+					
 					
 					
 					receiveFile(si.fileName);
@@ -4254,9 +4339,7 @@ public void compMissileUpdater(){
 	missileCounter(AInopPac2L, BInopPac2L, CInopPac2L, DInopPac2L, BnPac2InopCount);
 						
 	currentDtg.setText(zTime()); //Update time stamp
-}
-
-		
+	}
 }//End Class
 
 

@@ -8,6 +8,7 @@ package pss;
 
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -15,6 +16,8 @@ import javax.swing.text.StyledDocument;
 import pss.BNPssGUI.serverInfo;
 import pss.FileReceiver.ClientHandler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Scanner;
 import java.util.TimeZone;
@@ -143,6 +146,13 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 	private unitData FUdata;
 	private fireUnitData status;
 	private connected unitAddress;
+	private JTextField pac3OPLHeader;
+	private JTextField pac2OPLheader;
+	private JTextField pac3InopLHeader;
+	private JTextField pac2InopLHeader;
+	private JPanel pssPanel;
+	private int inc; 
+	private JScrollPane scroll;
 	
 	
 	//Constructor, more arguments can be added later as needed. 
@@ -163,11 +173,16 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		//Sets the title for the JFrame and some behavior/attributes for the frame. 
 		setTitle("PATRIOT SMART SAMSTAT");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(1500, 500, 1500, 500);
 		setAlwaysOnTop(true);
-		getContentPane().setBackground(Color.GRAY);
-		setBounds(new Rectangle(1500, 500, 1700, 500));
-		getContentPane().setLayout(null);
+		pssPanel = new JPanel();
+		pssPanel.setBackground(Color.GRAY);
 		
+		pssPanel.setPreferredSize(new Dimension(1700, 500));
+		pssPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		pssPanel.setLayout(null);
+		setLocationRelativeTo(null);
+		//setContentPane(pssPanel);
 		
 		
 		//Provides a header as per the design of the SamStat report.
@@ -177,7 +192,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		secretHeaderLeft.setHorizontalAlignment(SwingConstants.CENTER);
 		secretHeaderLeft.setText("SECRET WHEN FILLED IN");
 		secretHeaderLeft.setBounds(0, 0, 301, 20);
-		getContentPane().add(secretHeaderLeft);
+		pssPanel.add(secretHeaderLeft);
 		secretHeaderLeft.setColumns(10);
 		
 		//Provides a header as per the design of the SamStat report.
@@ -187,7 +202,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		samStatHeader.setText("BATTERY SAMSTATREP");
 		samStatHeader.setEditable(false);
 		samStatHeader.setBounds(299, 0, 1100, 20);
-		getContentPane().add(samStatHeader);
+		pssPanel.add(samStatHeader);
 		samStatHeader.setColumns(10);
 		
 		//Provides a header as per the design of the SamStat report. 
@@ -198,7 +213,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		secretHeaderRight.setEditable(false);
 		secretHeaderRight.setColumns(10);
 		secretHeaderRight.setBounds(1400, 0, 284, 20);
-		getContentPane().add(secretHeaderRight);
+		pssPanel.add(secretHeaderRight);
 		
 		//PRovides a header for our current DTG component. 
 		effectiveDtg = new JTextField();
@@ -206,7 +221,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		effectiveDtg.setHorizontalAlignment(SwingConstants.CENTER);
 		effectiveDtg.setText("EFFECTIVE DTG:");
 		effectiveDtg.setBounds(0, 21, 161, 20);
-		getContentPane().add(effectiveDtg);
+		pssPanel.add(effectiveDtg);
 		effectiveDtg.setColumns(10);
 		
 		//This component will store the current DTG for the samstat. 
@@ -216,7 +231,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		currentDtg.setEditable(false);
 		currentDtg.setBounds(161, 21, 140, 20);
 		currentDtg.setText(zTime());
-		getContentPane().add(currentDtg);
+		pssPanel.add(currentDtg);
 		currentDtg.setColumns(10);
 		
 		//Provides a header to the component that identifies the unit. 
@@ -225,7 +240,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		unitHeader.setBackground(Color.ORANGE);
 		unitHeader.setText("UNIT");
 		unitHeader.setBounds(0, 42, 79, 20);
-		getContentPane().add(unitHeader);
+		pssPanel.add(unitHeader);
 		
 		//Provides a header to the unit type box. 
 		typeHeader = new JTextField();
@@ -235,7 +250,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		typeHeader.setColumns(10);
 		typeHeader.setBackground(Color.YELLOW);
 		typeHeader.setBounds(75, 42, 86, 20);
-		getContentPane().add(typeHeader);
+		pssPanel.add(typeHeader);
 		
 		//provides a header for our current and directed alert state components. 
 		alertStateHeader = new JTextField();
@@ -245,7 +260,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		alertStateHeader.setEditable(false);
 		alertStateHeader.setColumns(10);
 		alertStateHeader.setBounds(161, 42, 140, 20);
-		getContentPane().add(alertStateHeader);
+		pssPanel.add(alertStateHeader);
 		
 		//This component may need to be adjusted to either a drop box containing all current active battalions or an editable box allowing the user to place what ever they want
 		//This component provides information on which battalion the unit belongs to. 
@@ -255,7 +270,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		bnId.setHorizontalAlignment(SwingConstants.CENTER);
 		bnId.setText("4-5 AMD BN");
 		bnId.setBounds(0, 63, 161, 52);
-		getContentPane().add(bnId);
+		pssPanel.add(bnId);
 		bnId.setColumns(10);
 		
 		//This component provides a header to the current AS box.
@@ -265,7 +280,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		curHeader.setText("CUR");
 		curHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		curHeader.setBounds(161, 63, 68, 52);
-		getContentPane().add(curHeader);
+		pssPanel.add(curHeader);
 		curHeader.setColumns(10);
 		
 		//This Component provides a header to the dir AS box. 
@@ -276,7 +291,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		dirHeader.setText("DIR");
 		dirHeader.setColumns(10);
 		dirHeader.setBounds(227, 63, 72, 52);
-		getContentPane().add(dirHeader);
+		pssPanel.add(dirHeader);
 		
 		//This component allows the user to store information on current unit identifier. Maybe necessary to pass this in as an arguement to the PssGui since there is no accounting for callsigns. 
 		//This component also needs to be updated with a mouse click event that can turn the color of the box to reflect the tooltip text.
@@ -286,7 +301,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		unitId.setToolTipText("<html>CLICK BOX TO CHANGE COLOR:<br/>GREEN-MC<br/>RED-NMC<br/>WHITE-UNIT IN TRANSISTION</html>");
 		unitId.setText("Set Unit Name");
 		unitId.setBounds(0, 116, 84, 172);
-		getContentPane().add(unitId);
+		pssPanel.add(unitId);
 		unitId.setColumns(10);
 		unitId.addMouseListener(new MouseAdapter() {
 			@Override
@@ -314,7 +329,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		systemType.setToolTipText("<html>ENTER SYSTEM TYPE:" + "<br/>PAT" + "<br/>AVENGER"+ "<br/>STINGER" + "<br/>THAAD</html>");
 		systemType.setEditable(false);
 		systemType.setBounds(83, 116, 79, 172);
-		getContentPane().add(systemType);
+		pssPanel.add(systemType);
 		
 		//This component allows the user to store information about the alert state they are currently at. 
 		curSelector = new JComboBox();
@@ -322,7 +337,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		curSelector.setEditable(false);
 		curSelector.setToolTipText("CURRENT ALERT STATE");
 		curSelector.setBounds(161, 116, 68, 172);
-		getContentPane().add(curSelector);
+		pssPanel.add(curSelector);
 		
 		//This component allows the user to store information on which alert state they are being directed to. 
 		dirSelector = new JComboBox();
@@ -330,7 +345,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		dirSelector.setEditable(false);
 		dirSelector.setToolTipText("DIRECTED ALERT STATE");
 		dirSelector.setBounds(227, 116, 74, 172);
-		getContentPane().add(dirSelector);
+		pssPanel.add(dirSelector);
 		
 		//This component provides a header to the user asking them to use the drop box and indicate which sto they are operating under.
 		stoHeader = new JTextField();
@@ -339,14 +354,14 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		stoHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		stoHeader.setText("CURRENT STO");
 		stoHeader.setBounds(0, 289, 161, 102);
-		getContentPane().add(stoHeader);
+		pssPanel.add(stoHeader);
 		stoHeader.setColumns(10);
 		
 		//This component allows the user select and store information about the current surface to air missile tactical order (STO) that they are operating under. 
 		stoSelector = new JComboBox();
 		stoSelector.setModel(new DefaultComboBoxModel(new String[] {"000"}));
 		stoSelector.setBounds(161, 289, 68, 102);
-		getContentPane().add(stoSelector);
+		pssPanel.add(stoSelector);
 		stoSelector.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				stoIncrementor(stoSelector);
@@ -361,7 +376,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		acoHeader.setBackground(Color.YELLOW);
 		acoHeader.setText("ACO/SPINS");
 		acoHeader.setBounds(227, 289, 74, 102);
-		getContentPane().add(acoHeader);
+		pssPanel.add(acoHeader);
 		acoHeader.setColumns(10);
 		
 		//This component exists for esthetic purposes. 
@@ -369,7 +384,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		blackspace.setEditable(false);
 		blackspace.setBackground(Color.BLACK);
 		blackspace.setBounds(299, 21, 327, 41);
-		getContentPane().add(blackspace);
+		pssPanel.add(blackspace);
 		blackspace.setColumns(10);
 		
 		//This component provides a header for the defendedAssets jtextfield prompting the user to enter in their defended assets. 
@@ -382,11 +397,11 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		DefAssetHeader.setText("DEFENDED ASSET");
 		DefAssetHeader.setBackground(Color.YELLOW);
 		DefAssetHeader.setBounds(299, 62, 86, 53);
-		getContentPane().add(DefAssetHeader);
+		pssPanel.add(DefAssetHeader);
 		
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(299, 116, 86, 172);
-		getContentPane().add(scrollPane_1);
+		pssPanel.add(scrollPane_1);
 		
 		//This component stores information about the units defended assets. 
 		defendedAssets = new JTextArea();
@@ -404,14 +419,14 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		locationHeader.setColumns(10);
 		locationHeader.setBackground(Color.YELLOW);
 		locationHeader.setBounds(386, 62, 86, 52);
-		getContentPane().add(locationHeader);
+		pssPanel.add(locationHeader);
 		
 		//This component stores the units current location in latitude and longitude. 
 		curLocation = new JTextField();
 		curLocation.setToolTipText("ENTER LAT/LONG & MGRS FOR CURRENT LOCATION");
 		curLocation.setColumns(10);
 		curLocation.setBounds(386, 116, 86, 172);
-		getContentPane().add(curLocation);
+		pssPanel.add(curLocation);
 		
 		//This ComboBox allows the user to report which ACO the fire unit is operating under. 
 		acoSelector = new JComboBox();
@@ -419,22 +434,36 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		acoSelector.setModel(new DefaultComboBoxModel(new String[] {"SACO", ""}));
 		acoSelector.setEditable(true);
 		acoSelector.setBounds(299, 289, 86, 102);
-		getContentPane().add(acoSelector);
+		pssPanel.add(acoSelector);
 		acoSelector.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//This code lets the user add to the dropbox list. 
-				if ( e.getActionCommand().equals("comboBoxEdited"))
-					acoSelector.addItem(acoSelector.getSelectedItem());
 				
+				if(inc <= 51 ){
+				String[] acoArray = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", 
+						"AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH", "II", "JJ", "KK", "LL", "MM", "NN", "OO", "PP", "QQ", "RR", "SS", "TT", "UU", "VV", "WW", "XX", "YY", "ZZ"};
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("dd");//This SDF reflects the Army's standard for Date Time Groups
+				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+				Calendar cal = Calendar.getInstance();
+				String timestamp = formatter.format(cal.getTime());
+				//String curAco = a
+				acoSelector.addItem(timestamp + acoArray[inc]);
+				inc++;
+				}else if(e.getActionCommand().equals("comboBoxEdited")){
+					acoSelector.addItem(acoSelector.getSelectedItem());
+				}
 			}
 		});
+		
+		//ArrayList acoList = new ArrayList();
+		
 		
 		//This component provides a header to the jtextfield that stores the ETRO information on the unit. 
 		etroHeader = new JTextField();
 		etroHeader.setText("ETRO");
 		etroHeader.setBackground(Color.YELLOW);
 		etroHeader.setBounds(474, 62, 50, 52);
-		getContentPane().add(etroHeader);
+		pssPanel.add(etroHeader);
 		
 		//This jtextfield provides the user a header for the jtextfield that stores information on the PTL.
 		ptlHeader = new JTextField();
@@ -444,13 +473,13 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		ptlHeader.setText("PTL");
 		ptlHeader.setColumns(10);
 		ptlHeader.setBounds(525, 63, 50, 52);
-		getContentPane().add(ptlHeader);
+		pssPanel.add(ptlHeader);
 		
 		//This jtextfield stores information about the current estimated time to return to operation or (ETRO).
 		curEtro = new JTextField();
 		curEtro.setToolTipText("ENTER DTG OF CURRENT ETRO");
 		curEtro.setBounds(474, 116, 50, 172);
-		getContentPane().add(curEtro);
+		pssPanel.add(curEtro);
 		curEtro.setColumns(10);
 		
 		//This component stores information about the primary target line or (PTL).
@@ -458,7 +487,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		curPtl.setToolTipText("PRIMARY TARGET LINE");
 		curPtl.setColumns(10);
 		curPtl.setBounds(525, 116, 50, 172);
-		getContentPane().add(curPtl);
+		pssPanel.add(curPtl);
 		
 		//this jtextfield provides a header letting the user know that the jtextfield below is for storing the STL. 
 		stlHeader = new JTextField();
@@ -468,14 +497,14 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		stlHeader.setColumns(10);
 		stlHeader.setBackground(Color.YELLOW);
 		stlHeader.setBounds(576, 63, 50, 52);
-		getContentPane().add(stlHeader);
+		pssPanel.add(stlHeader);
 		
 		//This JTextField stores information about the secondary target line or (STL).
 		curStl = new JTextField();
 		curStl.setToolTipText("SECONDARY TARGET LINE");
 		curStl.setColumns(10);
 		curStl.setBounds(576, 116, 50, 172);
-		getContentPane().add(curStl);
+		pssPanel.add(curStl);
 		
 		//This component is just a header for the missile section of the samstat
 		missileHeader = new JTextField();
@@ -484,7 +513,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		missileHeader.setText("MISSILES");
 		missileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		missileHeader.setBounds(625, 21, 1059, 20);
-		getContentPane().add(missileHeader);
+		pssPanel.add(missileHeader);
 		missileHeader.setColumns(10);
 		
 		//These "header" jtextfields prove the labels to our drop boxes that track the current number of Pac-3 Missiles.
@@ -493,21 +522,21 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		pac_3Header.setText("PAC3");
 		pac_3Header.setBackground(new Color(210, 105, 30));
 		pac_3Header.setBounds(625, 42, 155, 20);
-		getContentPane().add(pac_3Header);
+		pssPanel.add(pac_3Header);
 		
 		pac_3OpHeader = new JTextField();
 		pac_3OpHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		pac_3OpHeader.setText("OP");
 		pac_3OpHeader.setBackground(new Color(210, 105, 30));
 		pac_3OpHeader.setBounds(625, 63, 50, 52);
-		getContentPane().add(pac_3OpHeader);
+		pssPanel.add(pac_3OpHeader);
 		
 		pac_3InopHeader = new JTextField();
 		pac_3InopHeader.setText("INOP");
 		pac_3InopHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		pac_3InopHeader.setBounds(677, 63, 50, 52);
 		pac_3InopHeader.setBackground(new Color(210, 105, 30));
-		getContentPane().add(pac_3InopHeader);
+		pssPanel.add(pac_3InopHeader);
 		
 		pac_3OhHeader = new JTextField();
 		pac_3OhHeader.setText("OH");
@@ -516,7 +545,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		pac_3OhHeader.setColumns(10);
 		pac_3OhHeader.setBackground(new Color(210, 105, 30));
 		pac_3OhHeader.setBounds(730, 63, 50, 52);
-		getContentPane().add(pac_3OhHeader);
+		pssPanel.add(pac_3OhHeader);
 		
 		//pac_3OpCount, pac_3InopCount, and pac_3OhCount drop boxes track the current Pac-3 Missile Counts. 
 		//Pac3 OP component
@@ -535,7 +564,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		pac_3OpCount.setToolTipText("ENTER # OF OPERATIONAL PAC3");
 		pac_3OpCount.setBounds(625, 116, 50, 172);
-		getContentPane().add(pac_3OpCount);
+		pssPanel.add(pac_3OpCount);
 		//Pac 3 INOP component
 		pac_3InopCount = new JComboBox();
 		//pac_3InopCount.addItem(0);
@@ -550,12 +579,12 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		pac_3InopCount.setToolTipText("ENTER # OF INOP PAC3");
 		pac_3InopCount.setBounds(677, 116, 50, 172);
-		getContentPane().add(pac_3InopCount);
+		pssPanel.add(pac_3InopCount);
 		//Pac 3 OH component
 		pac_3OhCount = new JComboBox();
 		pac_3OhCount.setToolTipText("ENTER # OF OH PAC3");
 		pac_3OhCount.setBounds(730, 116, 50, 172);
-		getContentPane().add(pac_3OhCount);
+		pssPanel.add(pac_3OhCount);
 		pac_3OhCount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -572,7 +601,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemCHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		gemCHeader.setBackground(new Color(210, 105, 30));
 		gemCHeader.setBounds(780, 42, 155, 20);
-		getContentPane().add(gemCHeader);
+		pssPanel.add(gemCHeader);
 		
 		GemcOpHeader = new JTextField();
 		GemcOpHeader.setText("OP");
@@ -581,7 +610,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		GemcOpHeader.setColumns(10);
 		GemcOpHeader.setBackground(new Color(210, 105, 30));
 		GemcOpHeader.setBounds(780, 63, 50, 52);
-		getContentPane().add(GemcOpHeader);
+		pssPanel.add(GemcOpHeader);
 		
 		GemcInopHeader = new JTextField();
 		GemcInopHeader.setText("INOP");
@@ -590,7 +619,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		GemcInopHeader.setColumns(10);
 		GemcInopHeader.setBackground(new Color(210, 105, 30));
 		GemcInopHeader.setBounds(832, 63, 50, 52);
-		getContentPane().add(GemcInopHeader);
+		pssPanel.add(GemcInopHeader);
 		
 		GemCOhHeader = new JTextField();
 		GemCOhHeader.setText("OH");
@@ -599,7 +628,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		GemCOhHeader.setColumns(10);
 		GemCOhHeader.setBackground(new Color(210, 105, 30));
 		GemCOhHeader.setBounds(885, 63, 50, 52);
-		getContentPane().add(GemCOhHeader);
+		pssPanel.add(GemCOhHeader);
 		
 		//gemCOpCount, gemCInopCount, gemCOhCount are the drop boxes that track the current Gem-C missile counts.
 		//GEMc OP component
@@ -619,7 +648,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemCOpCount.setToolTipText("ENTER # OF OP GEM C");
 		gemCOpCount.setBounds(780, 116, 50, 172);
-		getContentPane().add(gemCOpCount);
+		pssPanel.add(gemCOpCount);
 		
 		//GEMC INOP component
 		gemCInopCount = new JComboBox();
@@ -635,7 +664,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemCInopCount.setToolTipText("ENTER # OF INOP GEM C");
 		gemCInopCount.setBounds(832, 116, 50, 172);
-		getContentPane().add(gemCInopCount);
+		pssPanel.add(gemCInopCount);
 		
 		//GEMC OH component
 		gemCOhCount = new JComboBox();
@@ -651,7 +680,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemCOhCount.setToolTipText("ENTER # OF OH GEM C");
 		gemCOhCount.setBounds(885, 116, 50, 172);
-		getContentPane().add(gemCOhCount);
+		pssPanel.add(gemCOhCount);
 		
 		//These "header" components provide the labels for the drop boxes that handle the Gem-T missile counts.
 		gemTHeader = new JTextField();
@@ -661,7 +690,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemTHeader.setColumns(10);
 		gemTHeader.setBackground(new Color(210, 105, 30));
 		gemTHeader.setBounds(935, 42, 155, 20);
-		getContentPane().add(gemTHeader);
+		pssPanel.add(gemTHeader);
 		
 		gemtOpHeader = new JTextField();
 		gemtOpHeader.setText("OP");
@@ -670,7 +699,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemtOpHeader.setColumns(10);
 		gemtOpHeader.setBackground(new Color(210, 105, 30));
 		gemtOpHeader.setBounds(935, 63, 50, 52);
-		getContentPane().add(gemtOpHeader);
+		pssPanel.add(gemtOpHeader);
 		
 		gemtInopHeader = new JTextField();
 		gemtInopHeader.setText("INOP");
@@ -679,7 +708,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemtInopHeader.setColumns(10);
 		gemtInopHeader.setBackground(new Color(210, 105, 30));
 		gemtInopHeader.setBounds(987, 63, 50, 52);
-		getContentPane().add(gemtInopHeader);
+		pssPanel.add(gemtInopHeader);
 		
 		gemtOhHeader = new JTextField();
 		gemtOhHeader.setText("OH");
@@ -688,7 +717,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		gemtOhHeader.setColumns(10);
 		gemtOhHeader.setBackground(new Color(210, 105, 30));
 		gemtOhHeader.setBounds(1040, 63, 50, 52);
-		getContentPane().add(gemtOhHeader);
+		pssPanel.add(gemtOhHeader);
 		
 		//gemtOpCount, gemtInopCount, and gemtOhCount are the dropboxes for the Gem T missile counts. 
 		//GEMT OP component
@@ -707,7 +736,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemtOpCount.setToolTipText("ENTER # OF OP GEM C");
 		gemtOpCount.setBounds(935, 116, 50, 172);
-		getContentPane().add(gemtOpCount);
+		pssPanel.add(gemtOpCount);
 		
 		//GEMT INOP component
 		gemtInopCount = new JComboBox();
@@ -723,7 +752,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemtInopCount.setToolTipText("ENTER # OF INOP GEM C");
 		gemtInopCount.setBounds(987, 116, 50, 172);
-		getContentPane().add(gemtInopCount);
+		pssPanel.add(gemtInopCount);
 		
 		//GEMT OH component
 		gemtOhCount = new JComboBox();
@@ -739,7 +768,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		});
 		gemtOhCount.setToolTipText("ENTER # OF OH GEM C");
 		gemtOhCount.setBounds(1040, 116, 50, 172);
-		getContentPane().add(gemtOhCount);
+		pssPanel.add(gemtOhCount);
 		
 		missileCountHeader = new JTextField();
 		missileCountHeader.setText("TOTAL MISSILES");
@@ -748,7 +777,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		missileCountHeader.setColumns(10);
 		missileCountHeader.setBackground(new Color(210, 105, 30));
 		missileCountHeader.setBounds(1090, 42, 155, 73);
-		getContentPane().add(missileCountHeader);
+		pssPanel.add(missileCountHeader);
 		
 		launchersHeader = new JTextField();
 		launchersHeader.setText("LAUNCHERS");
@@ -757,7 +786,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		launchersHeader.setColumns(10);
 		launchersHeader.setBackground(new Color(205, 133, 63));
 		launchersHeader.setBounds(1244, 42, 155, 20);
-		getContentPane().add(launchersHeader);
+		pssPanel.add(launchersHeader);
 		
 		remarksHeader = new JTextField();
 		remarksHeader.setText("REMARKS/GENERAL FAULTS");
@@ -766,7 +795,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		remarksHeader.setColumns(10);
 		remarksHeader.setBackground(Color.YELLOW);
 		remarksHeader.setBounds(1400, 42, 284, 20);
-		getContentPane().add(remarksHeader);
+		pssPanel.add(remarksHeader);
 		
 		launchersInopHeader = new JTextField();
 		launchersInopHeader.setText("INOP");
@@ -774,8 +803,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		launchersInopHeader.setEditable(false);
 		launchersInopHeader.setColumns(10);
 		launchersInopHeader.setBackground(new Color(205, 133, 63));
-		launchersInopHeader.setBounds(1320, 63, 77, 52);
-		getContentPane().add(launchersInopHeader);
+		launchersInopHeader.setBounds(1321, 89, 77, 26);
+		pssPanel.add(launchersInopHeader);
 		
 		launchersOPheader = new JTextField();
 		launchersOPheader.setText("OP");
@@ -783,8 +812,8 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		launchersOPheader.setEditable(false);
 		launchersOPheader.setColumns(10);
 		launchersOPheader.setBackground(new Color(205, 133, 63));
-		launchersOPheader.setBounds(1244, 63, 77, 52);
-		getContentPane().add(launchersOPheader);
+		launchersOPheader.setBounds(1244, 89, 77, 26);
+		pssPanel.add(launchersOPheader);
 		
 		//totalMissileCount represents the total amount of missiles on the site. It is only comprised of this sincle JTextField.
 		totalMissileCount = new JTextField();
@@ -794,7 +823,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		totalMissileCount.setForeground(Color.WHITE);
 		totalMissileCount.setBackground(new Color(0, 0, 0));
 		totalMissileCount.setBounds(1090, 116, 155, 172);
-		getContentPane().add(totalMissileCount);
+		pssPanel.add(totalMissileCount);
 		totalMissileCount.setColumns(10);
 		
 		//The LsCount and Pac2Count family of components covers the Launchers section of the samstat.
@@ -812,16 +841,16 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		opLsCount.setToolTipText("NUMBER OF OP L'S LAUNCHERS");
 		opLsCount.setEditable(false);
 		opLsCount.setBackground(new Color(205, 133, 63));
-		opLsCount.setBounds(1244, 116, 77, 86);
-		getContentPane().add(opLsCount);
+		opLsCount.setBounds(1244, 116, 39, 172);
+		pssPanel.add(opLsCount);
 		
 		inopLsCount = new JComboBox();
 		inopLsCount.setToolTipText("NUMBER OF INOP L'S");
 		inopLsCount.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
 		inopLsCount.setEditable(false);
 		inopLsCount.setBackground(new Color(205, 133, 63));
-		inopLsCount.setBounds(1321, 116, 77, 86);
-		getContentPane().add(inopLsCount);
+		inopLsCount.setBounds(1321, 116, 39, 172);
+		pssPanel.add(inopLsCount);
 		
 		opPac_2Count = new JComboBox();
 		opPac_2Count.addActionListener(new ActionListener() {
@@ -839,27 +868,27 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		opPac_2Count.setToolTipText("NUMBER OF OP PAC2 ");
 		opPac_2Count.setEditable(false);
 		opPac_2Count.setBackground(new Color(205, 133, 63));
-		opPac_2Count.setBounds(1244, 202, 77, 86);
-		getContentPane().add(opPac_2Count);
+		opPac_2Count.setBounds(1282, 116, 39, 172);
+		pssPanel.add(opPac_2Count);
 		
 		inop_Pac2Count = new JComboBox();
 		inop_Pac2Count.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}));
 		inop_Pac2Count.setToolTipText("NUMBER OF INOP PAC2");
 		inop_Pac2Count.setEditable(false);
 		inop_Pac2Count.setBackground(new Color(205, 133, 63));
-		inop_Pac2Count.setBounds(1321, 202, 77, 86);
-		getContentPane().add(inop_Pac2Count);
+		inop_Pac2Count.setBounds(1360, 116, 39, 172);
+		pssPanel.add(inop_Pac2Count);
 		
 		//This section handled the fault reporting on the samstat. 
 		faultHeader = new JTextPane();
 		faultHeader.setEditable(false);
 		faultHeader.setText("A-AMG B-ECS C-CRG D-BCP E-EPP/EPU F-FORKLIFT G-GMT J-LSTS K-IFF L-LS I-ICC M-MISSILES R-RS");
 		faultHeader.setBounds(1400, 63, 284, 52);
-		getContentPane().add(faultHeader);
+		pssPanel.add(faultHeader);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(1400, 118, 284, 343);
-		getContentPane().add(scrollPane);
+		pssPanel.add(scrollPane);
 		
 		remarksField = new JTextArea();
 		scrollPane.setViewportView(remarksField);
@@ -888,7 +917,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		JButton pssUpdate = new JButton("UPDATE");
 		pssUpdate.setToolTipText("This updates the PSS locally. ");
 		pssUpdate.setBounds(987, 412, 89, 23);
-		getContentPane().add(pssUpdate);
+		pssPanel.add(pssUpdate);
 		pssUpdate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -899,7 +928,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		//BroadCast_3 is going to be my printer button 
 		broadCast_3 = new JButton("");
 		broadCast_3.setBounds(832, 412, 89, 23);
-		getContentPane().add(broadCast_3);
+		pssPanel.add(broadCast_3);
 		broadCast_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -913,7 +942,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		tocButton = new JButton("TOC");
 		tocButton.setToolTipText("Send Your Report to the TOC");
 		tocButton.setBounds(677, 412, 89, 23);
-		getContentPane().add(tocButton);
+		pssPanel.add(tocButton);
 		tocButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				missileCounter();
@@ -927,7 +956,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		ecsButton = new JButton("ECS");
 		ecsButton.setToolTipText("Send Your Report to the ECS");
 		ecsButton.setBounds(525, 412, 89, 23);
-		getContentPane().add(ecsButton);
+		pssPanel.add(ecsButton);
 		ecsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				missileCounter();
@@ -940,7 +969,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		bcpButton = new JButton("BCP");
 		bcpButton.setToolTipText("Send Your Report to the BCP ");
 		bcpButton.setBounds(525, 412, 89, 23);
-		getContentPane().add(bcpButton);
+		pssPanel.add(bcpButton);
 		bcpButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				missileCounter();
@@ -976,7 +1005,7 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		batteryHeader.setColumns(10);
 		batteryHeader.setBackground(Color.YELLOW);
 		batteryHeader.setBounds(386, 289, 140, 50);
-		getContentPane().add(batteryHeader);
+		pssPanel.add(batteryHeader);
 		
 		battery = new JComboBox();
 		battery.setModel(new DefaultComboBoxModel(new String[] {"Alpha", "Bravo", "Charlie", "Delta", "ICC"}));
@@ -984,16 +1013,80 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		battery.setEditable(false);
 		battery.setBackground(Color.YELLOW);
 		battery.setBounds(386, 341, 140, 50);
-		getContentPane().add(battery);
+		pssPanel.add(battery);
+		
+		pac3OPLHeader = new JTextField();
+		pac3OPLHeader.setEditable(false);
+		pac3OPLHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		pac3OPLHeader.setText("PAC3");
+		pac3OPLHeader.setBounds(1245, 63, 38, 26);
+		pssPanel.add(pac3OPLHeader);
+		pac3OPLHeader.setBackground(new Color(205, 133, 63));
+		pac3OPLHeader.setColumns(10);
+		
+		pac2OPLheader = new JTextField();
+		pac2OPLheader.setEditable(false);
+		pac2OPLheader.setHorizontalAlignment(SwingConstants.CENTER);
+		pac2OPLheader.setText("PAC2");
+		pac2OPLheader.setColumns(10);
+		pac2OPLheader.setBounds(1284, 63, 38, 26);
+		pac2OPLheader.setBackground(new Color(205, 133, 63));
+		pssPanel.add(pac2OPLheader);
+		
+		pac3InopLHeader = new JTextField();
+		pac3InopLHeader.setEditable(false);
+		pac3InopLHeader.setText("PAC3");
+		pac3InopLHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		pac3InopLHeader.setColumns(10);
+		pac3InopLHeader.setBounds(1323, 63, 38, 26);
+		pac3InopLHeader.setBackground(new Color(205, 133, 63));
+		pssPanel.add(pac3InopLHeader);
+		
+		pac2InopLHeader = new JTextField();
+		pac2InopLHeader.setEditable(false);
+		pac2InopLHeader.setText("PAC2");
+		pac2InopLHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		pac2InopLHeader.setColumns(10);
+		pac2InopLHeader.setBackground(new Color(205, 133, 63));
+		pac2InopLHeader.setBounds(1362, 63, 38, 26);
+		pssPanel.add(pac2InopLHeader);
 		battery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				FUdata.setUnitName(battery.getSelectedItem().toString());
-				getContentPane().remove(battery);
-				getContentPane().remove(batteryHeader);				
+				pssPanel.remove(battery);
+				pssPanel.remove(batteryHeader);				
 			}
 		});
 		
 		broadCastSetter(); //Appropriately set the Labels to the three buttons on the bottom of the GUI. 
+		if(FUtype.equals("ICC")){
+			
+			pssPanel.remove(pac_3OpCount);
+			pssPanel.remove(pac_3InopCount);
+			pssPanel.remove(pac_3OhCount);
+			
+			pssPanel.remove(gemCOpCount);
+			pssPanel.remove(gemCInopCount);
+			pssPanel.remove(gemCOhCount);
+			
+			pssPanel.remove(gemtOpCount);
+			pssPanel.remove(gemtInopCount);
+			pssPanel.remove(gemtOhCount);
+	
+			pssPanel.remove(totalMissileCount);
+			pssPanel.remove(opLsCount);
+			pssPanel.remove(opPac_2Count);
+			pssPanel.remove(inopLsCount);
+			pssPanel.remove(inop_Pac2Count);
+
+		}
+		
+		scroll = new JScrollPane();
+		scroll.setVisible(true);
+		scroll.setBounds(0,0,1500,600);
+		scroll.setViewportView(pssPanel);
+		scroll.setViewportView(pssPanel);
+		setContentPane(scroll);
 		
 	}//End Constructor
 	
@@ -1081,10 +1174,10 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		//this lets us make sure all of our buttons on the program reflect whose actually using the program.
 		
 		case ECS: FUtype.equals("ECS");
-		getContentPane().remove(ecsButton);	
+		pssPanel.remove(ecsButton);	
 			break;
 		case BCP: 
-			getContentPane().remove(bcpButton);
+			pssPanel.remove(bcpButton);
 			break;
 
 		}//End Switch		
@@ -1695,8 +1788,4 @@ public class PssGui extends JFrame implements Utility, PSSbehaviours {
 		
 		worker.execute();
 	}
-	
-
-	
-	
 }//End PssGui

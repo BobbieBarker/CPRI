@@ -130,7 +130,7 @@ public class PssMain extends JFrame {
 				}
 				contentPane.removeAll();
 				contentPane.repaint();
-				
+				contentPane.add(userIpAddy);
 				//Pac3 OH entry field
 				OHcollector = new JTextField();
 				OHcollector.setToolTipText("ENTER YOUR CURRENT PAC3 OH HAND MISSILE COUNT");
