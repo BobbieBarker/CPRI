@@ -256,11 +256,6 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 	private JTextField inopPac2LHeader;
 	private JTextField inopPac3LHeader;
 	private JPanel bnGui;
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
-	private JScrollPane scrollPane_2;
-	private JScrollPane scrollPane_3;
-	private JScrollPane scrollPane_4;
 	
 	
 	BNPssGUI(){
@@ -855,16 +850,13 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			HHBInopLs.setBounds(1469, 116, 77, 48);
 			bnGui.add(HHBInopLs);
 			
-			scrollPane = new JScrollPane();
-			scrollPane.setBounds(1547, 116, 280, 94);
-			bnGui.add(scrollPane);
-			
 			HHBRemarks = new JTextArea();
-			scrollPane.setViewportView(HHBRemarks);
 			HHBRemarks.setToolTipText("Enter All Current System Faults and Deadlines Here");
 			HHBRemarks.setWrapStyleWord(true);
 			HHBRemarks.setLineWrap(true);
 			HHBRemarks.setBackground(Color.LIGHT_GRAY);
+			HHBRemarks.setBounds(1547, 116, 280, 94);
+			bnGui.add(HHBRemarks);
 			
 			HHBOPpac2L = new JTextField();
 			HHBOPpac2L.setEnabled(false);
@@ -1574,16 +1566,13 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			});
 			bnGui.add(AInopPac2L);
 			
-			scrollPane_1 = new JScrollPane();
-			scrollPane_1.setBounds(1547, 212, 280, 94);
-			bnGui.add(scrollPane_1);
-			
 			ARemarks = new JTextArea();
-			scrollPane_1.setViewportView(ARemarks);
 			ARemarks.setWrapStyleWord(true);
 			ARemarks.setToolTipText("Alpha's Current System Faults and Deadlines ");
 			ARemarks.setLineWrap(true);
 			ARemarks.setBackground(Color.LIGHT_GRAY);
+			ARemarks.setBounds(1547, 212, 280, 94);
+			bnGui.add(ARemarks);
 			
 			BSystemType = new JTextField();
 			BSystemType.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2803,38 +2792,29 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			DtotalMissileCount.setBounds(1236, 500, 155, 96);
 			bnGui.add(DtotalMissileCount);
 			
-			scrollPane_2 = new JScrollPane();
-			scrollPane_2.setBounds(1547, 307, 280, 94);
-			bnGui.add(scrollPane_2);
-			
 			BRemarks = new JTextArea();
-			scrollPane_2.setViewportView(BRemarks);
 			BRemarks.setWrapStyleWord(true);
 			BRemarks.setToolTipText("Bravo's Current System Faults and Deadlines ");
 			BRemarks.setLineWrap(true);
 			BRemarks.setBackground(Color.LIGHT_GRAY);
-			
-			scrollPane_3 = new JScrollPane();
-			scrollPane_3.setBounds(1547, 404, 280, 94);
-			bnGui.add(scrollPane_3);
+			BRemarks.setBounds(1547, 307, 280, 94);
+			bnGui.add(BRemarks);
 			
 			CRemarks = new JTextArea();
-			scrollPane_3.setViewportView(CRemarks);
 			CRemarks.setWrapStyleWord(true);
 			CRemarks.setToolTipText("Charlie's Current System Faults and Deadlines");
 			CRemarks.setLineWrap(true);
 			CRemarks.setBackground(Color.LIGHT_GRAY);
-			
-			scrollPane_4 = new JScrollPane();
-			scrollPane_4.setBounds(1547, 500, 280, 94);
-			bnGui.add(scrollPane_4);
+			CRemarks.setBounds(1547, 404, 280, 94);
+			bnGui.add(CRemarks);
 			
 			DRemarks = new JTextArea();
-			scrollPane_4.setViewportView(DRemarks);
 			DRemarks.setWrapStyleWord(true);
 			DRemarks.setToolTipText("Delta's Current System Faults and Deadlines");
 			DRemarks.setLineWrap(true);
 			DRemarks.setBackground(Color.LIGHT_GRAY);
+			DRemarks.setBounds(1547, 500, 280, 94);
+			bnGui.add(DRemarks);
 			
 			BOPLs = new JTextField();
 			BOPLs.setToolTipText("Current Number of OP Pac3 Launchers");
@@ -3661,7 +3641,7 @@ public class BNPssGUI extends JFrame implements Utility, PSSbehaviours{
 			 panel = new JScrollPane();
 			 panel.setVisible(true);
 			 panel.setBounds(0,0,1500,600);
-			 panel.setViewportView(bnGui);
+			 panel.getViewport().add(bnGui);
 			 panel.setViewportView(bnGui);
 			 setContentPane(panel);
 			
